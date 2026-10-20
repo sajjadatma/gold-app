@@ -333,6 +333,9 @@ def activate_profile(
             active.status = "archived"
             active.updated_at = datetime.now(UTC)
             session.add(active)
+    # Flush the archive updates before activating, otherwise the partial unique
+    # index can observe two active rows in one transaction.
+    session.flush()
     profile.status = "active"
     profile.activated_at = datetime.now(UTC)
     profile.updated_at = datetime.now(UTC)
