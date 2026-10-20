@@ -1,4 +1,5 @@
 import uuid
+from datetime import UTC, datetime
 from typing import Annotated
 
 from fastapi import APIRouter, File, HTTPException, Query, Response, UploadFile
@@ -11,6 +12,7 @@ from app.modules.brand_import.intelligence import (
     latest_profile,
 )
 from app.modules.brand_import.models import BrandAsset, BrandImport, BrandProfile
+from app.modules.brand_import.profile import validate_profile_json
 from app.modules.brand_import.schemas import (
     AssetsPublic,
     BrandAssetPublic,
@@ -19,6 +21,7 @@ from app.modules.brand_import.schemas import (
     BrandProfilePublic,
     ImportsPublic,
     ProfilesPublic,
+    ProfileUpdate,
 )
 from app.modules.brand_import.service import UploadedInput, process_import
 from app.modules.brand_import.validation import limit_for
@@ -283,4 +286,57 @@ def read_profile(
     profile = session.get(BrandProfile, profile_id)
     if not profile or profile.brand_id != membership.brand_id:
         raise HTTPException(status_code=404, detail="Profile not found")
+    return _profile_public(profile)
+
+
+@router.patch("/profile/{profile_id}", response_model=BrandProfilePublic)
+def update_profile(
+    *,
+    session: SessionDep,
+    owner: BrandOwner,
+    profile_id: uuid.UUID,
+    profile_in: ProfileUpdate,
+) -> BrandProfilePublic:
+    profile = session.get(BrandProfile, profile_id)
+    if not profile or profile.brand_id != owner.brand_id:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    try:
+        validated = validate_profile_json(profile_in.profile_json)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=422, detail="Profile does not match the required shape"
+        ) from exc
+    profile.profile_json = validated
+    profile.status = "needs_review"
+    profile.updated_at = datetime.now(UTC)
+    session.add(profile)
+    session.commit()
+    session.refresh(profile)
+    return _profile_public(profile)
+
+
+@router.post("/profile/{profile_id}/activate", response_model=BrandProfilePublic)
+def activate_profile(
+    *, session: SessionDep, owner: BrandOwner, profile_id: uuid.UUID
+) -> BrandProfilePublic:
+    profile = session.get(BrandProfile, profile_id)
+    if not profile or profile.brand_id != owner.brand_id:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    active_profiles = session.exec(
+        select(BrandProfile).where(
+            BrandProfile.brand_id == owner.brand_id,
+            BrandProfile.status == "active",
+        )
+    ).all()
+    for active in active_profiles:
+        if active.id != profile.id:
+            active.status = "archived"
+            active.updated_at = datetime.now(UTC)
+            session.add(active)
+    profile.status = "active"
+    profile.activated_at = datetime.now(UTC)
+    profile.updated_at = datetime.now(UTC)
+    session.add(profile)
+    session.commit()
+    session.refresh(profile)
     return _profile_public(profile)

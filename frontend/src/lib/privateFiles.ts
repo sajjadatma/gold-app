@@ -30,7 +30,9 @@ export async function uploadBrandFiles(
   files: File[],
 ): Promise<unknown> {
   const formData = new FormData()
-  files.forEach((file) => formData.append("files", file))
+  for (const file of files) {
+    formData.append("files", file)
+  }
   const response = await fetch(`${baseUrl}/api/v1/brands/${brandId}/imports`, {
     method: "POST",
     headers: authHeaders(),

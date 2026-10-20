@@ -2,7 +2,7 @@
 
 import { type Client, formDataBodySerializer, type Options as Options2, type TDataShape, urlSearchParamsBodySerializer } from './client';
 import { client } from './client.gen';
-import type { brandImportArchiveAssetData, brandImportArchiveAssetErrors, brandImportArchiveAssetResponses, brandImportCreateImportData, brandImportCreateImportErrors, brandImportCreateImportResponses, brandImportDownloadAssetData, brandImportDownloadAssetErrors, brandImportDownloadAssetResponses, brandImportPreviewAssetData, brandImportPreviewAssetErrors, brandImportPreviewAssetResponses, brandImportReadAssetsData, brandImportReadAssetsErrors, brandImportReadAssetsResponses, brandImportReadImportData, brandImportReadImportErrors, brandImportReadImportResponses, brandImportReadImportsData, brandImportReadImportsErrors, brandImportReadImportsResponses, brandsAddMemberData, brandsAddMemberErrors, brandsAddMemberResponses, brandsCreateBrandData, brandsCreateBrandErrors, brandsCreateBrandResponses, brandsDeleteMemberData, brandsDeleteMemberErrors, brandsDeleteMemberResponses, brandsReadBrandData, brandsReadBrandErrors, brandsReadBrandResponses, brandsReadBrandsData, brandsReadBrandsResponses, brandsReadMembersData, brandsReadMembersErrors, brandsReadMembersResponses, brandsUpdateMemberData, brandsUpdateMemberErrors, brandsUpdateMemberResponses, itemsCreateItemData, itemsCreateItemErrors, itemsCreateItemResponses, itemsDeleteItemData, itemsDeleteItemErrors, itemsDeleteItemResponses, itemsReadItemData, itemsReadItemErrors, itemsReadItemResponses, itemsReadItemsData, itemsReadItemsErrors, itemsReadItemsResponses, itemsUpdateItemData, itemsUpdateItemErrors, itemsUpdateItemResponses, loginLoginAccessTokenData, loginLoginAccessTokenErrors, loginLoginAccessTokenResponses, loginRecoverPasswordData, loginRecoverPasswordErrors, loginRecoverPasswordHtmlContentData, loginRecoverPasswordHtmlContentErrors, loginRecoverPasswordHtmlContentResponses, loginRecoverPasswordResponses, loginResetPasswordData, loginResetPasswordErrors, loginResetPasswordResponses, loginTestTokenData, loginTestTokenResponses, privateCreateUserData, privateCreateUserErrors, privateCreateUserResponses, usersCreateUserData, usersCreateUserErrors, usersCreateUserResponses, usersDeleteUserData, usersDeleteUserErrors, usersDeleteUserMeData, usersDeleteUserMeResponses, usersDeleteUserResponses, usersReadUserByIdData, usersReadUserByIdErrors, usersReadUserByIdResponses, usersReadUserMeData, usersReadUserMeResponses, usersReadUsersData, usersReadUsersErrors, usersReadUsersResponses, usersRegisterUserData, usersRegisterUserErrors, usersRegisterUserResponses, usersUpdatePasswordMeData, usersUpdatePasswordMeErrors, usersUpdatePasswordMeResponses, usersUpdateUserData, usersUpdateUserErrors, usersUpdateUserMeData, usersUpdateUserMeErrors, usersUpdateUserMeResponses, usersUpdateUserResponses, utilsHealthCheckData, utilsHealthCheckResponses, utilsTestEmailData, utilsTestEmailErrors, utilsTestEmailResponses } from './types.gen';
+import type { brandImportActivateProfileData, brandImportActivateProfileErrors, brandImportActivateProfileResponses, brandImportAnalyzeImportEndpointData, brandImportAnalyzeImportEndpointErrors, brandImportAnalyzeImportEndpointResponses, brandImportArchiveAssetData, brandImportArchiveAssetErrors, brandImportArchiveAssetResponses, brandImportCreateImportData, brandImportCreateImportErrors, brandImportCreateImportResponses, brandImportDownloadAssetData, brandImportDownloadAssetErrors, brandImportDownloadAssetResponses, brandImportPreviewAssetData, brandImportPreviewAssetErrors, brandImportPreviewAssetResponses, brandImportReadAssetsData, brandImportReadAssetsErrors, brandImportReadAssetsResponses, brandImportReadImportData, brandImportReadImportErrors, brandImportReadImportResponses, brandImportReadImportsData, brandImportReadImportsErrors, brandImportReadImportsResponses, brandImportReadLatestProfileData, brandImportReadLatestProfileErrors, brandImportReadLatestProfileResponses, brandImportReadProfileData, brandImportReadProfileErrors, brandImportReadProfileResponses, brandImportReadProfilesData, brandImportReadProfilesErrors, brandImportReadProfilesResponses, brandImportUpdateProfileData, brandImportUpdateProfileErrors, brandImportUpdateProfileResponses, brandsAddMemberData, brandsAddMemberErrors, brandsAddMemberResponses, brandsCreateBrandData, brandsCreateBrandErrors, brandsCreateBrandResponses, brandsDeleteMemberData, brandsDeleteMemberErrors, brandsDeleteMemberResponses, brandsReadBrandData, brandsReadBrandErrors, brandsReadBrandResponses, brandsReadBrandsData, brandsReadBrandsResponses, brandsReadMembersData, brandsReadMembersErrors, brandsReadMembersResponses, brandsUpdateMemberData, brandsUpdateMemberErrors, brandsUpdateMemberResponses, itemsCreateItemData, itemsCreateItemErrors, itemsCreateItemResponses, itemsDeleteItemData, itemsDeleteItemErrors, itemsDeleteItemResponses, itemsReadItemData, itemsReadItemErrors, itemsReadItemResponses, itemsReadItemsData, itemsReadItemsErrors, itemsReadItemsResponses, itemsUpdateItemData, itemsUpdateItemErrors, itemsUpdateItemResponses, loginLoginAccessTokenData, loginLoginAccessTokenErrors, loginLoginAccessTokenResponses, loginRecoverPasswordData, loginRecoverPasswordErrors, loginRecoverPasswordHtmlContentData, loginRecoverPasswordHtmlContentErrors, loginRecoverPasswordHtmlContentResponses, loginRecoverPasswordResponses, loginResetPasswordData, loginResetPasswordErrors, loginResetPasswordResponses, loginTestTokenData, loginTestTokenResponses, privateCreateUserData, privateCreateUserErrors, privateCreateUserResponses, usersCreateUserData, usersCreateUserErrors, usersCreateUserResponses, usersDeleteUserData, usersDeleteUserErrors, usersDeleteUserMeData, usersDeleteUserMeResponses, usersDeleteUserResponses, usersReadUserByIdData, usersReadUserByIdErrors, usersReadUserByIdResponses, usersReadUserMeData, usersReadUserMeResponses, usersReadUsersData, usersReadUsersErrors, usersReadUsersResponses, usersRegisterUserData, usersRegisterUserErrors, usersRegisterUserResponses, usersUpdatePasswordMeData, usersUpdatePasswordMeErrors, usersUpdatePasswordMeResponses, usersUpdateUserData, usersUpdateUserErrors, usersUpdateUserMeData, usersUpdateUserMeErrors, usersUpdateUserMeResponses, usersUpdateUserResponses, utilsHealthCheckData, utilsHealthCheckResponses, utilsTestEmailData, utilsTestEmailErrors, utilsTestEmailResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -548,6 +548,82 @@ export class BrandImportService {
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
             url: '/api/v1/brands/{brand_id}/assets/{asset_id}/preview',
+            ...options
+        });
+    }
+    
+    /**
+     * Analyze Import Endpoint
+     */
+    public static analyzeImportEndpoint<ThrowOnError extends boolean = true>(options: Options<brandImportAnalyzeImportEndpointData, ThrowOnError>) {
+        return (options.client ?? client).post<brandImportAnalyzeImportEndpointResponses, brandImportAnalyzeImportEndpointErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/brands/{brand_id}/imports/{import_id}/analyze',
+            ...options
+        });
+    }
+    
+    /**
+     * Read Latest Profile
+     */
+    public static readLatestProfile<ThrowOnError extends boolean = true>(options: Options<brandImportReadLatestProfileData, ThrowOnError>) {
+        return (options.client ?? client).get<brandImportReadLatestProfileResponses, brandImportReadLatestProfileErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/brands/{brand_id}/profile',
+            ...options
+        });
+    }
+    
+    /**
+     * Read Profiles
+     */
+    public static readProfiles<ThrowOnError extends boolean = true>(options: Options<brandImportReadProfilesData, ThrowOnError>) {
+        return (options.client ?? client).get<brandImportReadProfilesResponses, brandImportReadProfilesErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/brands/{brand_id}/profiles',
+            ...options
+        });
+    }
+    
+    /**
+     * Read Profile
+     */
+    public static readProfile<ThrowOnError extends boolean = true>(options: Options<brandImportReadProfileData, ThrowOnError>) {
+        return (options.client ?? client).get<brandImportReadProfileResponses, brandImportReadProfileErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/brands/{brand_id}/profile/{profile_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Update Profile
+     */
+    public static updateProfile<ThrowOnError extends boolean = true>(options: Options<brandImportUpdateProfileData, ThrowOnError>) {
+        return (options.client ?? client).patch<brandImportUpdateProfileResponses, brandImportUpdateProfileErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/brands/{brand_id}/profile/{profile_id}',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Activate Profile
+     */
+    public static activateProfile<ThrowOnError extends boolean = true>(options: Options<brandImportActivateProfileData, ThrowOnError>) {
+        return (options.client ?? client).post<brandImportActivateProfileResponses, brandImportActivateProfileErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/brands/{brand_id}/profile/{profile_id}/activate',
             ...options
         });
     }

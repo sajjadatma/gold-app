@@ -23,9 +23,7 @@ export function AssetThumb({
     if (!isImage) return
     let active = true
     let objectUrl: string | null = null
-    fetchPrivateFile(
-      `/api/v1/brands/${brandId}/assets/${asset.id}/preview`,
-    )
+    fetchPrivateFile(`/api/v1/brands/${brandId}/assets/${asset.id}/preview`)
       .then((blob) => {
         objectUrl = URL.createObjectURL(blob)
         if (active) setUrl(objectUrl)

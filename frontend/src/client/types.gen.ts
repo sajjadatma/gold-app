@@ -197,6 +197,50 @@ export type BrandImportPublic = {
 };
 
 /**
+ * BrandProfilePublic
+ */
+export type BrandProfilePublic = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Brand Id
+     */
+    brand_id: string;
+    /**
+     * Version
+     */
+    version: number;
+    /**
+     * Status
+     */
+    status: string;
+    /**
+     * Profile Json
+     */
+    profile_json: {
+        [key: string]: unknown;
+    };
+    /**
+     * Created From Import Id
+     */
+    created_from_import_id: string | null;
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Updated At
+     */
+    updated_at: string;
+    /**
+     * Activated At
+     */
+    activated_at: string | null;
+};
+
+/**
  * BrandPublic
  */
 export type BrandPublic = {
@@ -441,6 +485,32 @@ export type PrivateUserCreate = {
      * Is Verified
      */
     is_verified?: boolean;
+};
+
+/**
+ * ProfileUpdate
+ */
+export type ProfileUpdate = {
+    /**
+     * Profile Json
+     */
+    profile_json: {
+        [key: string]: unknown;
+    };
+};
+
+/**
+ * ProfilesPublic
+ */
+export type ProfilesPublic = {
+    /**
+     * Data
+     */
+    data: Array<BrandProfilePublic>;
+    /**
+     * Count
+     */
+    count: number;
 };
 
 /**
@@ -1643,6 +1713,202 @@ export type brandImportPreviewAssetResponses = {
      */
     200: unknown;
 };
+
+export type brandImportAnalyzeImportEndpointData = {
+    body?: never;
+    path: {
+        /**
+         * Import Id
+         */
+        import_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/imports/{import_id}/analyze';
+};
+
+export type brandImportAnalyzeImportEndpointErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandImportAnalyzeImportEndpointError = brandImportAnalyzeImportEndpointErrors[keyof brandImportAnalyzeImportEndpointErrors];
+
+export type brandImportAnalyzeImportEndpointResponses = {
+    /**
+     * Successful Response
+     */
+    200: BrandProfilePublic;
+};
+
+export type brandImportAnalyzeImportEndpointResponse = brandImportAnalyzeImportEndpointResponses[keyof brandImportAnalyzeImportEndpointResponses];
+
+export type brandImportReadLatestProfileData = {
+    body?: never;
+    path: {
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/profile';
+};
+
+export type brandImportReadLatestProfileErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandImportReadLatestProfileError = brandImportReadLatestProfileErrors[keyof brandImportReadLatestProfileErrors];
+
+export type brandImportReadLatestProfileResponses = {
+    /**
+     * Successful Response
+     */
+    200: BrandProfilePublic;
+};
+
+export type brandImportReadLatestProfileResponse = brandImportReadLatestProfileResponses[keyof brandImportReadLatestProfileResponses];
+
+export type brandImportReadProfilesData = {
+    body?: never;
+    path: {
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/profiles';
+};
+
+export type brandImportReadProfilesErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandImportReadProfilesError = brandImportReadProfilesErrors[keyof brandImportReadProfilesErrors];
+
+export type brandImportReadProfilesResponses = {
+    /**
+     * Successful Response
+     */
+    200: ProfilesPublic;
+};
+
+export type brandImportReadProfilesResponse = brandImportReadProfilesResponses[keyof brandImportReadProfilesResponses];
+
+export type brandImportReadProfileData = {
+    body?: never;
+    path: {
+        /**
+         * Profile Id
+         */
+        profile_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/profile/{profile_id}';
+};
+
+export type brandImportReadProfileErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandImportReadProfileError = brandImportReadProfileErrors[keyof brandImportReadProfileErrors];
+
+export type brandImportReadProfileResponses = {
+    /**
+     * Successful Response
+     */
+    200: BrandProfilePublic;
+};
+
+export type brandImportReadProfileResponse = brandImportReadProfileResponses[keyof brandImportReadProfileResponses];
+
+export type brandImportUpdateProfileData = {
+    body: ProfileUpdate;
+    path: {
+        /**
+         * Profile Id
+         */
+        profile_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/profile/{profile_id}';
+};
+
+export type brandImportUpdateProfileErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandImportUpdateProfileError = brandImportUpdateProfileErrors[keyof brandImportUpdateProfileErrors];
+
+export type brandImportUpdateProfileResponses = {
+    /**
+     * Successful Response
+     */
+    200: BrandProfilePublic;
+};
+
+export type brandImportUpdateProfileResponse = brandImportUpdateProfileResponses[keyof brandImportUpdateProfileResponses];
+
+export type brandImportActivateProfileData = {
+    body?: never;
+    path: {
+        /**
+         * Profile Id
+         */
+        profile_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/profile/{profile_id}/activate';
+};
+
+export type brandImportActivateProfileErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandImportActivateProfileError = brandImportActivateProfileErrors[keyof brandImportActivateProfileErrors];
+
+export type brandImportActivateProfileResponses = {
+    /**
+     * Successful Response
+     */
+    200: BrandProfilePublic;
+};
+
+export type brandImportActivateProfileResponse = brandImportActivateProfileResponses[keyof brandImportActivateProfileResponses];
 
 export type privateCreateUserData = {
     body: PrivateUserCreate;

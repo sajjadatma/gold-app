@@ -3,7 +3,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
 import { Upload } from "lucide-react"
 import { useState } from "react"
 
-import { BrandImportService, type BrandImportPublic } from "@/client"
+import { type BrandImportPublic, BrandImportService } from "@/client"
 import { NoBrand } from "@/components/Common/NoBrand"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -61,9 +61,7 @@ function ImportPage() {
       await refetch()
       navigate({ to: "/brand/imports/$id", params: { id: result.id } })
     } catch (error) {
-      showErrorToast(
-        error instanceof Error ? error.message : "Upload failed",
-      )
+      showErrorToast(error instanceof Error ? error.message : "Upload failed")
     } finally {
       setUploading(false)
     }

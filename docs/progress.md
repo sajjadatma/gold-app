@@ -9,8 +9,8 @@ MVP1 execution status. Updated at the end of every completed stage.
 | T02 | Brand + multi-tenant access | complete | `089d99f` |
 | T03 | Private storage | complete | `a712bd9` |
 | T04 | Brand import | complete | `df11d1f` |
-| T05 | Brand intelligence | complete | pending push |
-| T06 | Brand validation & activation | pending | — |
+| T05 | Brand intelligence | complete | `45fc6e6` |
+| T06 | Brand validation & activation | complete | pending push |
 | T07 | Real & virtual brand models | pending | — |
 | T08 | Product catalog | pending | — |
 | T09 | AI generation foundation | pending | — |

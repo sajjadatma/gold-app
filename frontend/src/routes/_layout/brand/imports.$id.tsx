@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query"
-import { createFileRoute, Link } from "@tanstack/react-router"
-import { ArrowLeft, Download } from "lucide-react"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
+import { ArrowLeft, Download, Sparkles } from "lucide-react"
 
 import { BrandImportService } from "@/client"
 import { AssetThumb } from "@/components/Assets/AssetThumb"
@@ -8,6 +8,7 @@ import { NoBrand } from "@/components/Common/NoBrand"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { useBrand } from "@/hooks/useBrand"
+import useCustomToast from "@/hooks/useCustomToast"
 import { downloadPrivateFile } from "@/lib/privateFiles"
 
 export const Route = createFileRoute("/_layout/brand/imports/$id")({
@@ -18,6 +19,9 @@ export const Route = createFileRoute("/_layout/brand/imports/$id")({
 function ImportDetailPage() {
   const { id } = Route.useParams()
   const { brand } = useBrand()
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const { showErrorToast, showSuccessToast } = useCustomToast()
 
   const { data, isLoading } = useQuery({
     queryKey: ["import", brand?.id, id],
@@ -28,6 +32,21 @@ function ImportDetailPage() {
         })
       ).data,
     enabled: Boolean(brand),
+  })
+
+  const analyze = useMutation({
+    mutationFn: async () =>
+      (
+        await BrandImportService.analyzeImportEndpoint({
+          path: { brand_id: brand?.id ?? "", import_id: id },
+        })
+      ).data,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["profile", brand?.id] })
+      showSuccessToast("Brand profile ready for review")
+      navigate({ to: "/brand/profile" })
+    },
+    onError: () => showErrorToast("Brand analysis failed. Please retry."),
   })
 
   if (!brand) return <NoBrand />
@@ -53,12 +72,21 @@ function ImportDetailPage() {
             {data.processed_file_count} processed · {data.error_count} errors
           </p>
         </div>
-        <Badge
-          variant={data.status === "completed" ? "default" : "secondary"}
-          className="capitalize"
-        >
-          {data.status.replace("_", " ")}
-        </Badge>
+        <div className="flex items-center gap-2">
+          <Badge
+            variant={data.status === "completed" ? "default" : "secondary"}
+            className="capitalize"
+          >
+            {data.status.replace("_", " ")}
+          </Badge>
+          <Button
+            onClick={() => analyze.mutate()}
+            disabled={analyze.isPending || data.assets.length === 0}
+          >
+            <Sparkles className="mr-2 h-4 w-4" />
+            {analyze.isPending ? "Analyzing..." : "Analyze brand"}
+          </Button>
+        </div>
       </div>
 
       {data.assets.length === 0 ? (
@@ -73,7 +101,10 @@ function ImportDetailPage() {
                 <AssetThumb brandId={brand.id} asset={asset} />
               </div>
               <div className="space-y-2 p-3">
-                <p className="truncate text-sm font-medium" title={asset.original_filename}>
+                <p
+                  className="truncate text-sm font-medium"
+                  title={asset.original_filename}
+                >
                   {asset.original_filename}
                 </p>
                 <div className="flex items-center justify-between gap-2">
