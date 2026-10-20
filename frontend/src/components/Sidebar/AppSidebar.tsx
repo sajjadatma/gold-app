@@ -1,5 +1,6 @@
-import { Briefcase, Home, Users } from "lucide-react"
+import { Home, Users } from "lucide-react"
 
+import { BrandSwitcher } from "@/components/Brand/BrandSwitcher"
 import { SidebarAppearance } from "@/components/Common/Appearance"
 import { Logo } from "@/components/Common/Logo"
 import {
@@ -14,7 +15,7 @@ import { User } from "./User"
 
 const baseItems: Item[] = [
   { icon: Home, title: "Dashboard", path: "/" },
-  { icon: Briefcase, title: "Items", path: "/items" },
+  { icon: Users, title: "Team", path: "/team" },
 ]
 
 export function AppSidebar() {
@@ -29,6 +30,9 @@ export function AppSidebar() {
       <SidebarHeader className="px-4 py-6 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:items-center">
         <Logo variant="responsive" />
       </SidebarHeader>
+      <div className="pb-2">
+        <BrandSwitcher />
+      </div>
       <SidebarContent>
         <Main items={items} />
       </SidebarContent>

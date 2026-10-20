@@ -35,6 +35,61 @@ export type Body_login_login_access_token = {
 };
 
 /**
+ * BrandCreate
+ */
+export type BrandCreate = {
+    /**
+     * Name
+     */
+    name: string;
+};
+
+/**
+ * BrandPublic
+ */
+export type BrandPublic = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Slug
+     */
+    slug: string;
+    /**
+     * Status
+     */
+    status: string;
+    role: MemberRole;
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Updated At
+     */
+    updated_at: string;
+};
+
+/**
+ * BrandsPublic
+ */
+export type BrandsPublic = {
+    /**
+     * Data
+     */
+    data: Array<BrandPublic>;
+    /**
+     * Count
+     */
+    count: number;
+};
+
+/**
  * HTTPValidationError
  */
 export type HTTPValidationError = {
@@ -106,6 +161,70 @@ export type ItemsPublic = {
      * Data
      */
     data: Array<ItemPublic>;
+    /**
+     * Count
+     */
+    count: number;
+};
+
+/**
+ * MemberCreate
+ */
+export type MemberCreate = {
+    /**
+     * Email
+     */
+    email: string;
+    role?: MemberRole;
+};
+
+/**
+ * MemberPublic
+ */
+export type MemberPublic = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * User Id
+     */
+    user_id: string;
+    /**
+     * Email
+     */
+    email: string;
+    /**
+     * Full Name
+     */
+    full_name: string | null;
+    role: MemberRole;
+    /**
+     * Created At
+     */
+    created_at: string;
+};
+
+/**
+ * MemberRole
+ */
+export type MemberRole = 'owner' | 'content_manager';
+
+/**
+ * MemberUpdate
+ */
+export type MemberUpdate = {
+    role: MemberRole;
+};
+
+/**
+ * MembersPublic
+ */
+export type MembersPublic = {
+    /**
+     * Data
+     */
+    data: Array<MemberPublic>;
     /**
      * Count
      */
@@ -920,6 +1039,209 @@ export type itemsUpdateItemResponses = {
 };
 
 export type itemsUpdateItemResponse = itemsUpdateItemResponses[keyof itemsUpdateItemResponses];
+
+export type brandsReadBrandsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/brands';
+};
+
+export type brandsReadBrandsResponses = {
+    /**
+     * Successful Response
+     */
+    200: BrandsPublic;
+};
+
+export type brandsReadBrandsResponse = brandsReadBrandsResponses[keyof brandsReadBrandsResponses];
+
+export type brandsCreateBrandData = {
+    body: BrandCreate;
+    path?: never;
+    query?: never;
+    url: '/api/v1/brands';
+};
+
+export type brandsCreateBrandErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandsCreateBrandError = brandsCreateBrandErrors[keyof brandsCreateBrandErrors];
+
+export type brandsCreateBrandResponses = {
+    /**
+     * Successful Response
+     */
+    200: BrandPublic;
+};
+
+export type brandsCreateBrandResponse = brandsCreateBrandResponses[keyof brandsCreateBrandResponses];
+
+export type brandsReadBrandData = {
+    body?: never;
+    path: {
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}';
+};
+
+export type brandsReadBrandErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandsReadBrandError = brandsReadBrandErrors[keyof brandsReadBrandErrors];
+
+export type brandsReadBrandResponses = {
+    /**
+     * Successful Response
+     */
+    200: BrandPublic;
+};
+
+export type brandsReadBrandResponse = brandsReadBrandResponses[keyof brandsReadBrandResponses];
+
+export type brandsReadMembersData = {
+    body?: never;
+    path: {
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/members';
+};
+
+export type brandsReadMembersErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandsReadMembersError = brandsReadMembersErrors[keyof brandsReadMembersErrors];
+
+export type brandsReadMembersResponses = {
+    /**
+     * Successful Response
+     */
+    200: MembersPublic;
+};
+
+export type brandsReadMembersResponse = brandsReadMembersResponses[keyof brandsReadMembersResponses];
+
+export type brandsAddMemberData = {
+    body: MemberCreate;
+    path: {
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/members';
+};
+
+export type brandsAddMemberErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandsAddMemberError = brandsAddMemberErrors[keyof brandsAddMemberErrors];
+
+export type brandsAddMemberResponses = {
+    /**
+     * Successful Response
+     */
+    200: MemberPublic;
+};
+
+export type brandsAddMemberResponse = brandsAddMemberResponses[keyof brandsAddMemberResponses];
+
+export type brandsDeleteMemberData = {
+    body?: never;
+    path: {
+        /**
+         * Membership Id
+         */
+        membership_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/members/{membership_id}';
+};
+
+export type brandsDeleteMemberErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandsDeleteMemberError = brandsDeleteMemberErrors[keyof brandsDeleteMemberErrors];
+
+export type brandsDeleteMemberResponses = {
+    /**
+     * Response Brands-Delete Member
+     *
+     * Successful Response
+     */
+    200: {
+        [key: string]: string;
+    };
+};
+
+export type brandsDeleteMemberResponse = brandsDeleteMemberResponses[keyof brandsDeleteMemberResponses];
+
+export type brandsUpdateMemberData = {
+    body: MemberUpdate;
+    path: {
+        /**
+         * Membership Id
+         */
+        membership_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/members/{membership_id}';
+};
+
+export type brandsUpdateMemberErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandsUpdateMemberError = brandsUpdateMemberErrors[keyof brandsUpdateMemberErrors];
+
+export type brandsUpdateMemberResponses = {
+    /**
+     * Successful Response
+     */
+    200: MemberPublic;
+};
+
+export type brandsUpdateMemberResponse = brandsUpdateMemberResponses[keyof brandsUpdateMemberResponses];
 
 export type privateCreateUserData = {
     body: PrivateUserCreate;

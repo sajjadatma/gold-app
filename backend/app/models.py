@@ -124,3 +124,7 @@ class TokenPayload(SQLModel):
 class NewPassword(SQLModel):
     token: str
     new_password: str = Field(min_length=8, max_length=128)
+
+
+# Module models are imported so Alembic and SQLModel see their metadata.
+from app.modules.brands.models import Brand, Membership  # noqa: E402, F401

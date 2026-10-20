@@ -8,6 +8,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { isLoggedIn } from "@/hooks/useAuth"
+import { BrandProvider } from "@/hooks/useBrand"
 
 export const Route = createFileRoute("/_layout")({
   component: Layout,
@@ -22,7 +23,8 @@ export const Route = createFileRoute("/_layout")({
 
 function Layout() {
   return (
-    <SidebarProvider>
+    <BrandProvider>
+      <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
         <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
@@ -35,6 +37,7 @@ function Layout() {
         </main>
         <Footer />
       </SidebarInset>
-    </SidebarProvider>
+      </SidebarProvider>
+    </BrandProvider>
   )
 }
