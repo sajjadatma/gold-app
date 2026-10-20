@@ -3,7 +3,6 @@ import { Plus } from "lucide-react"
 import type { ReactNode } from "react"
 import { useState } from "react"
 
-import { BrandsService } from "@/client"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -24,16 +23,11 @@ export function CreateBrandDialog({ trigger }: { trigger?: ReactNode }) {
   const [open, setOpen] = useState(false)
   const [name, setName] = useState("")
   const { showErrorToast, showSuccessToast } = useCustomToast()
-  const { refresh, selectBrand } = useBrand()
+  const { createBrand } = useBrand()
 
   const mutation = useMutation({
-    mutationFn: async () => {
-      const response = await BrandsService.createBrand({ body: { name } })
-      return response.data
-    },
-    onSuccess: async (brand) => {
-      await refresh()
-      selectBrand(brand.id)
+    mutationFn: async () => createBrand(name),
+    onSuccess: () => {
       showSuccessToast("Brand created")
       setName("")
       setOpen(false)

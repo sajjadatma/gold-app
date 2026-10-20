@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { createFileRoute, Link } from "@tanstack/react-router"
-import { ArrowLeft, RefreshCw } from "lucide-react"
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
+import { ArrowLeft, FileText, RefreshCw } from "lucide-react"
 
-import { GenerationsService, ProductsService } from "@/client"
+import { ContentService, GenerationsService, ProductsService } from "@/client"
 import { NoBrand } from "@/components/Common/NoBrand"
 import { GeneratedImage } from "@/components/Generations/GeneratedImage"
 import { ProductImage } from "@/components/Products/ProductImage"
@@ -21,6 +21,7 @@ export const Route = createFileRoute("/_layout/studio/generations/$id")({
 function GenerationDetailPage() {
   const { id } = Route.useParams()
   const { brand } = useBrand()
+  const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { showErrorToast, showSuccessToast } = useCustomToast()
 
@@ -51,6 +52,18 @@ function GenerationDetailPage() {
         })
       ).data,
     enabled: Boolean(brand && data),
+  })
+
+  const createDraft = useMutation({
+    mutationFn: async (assetId: string) =>
+      ContentService.createDraft({
+        path: { brand_id: brand?.id ?? "" },
+        body: { generated_asset_id: assetId },
+      }),
+    onSuccess: (response) => {
+      navigate({ to: "/content/$id", params: { id: response.data.id } })
+    },
+    onError: handleError.bind(showErrorToast),
   })
 
   const retry = useMutation({
@@ -115,6 +128,14 @@ function GenerationDetailPage() {
           {data.status === "failed" ? (
             <Button variant="outline" onClick={() => retry.mutate()}>
               <RefreshCw className="mr-2 h-4 w-4" /> Retry
+            </Button>
+          ) : null}
+          {asset ? (
+            <Button
+              onClick={() => createDraft.mutate(asset.id)}
+              disabled={createDraft.isPending}
+            >
+              <FileText className="mr-2 h-4 w-4" /> Create content draft
             </Button>
           ) : null}
         </div>

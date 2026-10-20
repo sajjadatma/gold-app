@@ -34,6 +34,8 @@ export function BrandProvider({ children }: { children: ReactNode }) {
   )
 
   useEffect(() => {
+    // Wait for the first fetch before deciding the selection is stale.
+    if (isLoading) return
     if (!brands.length) {
       if (selectedId) {
         setSelectedId(null)
@@ -46,7 +48,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
       setSelectedId(next)
       localStorage.setItem(STORAGE_KEY, next)
     }
-  }, [brands, selectedId])
+  }, [brands, selectedId, isLoading])
 
   const brand = brands.find((item) => item.id === selectedId) ?? null
 
@@ -57,8 +59,17 @@ export function BrandProvider({ children }: { children: ReactNode }) {
 
   const createBrand = async (name: string) => {
     const created = (await BrandsService.createBrand({ body: { name } })).data
-    await queryClient.invalidateQueries({ queryKey: ["brands"] })
+    // Put the new brand in the cache before selecting it so the provider
+    // cannot fall back to the previously selected brand during a refetch.
+    queryClient.setQueryData<{ data: BrandPublic[]; count: number }>(
+      ["brands"],
+      (old) => {
+        if (!old) return { data: [created], count: 1 }
+        return { data: [...old.data, created], count: old.count + 1 }
+      },
+    )
     selectBrand(created.id)
+    await queryClient.invalidateQueries({ queryKey: ["brands"] })
     return created
   }
 
