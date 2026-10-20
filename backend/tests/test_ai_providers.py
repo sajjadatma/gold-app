@@ -2,7 +2,12 @@ import io
 
 from PIL import Image
 
-from app.providers.ai import evaluate_integrity, generate_image, generate_model_previews, generate_text
+from app.providers.ai import (
+    evaluate_integrity,
+    generate_image,
+    generate_model_previews,
+    generate_text,
+)
 
 
 def _png(size: tuple[int, int], color: tuple[int, int, int]) -> bytes:

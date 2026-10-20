@@ -1,5 +1,6 @@
 import {
   Camera,
+  FileText,
   Gem,
   Home,
   Images,
@@ -30,6 +31,7 @@ const baseItems: Item[] = [
   { icon: UserRound, title: "Models", path: "/models" },
   { icon: Gem, title: "Products", path: "/products" },
   { icon: Camera, title: "Studio", path: "/studio" },
+  { icon: FileText, title: "Content", path: "/content" },
   { icon: Users, title: "Team", path: "/team" },
 ]
 

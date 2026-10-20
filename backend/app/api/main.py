@@ -5,6 +5,7 @@ from app.core.config import settings
 from app.modules.brand_import.api import router as brand_assets_router
 from app.modules.brand_models.api import router as brand_models_router
 from app.modules.brands.api import router as brands_router
+from app.modules.content.api import router as content_router
 from app.modules.generations.api import router as generations_router
 from app.modules.products.api import router as products_router
 
@@ -17,6 +18,7 @@ api_router.include_router(brands_router)
 api_router.include_router(brand_assets_router)
 api_router.include_router(brand_models_router)
 api_router.include_router(generations_router)
+api_router.include_router(content_router)
 api_router.include_router(products_router)
 
 

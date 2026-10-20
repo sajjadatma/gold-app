@@ -463,6 +463,16 @@ export type CanonicalReferenceUpdate = {
 };
 
 /**
+ * CaptionGenerateRequest
+ */
+export type CaptionGenerateRequest = {
+    /**
+     * Force
+     */
+    force?: boolean;
+};
+
+/**
  * ConsentCreate
  */
 export type ConsentCreate = {
@@ -500,6 +510,214 @@ export type ConsentPublic = {
      * Confirmed At
      */
     confirmed_at: string;
+};
+
+/**
+ * ContentDraftCreate
+ */
+export type ContentDraftCreate = {
+    /**
+     * Generated Asset Id
+     */
+    generated_asset_id: string;
+};
+
+/**
+ * ContentDraftDetail
+ */
+export type ContentDraftDetail = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Brand Id
+     */
+    brand_id: string;
+    /**
+     * Product Id
+     */
+    product_id: string;
+    /**
+     * Generated Asset Id
+     */
+    generated_asset_id: string;
+    /**
+     * Caption
+     */
+    caption: string;
+    /**
+     * Alternative Captions Json
+     */
+    alternative_captions_json: Array<string>;
+    /**
+     * Hashtags
+     */
+    hashtags: string;
+    /**
+     * Cta
+     */
+    cta: string | null;
+    /**
+     * Status
+     */
+    status: string;
+    /**
+     * Created By
+     */
+    created_by: string;
+    /**
+     * Approved By
+     */
+    approved_by: string | null;
+    /**
+     * Approved At
+     */
+    approved_at: string | null;
+    /**
+     * User Edited
+     */
+    user_edited: boolean;
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Updated At
+     */
+    updated_at: string;
+    /**
+     * Generation Request Id
+     */
+    generation_request_id: string;
+    /**
+     * Integrity Status
+     */
+    integrity_status: string;
+    /**
+     * Integrity Findings Json
+     */
+    integrity_findings_json: {
+        [key: string]: unknown;
+    };
+    /**
+     * Product Name
+     */
+    product_name: string;
+    /**
+     * Product Category
+     */
+    product_category: string;
+    /**
+     * Brand Profile Version
+     */
+    brand_profile_version: number;
+    /**
+     * Model Name
+     */
+    model_name: string | null;
+};
+
+/**
+ * ContentDraftPublic
+ */
+export type ContentDraftPublic = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Brand Id
+     */
+    brand_id: string;
+    /**
+     * Product Id
+     */
+    product_id: string;
+    /**
+     * Generated Asset Id
+     */
+    generated_asset_id: string;
+    /**
+     * Caption
+     */
+    caption: string;
+    /**
+     * Alternative Captions Json
+     */
+    alternative_captions_json: Array<string>;
+    /**
+     * Hashtags
+     */
+    hashtags: string;
+    /**
+     * Cta
+     */
+    cta: string | null;
+    /**
+     * Status
+     */
+    status: string;
+    /**
+     * Created By
+     */
+    created_by: string;
+    /**
+     * Approved By
+     */
+    approved_by: string | null;
+    /**
+     * Approved At
+     */
+    approved_at: string | null;
+    /**
+     * User Edited
+     */
+    user_edited: boolean;
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Updated At
+     */
+    updated_at: string;
+};
+
+/**
+ * ContentDraftUpdate
+ */
+export type ContentDraftUpdate = {
+    /**
+     * Caption
+     */
+    caption?: string | null;
+    /**
+     * Alternative Captions
+     */
+    alternative_captions?: Array<string> | null;
+    /**
+     * Hashtags
+     */
+    hashtags?: string | null;
+    /**
+     * Cta
+     */
+    cta?: string | null;
+};
+
+/**
+ * ContentDraftsPublic
+ */
+export type ContentDraftsPublic = {
+    /**
+     * Data
+     */
+    data: Array<ContentDraftPublic>;
+    /**
+     * Count
+     */
+    count: number;
 };
 
 /**
@@ -3053,6 +3271,202 @@ export type generationsDownloadGeneratedAssetResponses = {
      */
     200: unknown;
 };
+
+export type contentReadDraftsData = {
+    body?: never;
+    path: {
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/drafts';
+};
+
+export type contentReadDraftsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type contentReadDraftsError = contentReadDraftsErrors[keyof contentReadDraftsErrors];
+
+export type contentReadDraftsResponses = {
+    /**
+     * Successful Response
+     */
+    200: ContentDraftsPublic;
+};
+
+export type contentReadDraftsResponse = contentReadDraftsResponses[keyof contentReadDraftsResponses];
+
+export type contentCreateDraftData = {
+    body: ContentDraftCreate;
+    path: {
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/drafts';
+};
+
+export type contentCreateDraftErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type contentCreateDraftError = contentCreateDraftErrors[keyof contentCreateDraftErrors];
+
+export type contentCreateDraftResponses = {
+    /**
+     * Successful Response
+     */
+    200: ContentDraftDetail;
+};
+
+export type contentCreateDraftResponse = contentCreateDraftResponses[keyof contentCreateDraftResponses];
+
+export type contentReadDraftData = {
+    body?: never;
+    path: {
+        /**
+         * Draft Id
+         */
+        draft_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/drafts/{draft_id}';
+};
+
+export type contentReadDraftErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type contentReadDraftError = contentReadDraftErrors[keyof contentReadDraftErrors];
+
+export type contentReadDraftResponses = {
+    /**
+     * Successful Response
+     */
+    200: ContentDraftDetail;
+};
+
+export type contentReadDraftResponse = contentReadDraftResponses[keyof contentReadDraftResponses];
+
+export type contentUpdateDraftData = {
+    body: ContentDraftUpdate;
+    path: {
+        /**
+         * Draft Id
+         */
+        draft_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/drafts/{draft_id}';
+};
+
+export type contentUpdateDraftErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type contentUpdateDraftError = contentUpdateDraftErrors[keyof contentUpdateDraftErrors];
+
+export type contentUpdateDraftResponses = {
+    /**
+     * Successful Response
+     */
+    200: ContentDraftDetail;
+};
+
+export type contentUpdateDraftResponse = contentUpdateDraftResponses[keyof contentUpdateDraftResponses];
+
+export type contentGenerateCaptionEndpointData = {
+    body: CaptionGenerateRequest;
+    path: {
+        /**
+         * Draft Id
+         */
+        draft_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/drafts/{draft_id}/generate-caption';
+};
+
+export type contentGenerateCaptionEndpointErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type contentGenerateCaptionEndpointError = contentGenerateCaptionEndpointErrors[keyof contentGenerateCaptionEndpointErrors];
+
+export type contentGenerateCaptionEndpointResponses = {
+    /**
+     * Successful Response
+     */
+    200: ContentDraftDetail;
+};
+
+export type contentGenerateCaptionEndpointResponse = contentGenerateCaptionEndpointResponses[keyof contentGenerateCaptionEndpointResponses];
+
+export type contentSubmitDraftData = {
+    body?: never;
+    path: {
+        /**
+         * Draft Id
+         */
+        draft_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/drafts/{draft_id}/submit';
+};
+
+export type contentSubmitDraftErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type contentSubmitDraftError = contentSubmitDraftErrors[keyof contentSubmitDraftErrors];
+
+export type contentSubmitDraftResponses = {
+    /**
+     * Successful Response
+     */
+    200: ContentDraftDetail;
+};
+
+export type contentSubmitDraftResponse = contentSubmitDraftResponses[keyof contentSubmitDraftResponses];
 
 export type productsReadProductsData = {
     body?: never;

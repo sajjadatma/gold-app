@@ -22,6 +22,8 @@ import { Route as LayoutTeamRouteImport } from './routes/_layout/team'
 import { Route as LayoutBrandAssetsRouteImport } from './routes/_layout/brand/assets'
 import { Route as LayoutBrandImportRouteImport } from './routes/_layout/brand/import'
 import { Route as LayoutBrandProfileRouteImport } from './routes/_layout/brand/profile'
+import { Route as LayoutContentIndexRouteImport } from './routes/_layout/content/index'
+import { Route as LayoutContentIdRouteImport } from './routes/_layout/content/$id'
 import { Route as LayoutModelsIndexRouteImport } from './routes/_layout/models/index'
 import { Route as LayoutModelsIdRouteImport } from './routes/_layout/models/$id'
 import { Route as LayoutModelsNewRouteImport } from './routes/_layout/models/new'
@@ -96,6 +98,16 @@ const LayoutBrandProfileRoute = LayoutBrandProfileRouteImport.update({
   path: '/brand/profile',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutContentIndexRoute = LayoutContentIndexRouteImport.update({
+  id: '/content/',
+  path: '/content/',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutContentIdRoute = LayoutContentIdRouteImport.update({
+  id: '/content/$id',
+  path: '/content/$id',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutModelsIndexRoute = LayoutModelsIndexRouteImport.update({
   id: '/models/',
   path: '/models/',
@@ -156,10 +168,12 @@ export interface FileRoutesByFullPath {
   '/brand/assets': typeof LayoutBrandAssetsRoute
   '/brand/import': typeof LayoutBrandImportRoute
   '/brand/profile': typeof LayoutBrandProfileRoute
+  '/content/$id': typeof LayoutContentIdRoute
   '/models/$id': typeof LayoutModelsIdRoute
   '/models/new': typeof LayoutModelsNewRoute
   '/products/$id': typeof LayoutProductsIdRoute
   '/products/new': typeof LayoutProductsNewRoute
+  '/content/': typeof LayoutContentIndexRoute
   '/models/': typeof LayoutModelsIndexRoute
   '/products/': typeof LayoutProductsIndexRoute
   '/studio/': typeof LayoutStudioIndexRoute
@@ -179,10 +193,12 @@ export interface FileRoutesByTo {
   '/brand/assets': typeof LayoutBrandAssetsRoute
   '/brand/import': typeof LayoutBrandImportRoute
   '/brand/profile': typeof LayoutBrandProfileRoute
+  '/content/$id': typeof LayoutContentIdRoute
   '/models/$id': typeof LayoutModelsIdRoute
   '/models/new': typeof LayoutModelsNewRoute
   '/products/$id': typeof LayoutProductsIdRoute
   '/products/new': typeof LayoutProductsNewRoute
+  '/content': typeof LayoutContentIndexRoute
   '/models': typeof LayoutModelsIndexRoute
   '/products': typeof LayoutProductsIndexRoute
   '/studio': typeof LayoutStudioIndexRoute
@@ -204,10 +220,12 @@ export interface FileRoutesById {
   '/_layout/brand/assets': typeof LayoutBrandAssetsRoute
   '/_layout/brand/import': typeof LayoutBrandImportRoute
   '/_layout/brand/profile': typeof LayoutBrandProfileRoute
+  '/_layout/content/$id': typeof LayoutContentIdRoute
   '/_layout/models/$id': typeof LayoutModelsIdRoute
   '/_layout/models/new': typeof LayoutModelsNewRoute
   '/_layout/products/$id': typeof LayoutProductsIdRoute
   '/_layout/products/new': typeof LayoutProductsNewRoute
+  '/_layout/content/': typeof LayoutContentIndexRoute
   '/_layout/models/': typeof LayoutModelsIndexRoute
   '/_layout/products/': typeof LayoutProductsIndexRoute
   '/_layout/studio/': typeof LayoutStudioIndexRoute
@@ -229,10 +247,12 @@ export interface FileRouteTypes {
     | '/brand/assets'
     | '/brand/import'
     | '/brand/profile'
+    | '/content/$id'
     | '/models/$id'
     | '/models/new'
     | '/products/$id'
     | '/products/new'
+    | '/content/'
     | '/models/'
     | '/products/'
     | '/studio/'
@@ -252,10 +272,12 @@ export interface FileRouteTypes {
     | '/brand/assets'
     | '/brand/import'
     | '/brand/profile'
+    | '/content/$id'
     | '/models/$id'
     | '/models/new'
     | '/products/$id'
     | '/products/new'
+    | '/content'
     | '/models'
     | '/products'
     | '/studio'
@@ -276,10 +298,12 @@ export interface FileRouteTypes {
     | '/_layout/brand/assets'
     | '/_layout/brand/import'
     | '/_layout/brand/profile'
+    | '/_layout/content/$id'
     | '/_layout/models/$id'
     | '/_layout/models/new'
     | '/_layout/products/$id'
     | '/_layout/products/new'
+    | '/_layout/content/'
     | '/_layout/models/'
     | '/_layout/products/'
     | '/_layout/studio/'
@@ -388,6 +412,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutBrandProfileRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/content/': {
+      id: '/_layout/content/'
+      path: '/content'
+      fullPath: '/content/'
+      preLoaderRoute: typeof LayoutContentIndexRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/content/$id': {
+      id: '/_layout/content/$id'
+      path: '/content/$id'
+      fullPath: '/content/$id'
+      preLoaderRoute: typeof LayoutContentIdRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/models/': {
       id: '/_layout/models/'
       path: '/models'
@@ -463,10 +501,12 @@ interface LayoutRouteChildren {
   LayoutBrandAssetsRoute: typeof LayoutBrandAssetsRoute
   LayoutBrandImportRoute: typeof LayoutBrandImportRoute
   LayoutBrandProfileRoute: typeof LayoutBrandProfileRoute
+  LayoutContentIdRoute: typeof LayoutContentIdRoute
   LayoutModelsIdRoute: typeof LayoutModelsIdRoute
   LayoutModelsNewRoute: typeof LayoutModelsNewRoute
   LayoutProductsIdRoute: typeof LayoutProductsIdRoute
   LayoutProductsNewRoute: typeof LayoutProductsNewRoute
+  LayoutContentIndexRoute: typeof LayoutContentIndexRoute
   LayoutModelsIndexRoute: typeof LayoutModelsIndexRoute
   LayoutProductsIndexRoute: typeof LayoutProductsIndexRoute
   LayoutStudioIndexRoute: typeof LayoutStudioIndexRoute
@@ -483,10 +523,12 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutBrandAssetsRoute: LayoutBrandAssetsRoute,
   LayoutBrandImportRoute: LayoutBrandImportRoute,
   LayoutBrandProfileRoute: LayoutBrandProfileRoute,
+  LayoutContentIdRoute: LayoutContentIdRoute,
   LayoutModelsIdRoute: LayoutModelsIdRoute,
   LayoutModelsNewRoute: LayoutModelsNewRoute,
   LayoutProductsIdRoute: LayoutProductsIdRoute,
   LayoutProductsNewRoute: LayoutProductsNewRoute,
+  LayoutContentIndexRoute: LayoutContentIndexRoute,
   LayoutModelsIndexRoute: LayoutModelsIndexRoute,
   LayoutProductsIndexRoute: LayoutProductsIndexRoute,
   LayoutStudioIndexRoute: LayoutStudioIndexRoute,

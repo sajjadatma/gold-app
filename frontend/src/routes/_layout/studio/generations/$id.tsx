@@ -1,60 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { ArrowLeft, RefreshCw } from "lucide-react"
-import { useEffect, useState } from "react"
 
 import { GenerationsService, ProductsService } from "@/client"
 import { NoBrand } from "@/components/Common/NoBrand"
+import { GeneratedImage } from "@/components/Generations/GeneratedImage"
 import { ProductImage } from "@/components/Products/ProductImage"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
 import { useBrand } from "@/hooks/useBrand"
 import useCustomToast from "@/hooks/useCustomToast"
-import { fetchPrivateFile } from "@/lib/privateFiles"
 import { handleError } from "@/utils"
 
 export const Route = createFileRoute("/_layout/studio/generations/$id")({
   component: GenerationDetailPage,
   head: () => ({ meta: [{ title: "Generation - Jewelry Brand Studio" }] }),
 })
-
-function GeneratedImage({
-  brandId,
-  assetId,
-}: {
-  brandId: string
-  assetId: string
-}) {
-  const [url, setUrl] = useState<string | null>(null)
-
-  useEffect(() => {
-    let active = true
-    let objectUrl: string | null = null
-    fetchPrivateFile(
-      `/api/v1/brands/${brandId}/generations/assets/${assetId}/download`,
-    )
-      .then((blob) => {
-        objectUrl = URL.createObjectURL(blob)
-        if (active) setUrl(objectUrl)
-      })
-      .catch(() => undefined)
-    return () => {
-      active = false
-      if (objectUrl) URL.revokeObjectURL(objectUrl)
-    }
-  }, [brandId, assetId])
-
-  if (!url) return <Skeleton className="h-full w-full" />
-  return (
-    <img
-      src={url}
-      alt="Generated jewelry"
-      className="h-full w-full object-contain"
-    />
-  )
-}
 
 function GenerationDetailPage() {
   const { id } = Route.useParams()
@@ -202,11 +164,39 @@ function GenerationDetailPage() {
               )}
             </div>
             {asset ? (
-              <div className="mt-3 flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Integrity</span>
-                <Badge variant="outline" className="capitalize">
-                  {asset.integrity_status.replace("_", " ")}
-                </Badge>
+              <div className="mt-3 space-y-2 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Integrity</span>
+                  <Badge
+                    variant={
+                      asset.integrity_status === "failed"
+                        ? "destructive"
+                        : "outline"
+                    }
+                    className="capitalize"
+                  >
+                    {asset.integrity_status.replace("_", " ")}
+                  </Badge>
+                </div>
+                {typeof asset.integrity_findings_json.summary === "string" ? (
+                  <p className="text-muted-foreground">
+                    {asset.integrity_findings_json.summary}
+                  </p>
+                ) : null}
+                {Array.isArray(asset.integrity_findings_json.checks) ? (
+                  <ul className="list-disc pl-5 text-xs text-muted-foreground">
+                    {(
+                      asset.integrity_findings_json.checks as Array<
+                        Record<string, unknown>
+                      >
+                    ).map((check, index) => (
+                      <li key={index}>
+                        {String(check.name)}: {String(check.result)}
+                        {check.note ? ` — ${String(check.note)}` : ""}
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
               </div>
             ) : null}
           </CardContent>

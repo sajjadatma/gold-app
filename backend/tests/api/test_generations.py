@@ -107,7 +107,7 @@ def test_studio_generation_completes(
     assert generation["provider"] in {"fake", "openai"}
     assert len(generation["assets"]) == 1
     asset = generation["assets"][0]
-    assert asset["integrity_status"] == "pending"
+    assert asset["integrity_status"] in {"passed", "needs_review", "failed"}
     assert asset["width"] == 1024 and asset["height"] == 1280
 
     download = client.get(

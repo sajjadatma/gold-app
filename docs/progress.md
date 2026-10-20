@@ -14,9 +14,9 @@ MVP1 execution status. Updated at the end of every completed stage.
 | T07 | Real & virtual brand models | complete | `c76ad5f` |
 | T08 | Product catalog | complete | `9eafa7f` |
 | T09 | AI generation foundation | complete | same-as-T10 |
-| T10 | AI photography studio | complete | pending push |
-| T11 | Product integrity evaluation | pending | — |
-| T12 | Caption & content draft | pending | — |
+| T10 | AI photography studio | complete | `a0cdd53` |
+| T11 | Product integrity evaluation | complete | same-as-T12 |
+| T12 | Caption & content draft | complete | pending push |
 | T13 | Approval workflow | pending | — |
 | T14 | Instagram publishing | pending | — |
 | T15 | Complete E2E workflow | pending | — |

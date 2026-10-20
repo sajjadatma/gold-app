@@ -138,6 +138,7 @@ from app.modules.brand_models.models import (  # noqa: E402, F401
     ConsentRecord,
 )
 from app.modules.brands.models import Brand, Membership  # noqa: E402, F401
+from app.modules.content.models import ContentDraft  # noqa: E402, F401
 from app.modules.generations.models import (  # noqa: E402, F401
     GeneratedAsset,
     GenerationRequest,

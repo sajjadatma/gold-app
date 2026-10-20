@@ -435,3 +435,70 @@ def evaluate_integrity(
         "checks": checks,
         "confidence": 0.55,
     }
+
+
+def generate_caption(
+    brand_name: str,
+    profile_json: dict[str, Any],
+    product_name: str,
+    category: str,
+    metal_color: str | None,
+    stone_type: str | None,
+) -> dict[str, Any]:
+    tone = profile_json.get("tone_of_voice", {})
+    identity = profile_json.get("identity", {})
+    if settings.AI_PROVIDER == "openai" and settings.AI_API_KEY:
+        prompt = (
+            f"Write social copy for {brand_name}. Product: {product_name} ({category}), "
+            f"metal color: {metal_color or 'unknown'}, stone: {stone_type or 'unknown'}. "
+            f"Brand identity: {identity}. Tone rules: {tone}. "
+            "Return JSON: {primary_caption, alternatives: [two strings], cta, hashtags: [strings]}. "
+            "Respect the brand's language, tone, emoji policy, and CTA style. "
+            "Do not invent certifications, prices, or claims."
+        )
+        response = httpx.post(
+            f"{settings.AI_API_BASE.rstrip('/')}/chat/completions",
+            headers={"Authorization": f"Bearer {settings.AI_API_KEY}"},
+            json={
+                "model": settings.AI_TEXT_MODEL,
+                "messages": [
+                    {
+                        "role": "system",
+                        "content": "You write concise premium jewelry captions. Output valid JSON only.",
+                    },
+                    {"role": "user", "content": prompt},
+                ],
+                "response_format": {"type": "json_object"},
+                "temperature": 0.6,
+            },
+            timeout=90,
+        )
+        response.raise_for_status()
+        parsed = json.loads(response.json()["choices"][0]["message"]["content"])
+        if not isinstance(parsed, dict):
+            raise ValueError("Caption response was not an object")
+        return parsed
+
+    tagline = identity.get("tagline") or "crafted to be worn"
+    primary = (
+        f"{product_name}. {tagline}. "
+        f"A {category} in {metal_color or 'precious metal'}"
+        + (f" with {stone_type}" if stone_type else "")
+        + "."
+    )
+    alternatives = [
+        f"Meet the {product_name}: {tagline}.",
+        f"Quiet detail, lasting presence. The {product_name} in {metal_color or 'gold'}.",
+    ]
+    cta = tone.get("cta_style") or "Discover the piece."
+    hashtags = [
+        f"#{brand_name.replace(' ', '')}",
+        f"#{category}",
+        "#finejewelry",
+    ]
+    return {
+        "primary_caption": primary,
+        "alternatives": alternatives,
+        "cta": cta,
+        "hashtags": hashtags,
+    }

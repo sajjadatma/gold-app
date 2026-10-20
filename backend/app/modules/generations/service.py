@@ -17,7 +17,7 @@ from app.modules.generations.models import (
     IntegrityStatus,
 )
 from app.modules.products.models import Product, ProductImage
-from app.providers.ai import generate_image
+from app.providers.ai import evaluate_integrity, generate_image
 from app.providers.storage import build_storage_key, get_storage
 
 
@@ -154,6 +154,8 @@ def run_generation(session: Session, request_id: uuid.UUID) -> GenerationRequest
             integrity_status=IntegrityStatus.PENDING.value,
         )
         session.add(asset)
+        session.flush()
+        _apply_integrity(asset, source_bytes, image_bytes, product)
         request.status = GenerationStatus.COMPLETED.value
         request.provider = settings.AI_PROVIDER
         request.model = settings.AI_IMAGE_MODEL
@@ -170,3 +172,29 @@ def run_generation(session: Session, request_id: uuid.UUID) -> GenerationRequest
         session.add(request)
         session.commit()
         raise GenerationError(request.error_message) from exc
+
+
+def _apply_integrity(
+    asset: GeneratedAsset, source: bytes, generated: bytes, product: Product
+) -> None:
+    try:
+        result = evaluate_integrity(
+            source, generated, product.name, product.integrity_notes or ""
+        )
+    except Exception as exc:  # noqa: BLE001
+        asset.integrity_status = IntegrityStatus.NEEDS_REVIEW.value
+        asset.integrity_findings_json = {
+            "summary": "Automatic integrity evaluation failed; review manually.",
+            "checks": [],
+            "error": type(exc).__name__,
+        }
+        return
+    status = result.get("status")
+    if status not in {
+        IntegrityStatus.PASSED.value,
+        IntegrityStatus.NEEDS_REVIEW.value,
+        IntegrityStatus.FAILED.value,
+    }:
+        status = IntegrityStatus.NEEDS_REVIEW.value
+    asset.integrity_status = status
+    asset.integrity_findings_json = result
