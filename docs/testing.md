@@ -48,3 +48,11 @@ CI must not depend on paid AI, real Instagram, or real S3. Fake providers are th
 
 - Responses API request shape is unit-tested (model, PDF data, session header).
 - A blank/scanned PDF is analyzed with a mocked OCR response; the profile is populated, OCR text is cached, and a second analysis does not call OCR again.
+
+## Full-app acceptance pass (2026-10-21)
+
+A comprehensive browser pass used real downloaded assets: public-domain/CC jewelry and portrait images from Wikimedia Commons, the open-source Vazirmatn TTF, a generated multi-section brand-book PDF, a scanned image-only PDF, SVG logos (including an unsafe SVG), AI/EPS/PSD design files, and a ZIP bundle.
+
+Covered: signup/team roles, full brand import and downloads, brand intelligence and every profile field, virtual + real models with consent, full product fields and multi-image upload, all three studio modes, integrity, captions, approval, Instagram publish, admin CRUD, items CRUD, settings, language switching/RTL, OCR of a scanned brand book, and failed-upload state.
+
+Bugs found and fixed: PDF section headings without blank lines were not preserved; the settings form could disable Save when reverting to the original name; English mode showed raw enum values such as `on_model` instead of display labels.

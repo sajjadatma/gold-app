@@ -16,7 +16,9 @@ class _FakeResponse:
         return self.payload
 
 
-def test_ocr_requires_explicit_configuration() -> None:
+def test_ocr_requires_explicit_configuration(monkeypatch) -> None:
+    monkeypatch.setattr(settings, "OCR_ENABLED", False)
+    monkeypatch.setattr(settings, "OCR_API_KEY", None)
     assert not ocr_available()
     with pytest.raises(OcrError):
         extract_pdf_text(b"%PDF-1.4", "book.pdf", "session")

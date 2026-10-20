@@ -35,7 +35,7 @@ test("complete MVP workflow with fake providers", async ({ page }) => {
   await page.getByRole("button", { name: "Analyze brand" }).click()
   await page.waitForURL(/\/brand\/profile/)
   await page.getByRole("button", { name: "Activate" }).first().click()
-  await expect(page.getByText(/v1 · active/)).toBeVisible()
+  await expect(page.getByText(/v1 · active/i)).toBeVisible()
 
   // Virtual model
   await page.goto("/models/new")
@@ -83,7 +83,7 @@ test("complete MVP workflow with fake providers", async ({ page }) => {
   await page.locator("#account-id").fill("17841400000000000")
   await page.locator("#account-name").fill("e2e.atelier")
   await page.getByRole("button", { name: "Connect Instagram" }).click()
-  await expect(page.getByText("connected", { exact: true })).toBeVisible()
+  await expect(page.getByText(/connected/i).first()).toBeVisible()
 
   // Publish
   await page.goto(contentUrl)

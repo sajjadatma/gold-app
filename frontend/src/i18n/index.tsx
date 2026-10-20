@@ -14,6 +14,75 @@ export type Language = "en" | "fa"
 
 const STORAGE_KEY = "app_language"
 
+const enLabels: Record<string, string> = {
+  active: "Active",
+  archived: "Archived",
+  draft: "Draft",
+  needs_review: "Needs review",
+  processing: "Processing",
+  completed: "Completed",
+  failed: "Failed",
+  pending: "Pending",
+  queued: "Queued",
+  ready: "Ready",
+  generating: "Generating",
+  approved: "Approved",
+  rejected: "Rejected",
+  published: "Published",
+  publish_failed: "Publish failed",
+  needs_approval: "Needs approval",
+  connected: "Connected",
+  disconnected: "Disconnected",
+  error: "Error",
+  passed: "Passed",
+  virtual: "Virtual",
+  real: "Real",
+  studio: "Studio",
+  on_model: "On model",
+  campaign: "Campaign",
+  owner: "Owner",
+  content_manager: "Content Manager",
+  ok: "OK",
+  warning: "Warning",
+  blocked: "Blocked",
+  brand_book: "Brand book",
+  "brand book": "Brand book",
+  logo: "Logo",
+  font: "Font",
+  image: "Image",
+  campaign_reference: "Campaign reference",
+  "campaign reference": "Campaign reference",
+  pattern: "Pattern",
+  graphic_element: "Graphic element",
+  "graphic element": "Graphic element",
+  design_source: "Design source",
+  "design source": "Design source",
+  other: "Other",
+  ring: "Ring",
+  necklace: "Necklace",
+  bracelet: "Bracelet",
+  earrings: "Earrings",
+  set: "Set",
+  pendant: "Pendant",
+  low_resolution: "Low resolution",
+  unusable_crop: "Unusable crop",
+  underexposed: "Underexposed",
+  overexposed: "Overexposed",
+  likely_blurred: "Likely blurred",
+  gender_presentation: "Gender presentation",
+  "gender presentation": "Gender presentation",
+  age_range: "Age range",
+  "age range": "Age range",
+  skin: "Skin",
+  hair: "Hair",
+  makeup: "Makeup",
+  wardrobe: "Wardrobe",
+  hands_and_nails: "Hands and nails",
+  "hands and nails": "Hands and nails",
+  posing: "Posing",
+  notes: "Notes",
+}
+
 type Vars = Record<string, string | number>
 
 type I18nContextValue = {
@@ -60,7 +129,8 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   const t = useCallback(
     (key: string, vars?: Vars) => {
-      const template = language === "fa" ? (fa[key] ?? key) : key
+      const template =
+        language === "fa" ? (fa[key] ?? key) : (enLabels[key] ?? key)
       return interpolate(template, vars)
     },
     [language],

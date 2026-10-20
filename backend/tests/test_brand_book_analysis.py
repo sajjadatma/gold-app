@@ -229,3 +229,22 @@ def test_scanned_pdf_uses_ocr_fallback(
         headers=normal_user_token_headers,
     )
     assert calls["count"] == 1
+
+
+def test_uppercase_sections_without_blank_lines_are_preserved() -> None:
+    text = (
+        "BRAND STORY\nA quiet story.\n"
+        "TONE OF VOICE\nWarm, concise.\n"
+        "PACKAGING\nIvory box, gold foil.\n"
+        "MATERIALS\n18k recycled gold.\n"
+    )
+    profile = BrandProfileData.model_validate(analyze_brand("Aurum", [
+        AnalysisSource(
+            filename="book.pdf",
+            asset_type="brand_book",
+            text=text,
+            asset_id=None,
+        )
+    ]))
+    titles = {section.title for section in profile.additional_sections}
+    assert {"PACKAGING", "MATERIALS"} <= titles

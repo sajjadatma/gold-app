@@ -195,10 +195,13 @@ def _collect_text_blocks(text: str) -> list[dict[str, Any]]:
         key = _heading_key(line)
         is_heading = key is not None
         numbered_heading = bool(re.match(r"^[0-9]+[.)\-\s]+", line))
-        if not is_heading and (previous_blank or numbered_heading):
+        if not is_heading:
             words = line.split()
+            # Brand-book section titles are commonly all-caps, with or without
+            # surrounding blank lines (PDF extraction often drops them).
             is_heading = (
-                len(line) <= 60
+                (previous_blank or numbered_heading or line.isupper())
+                and len(line) <= 60
                 and not re.search(r"[.!?;:]$", line)
                 and len(words) <= 8
                 and line.isupper()

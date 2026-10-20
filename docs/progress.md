@@ -39,3 +39,5 @@ MVP1 execution status. Updated at the end of every completed stage.
 - Brand-book PDFs are read in full from embedded text; real AI analysis is chunked across the document and unknown sections are stored in `additional_sections`.
 
 - Added English/Farsi localization with RTL, Persian dates, persisted language selection, and a sidebar/auth language switcher.
+
+- Full-app acceptance pass completed with downloaded real assets, rich brand-book PDFs, scanned OCR, admin/items CRUD, and both languages; fixed discovered parser, settings-form, and English enum-label issues.
