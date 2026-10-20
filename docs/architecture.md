@@ -34,7 +34,7 @@ Modules expose routers and services; no repository/controller layers. Cross-modu
 
 ## Background jobs
 
-`arq` is the only worker. Tasks: import analysis, model previews, image generation, integrity evaluation, publishing. They update persisted status. When `TASKS_EAGER=true` (tests/local default) tasks execute inline so the contract is verifiable without Redis; production runs the same functions through arq.
+`arq` is the only worker. Long-running work (image generation, model previews, publishing) uses persisted status and is dispatched through `app/workers/tasks.py`. When `TASKS_EAGER=true` (tests/local default) the same functions execute inline so the contract is verifiable without Redis; production sets `TASKS_EAGER=false`, runs one worker, and uses Redis as the queue. Brand import validation/analysis stays synchronous in MVP because it is bounded and fast for supported files.
 
 ## Providers
 

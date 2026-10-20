@@ -174,7 +174,18 @@ def sanitize_svg(data: bytes) -> bytes:
     except Exception as exc:  # noqa: BLE001
         raise ValidationError("SVG: could not be parsed safely") from exc
 
-    forbidden = {"script", "foreignobject", "iframe", "object", "embed", "audio", "video"}
+    forbidden = {
+        "script",
+        "style",
+        "link",
+        "meta",
+        "foreignobject",
+        "iframe",
+        "object",
+        "embed",
+        "audio",
+        "video",
+    }
     for element in list(root.iter()):
         tag = element.tag.split("}")[-1].lower()
         if tag in forbidden:
@@ -186,9 +197,10 @@ def sanitize_svg(data: bytes) -> bytes:
         for attribute in list(element.attrib):
             local = attribute.split("}")[-1].lower()
             value = element.attrib[attribute].strip().lower()
-            if local.startswith("on") or (
-                local in {"href", "src"} and not value.startswith(("#", "data:image/"))
-            ):
+            if local == "style" or local.startswith("on"):
+                del element.attrib[attribute]
+            elif local in {"href", "src"} and not value.startswith("#"):
+                # External and data-URI references can smuggle active content.
                 del element.attrib[attribute]
 
     return bytes(DefusedET.tostring(root, encoding="utf-8"))

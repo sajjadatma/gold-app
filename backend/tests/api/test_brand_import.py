@@ -271,3 +271,21 @@ def test_import_id_is_uuid(client: TestClient, normal_user_token_headers: dict[s
         [("files", ("ring.png", _png(), "image/png"))],
     )
     uuid.UUID(result["id"])
+
+
+def test_upload_file_count_limit(
+    client: TestClient, normal_user_token_headers: dict[str, str], monkeypatch
+) -> None:
+    from app.core import config
+
+    brand_id = _brand(client, normal_user_token_headers)
+    monkeypatch.setattr(config.settings, "MAX_UPLOAD_FILES", 1)
+    response = client.post(
+        f"{settings.API_V1_STR}/brands/{brand_id}/imports",
+        headers=normal_user_token_headers,
+        files=[
+            ("files", ("a.png", _png(), "image/png")),
+            ("files", ("b.png", _png(), "image/png")),
+        ],
+    )
+    assert response.status_code == 413

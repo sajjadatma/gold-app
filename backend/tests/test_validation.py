@@ -79,3 +79,21 @@ def test_zip_expansion_and_count_limits(monkeypatch: pytest.MonkeyPatch) -> None
     monkeypatch.setattr(config.settings, "MAX_ARCHIVE_FILES", 2)
     with pytest.raises(ValidationError):
         extract_zip(buffer.getvalue(), "bundle.zip")
+
+
+def test_svg_external_and_data_references_removed() -> None:
+    raw = b"""<svg xmlns="http://www.w3.org/2000/svg">
+      <image href="https://tracker.example/pixel.png"/>
+      <use href="data:image/svg+xml;base64,PHN2Zz48c2NyaXB0PmFsZXJ0KDEpPC9zY3JpcHQ+PC9zdmc+"/>
+      <rect href="#safe" width="10" height="10"/>
+    </svg>"""
+    sanitized = sanitize_svg(raw).decode()
+    assert "tracker.example" not in sanitized
+    assert "data:image" not in sanitized
+    assert "#safe" in sanitized
+
+
+def test_svg_style_elements_removed() -> None:
+    raw = b'<svg xmlns="http://www.w3.org/2000/svg"><style>rect{fill:url(javascript:1)}</style><rect width="2" height="2"/></svg>'
+    sanitized = sanitize_svg(raw).decode()
+    assert "<style" not in sanitized

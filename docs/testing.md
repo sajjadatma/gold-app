@@ -29,3 +29,12 @@ cd backend && uv run ruff check app tests
 - Small real-model path verifies consent enforcement.
 
 CI must not depend on paid AI, real Instagram, or real S3. Fake providers are the default.
+
+
+## Delivery verification (MVP1)
+
+- Backend: 156 tests passed; Ruff clean; mypy clean.
+- Frontend: Biome clean; production build passes.
+- Fresh database migrated through all ten revisions to `f1eb7aefef7a`.
+- OpenAPI client regenerated with no pending diff.
+- Playwright: complete fake-provider workflow and real-model consent path passed.

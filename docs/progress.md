@@ -19,9 +19,9 @@ MVP1 execution status. Updated at the end of every completed stage.
 | T12 | Caption & content draft | complete | `c083049` |
 | T13 | Approval workflow | complete | `33c6ed9` |
 | T14 | Instagram publishing | complete | `60e777d` |
-| T15 | Complete E2E workflow | complete | pending push |
-| T16 | Hardening | pending | — |
-| T17 | Delivery | pending | — |
+| T15 | Complete E2E workflow | complete | `ce35f4d` |
+| T16 | Hardening | complete | pending push |
+| T17 | Delivery | in progress | — |
 
 ## Baseline notes (T00)
 

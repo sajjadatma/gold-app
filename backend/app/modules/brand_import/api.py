@@ -6,6 +6,7 @@ from fastapi import APIRouter, File, HTTPException, Query, Response, UploadFile
 from sqlmodel import select
 
 from app.api.deps import CurrentUser, SessionDep
+from app.core.config import settings
 from app.modules.brand_import.intelligence import (
     ProfileAnalysisError,
     analyze_import,
@@ -88,6 +89,11 @@ async def create_import(
 ) -> BrandImportDetail:
     if not files:
         raise HTTPException(status_code=422, detail="At least one file is required")
+    if len(files) > settings.MAX_UPLOAD_FILES:
+        raise HTTPException(
+            status_code=413,
+            detail=f"Upload at most {settings.MAX_UPLOAD_FILES} files at a time",
+        )
     import_row = BrandImport(
         brand_id=membership.brand_id,
         created_by=current_user.id,

@@ -2,6 +2,7 @@ import uuid
 from datetime import UTC, datetime
 
 from fastapi import APIRouter, HTTPException
+from sqlalchemy.exc import IntegrityError
 from sqlmodel import select
 
 from app.api.deps import SessionDep
@@ -147,7 +148,20 @@ async def publish_draft(
         status=PublishStatus.QUEUED.value,
     )
     session.add(job)
-    session.commit()
+    try:
+        session.commit()
+    except IntegrityError:
+        # A concurrent request won the idempotency race.
+        session.rollback()
+        existing_jobs = session.exec(
+            select(PublishJob).where(
+                PublishJob.draft_id == draft.id,
+                PublishJob.status != PublishStatus.FAILED.value,
+            )
+        ).all()
+        if existing_jobs:
+            return _job_public(existing_jobs[0])
+        raise HTTPException(status_code=409, detail="Publish already in progress")
     session.refresh(job)
     try:
         await enqueue_publish(job.id)

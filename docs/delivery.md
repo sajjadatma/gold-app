@@ -1,4 +1,4 @@
-# Delivery
+# Delivery and Configuration
 
 ## Repositories
 
@@ -7,25 +7,106 @@
 | `origin` | https://github.com/sajjadatma/gold-app.git | Delivery repository |
 | `upstream` | https://github.com/fastapi/full-stack-fastapi-template.git | Base template |
 
-Delivery branch: `main`.
+Branch: `main`.
 
-## Local baseline
+## Local services
 
-- Python: 3.14 (`.python-version`, managed by `uv`)
-- Node: 22, package manager: `bun`
-- PostgreSQL: Docker Compose service `db`, exposed on host port `5433`
-- Mailpit: http://localhost:8025
-- Backend (dev): http://localhost:8000
-- Frontend (dev): http://localhost:5173
+| Service | Address |
+| --- | --- |
+| Frontend (dev) | http://localhost:5173 |
+| API | http://localhost:8000 |
+| API docs | http://localhost:8000/docs |
+| PostgreSQL | `localhost:5433` (isolated from a local 5432 server) |
+| Mailpit | http://localhost:8025 |
+| Redis | `localhost:6379` (`docker compose up -d redis`) |
 
-Host port `5432` is intentionally avoided because a pre-existing local PostgreSQL
-installation uses it on some development machines.
+Host port 5432 is intentionally avoided because a pre-existing local PostgreSQL may own it.
 
-## Baseline commands
+## Environment
+
+Copy `.env.example` to `.env`. It contains:
+
+- `SECRET_KEY`, `FIRST_SUPERUSER`, `FIRST_SUPERUSER_PASSWORD`
+- `DATABASE_URL` (`postgresql://postgres:...@localhost:5433/app`)
+- storage selection and S3 settings
+- AI provider settings
+- Instagram provider settings
+- job execution (`TASKS_EAGER`, `REDIS_URL`)
+
+`.env` is ignored by Git. Never commit real credentials.
+
+## Storage
+
+`STORAGE_BACKEND=local` (default) writes private objects under `backend/storage`, keyed as
+`brands/{brand_id}/{namespace}/{uuid}{ext}`. Every download is authenticated and tenant-checked.
+
+For production, set:
+
+```text
+STORAGE_BACKEND=s3
+S3_BUCKET=...
+S3_ENDPOINT_URL=https://...   # optional for AWS
+S3_ACCESS_KEY_ID=...
+S3_SECRET_ACCESS_KEY=...
+S3_REGION=...
+```
+
+The S3 adapter uses presigned GET URLs only for Instagram Graph publishing.
+
+## AI
+
+Defaults use deterministic fakes, so the full product works without paid credentials.
+
+```text
+AI_PROVIDER=fake            # or openai
+AI_API_BASE=https://api.openai.com/v1
+AI_API_KEY=...
+AI_TEXT_MODEL=gpt-4.1-mini
+AI_VISION_MODEL=gpt-4.1-mini
+AI_IMAGE_MODEL=gpt-image-1
+```
+
+The OpenAI-compatible adapter calls chat completions for brand analysis/captions/integrity and images for generation. All structured output is validated by Pydantic before persistence. Missing credentials fall back to fake providers.
+
+## Instagram
+
+```text
+INSTAGRAM_PROVIDER=fake     # or graph
+INSTAGRAM_GRAPH_BASE=https://graph.facebook.com/v21.0
+```
+
+Connect a professional account under **Social** with its Instagram user id and access token. Real publishing requires a public/presigned image URL (S3 storage). Fake publishing is used in development and tests.
+
+## Background jobs
+
+One worker only:
 
 ```bash
-docker compose up -d --wait db mailpit
-cd backend && uv run bash scripts/prestart.sh
-cd backend && uv run pytest
-cd frontend && bun install && bun run build
+cd backend && uv run arq app.workers.tasks.WorkerSettings
+```
+
+`TASKS_EAGER=true` executes generation/publish inline (tests and local demo). `TASKS_EAGER=false` enqueues to Redis for the worker. Docker Compose starts both Redis and the worker automatically.
+
+## Database
+
+```bash
+cd backend
+uv run alembic upgrade head          # migrations
+uv run python -m app.initial_data    # initial superuser
+```
+
+A fresh database migrates to head (verified in delivery).
+
+## Verification
+
+```bash
+cd backend
+uv run pytest
+uv run ruff check app tests
+uv run mypy app
+
+cd ../frontend
+bun run lint
+bun run build
+bunx playwright test tests/mvp-workflow.spec.ts --workers=1
 ```

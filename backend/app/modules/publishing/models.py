@@ -2,6 +2,7 @@ import uuid
 from datetime import UTC, datetime
 from enum import StrEnum
 
+from sqlalchemy import Index, text
 from sqlmodel import Field, SQLModel
 
 
@@ -38,6 +39,15 @@ class SocialConnection(SQLModel, table=True):
 
 
 class PublishJob(SQLModel, table=True):
+    __table_args__ = (
+        Index(
+            "uq_publishjob_active_draft",
+            "draft_id",
+            unique=True,
+            postgresql_where=text("status <> 'failed'"),
+        ),
+    )
+
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     brand_id: uuid.UUID = Field(foreign_key="brand.id", index=True, ondelete="CASCADE")
     draft_id: uuid.UUID = Field(foreign_key="contentdraft.id", index=True, ondelete="CASCADE")

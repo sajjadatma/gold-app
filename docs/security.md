@@ -32,6 +32,19 @@
 - Publishing requires an approved draft, connected account, and no successful prior job for the draft.
 - Approval and publish actions record actor and timestamp.
 
+## Token storage
+
+Instagram access tokens are stored only in `socialconnection.access_token`, never
+serialized in API responses, and cleared on disconnect. Production deployments
+must protect the database with encryption at rest and restricted network access.
+No token is written to logs.
+
+## Response headers
+
+Application responses set `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`,
+and `Referrer-Policy: same-origin`. Private previews are additionally served inline
+with a restrictive content security policy.
+
 ## Errors and logging
 
 - User-facing errors are actionable without stack traces, tokens, or filesystem paths.

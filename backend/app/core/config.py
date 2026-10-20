@@ -65,6 +65,7 @@ class Settings(BaseSettings):
     MAX_DESIGN_SOURCE_BYTES: int = 150 * 1024 * 1024
     MAX_ZIP_BYTES: int = 250 * 1024 * 1024
     MAX_ARCHIVE_FILES: int = 500
+    MAX_UPLOAD_FILES: int = 100
     MAX_ARCHIVE_EXPANDED_BYTES: int = 500 * 1024 * 1024
     MAX_IMAGE_PIXELS: int = 80_000_000
 
