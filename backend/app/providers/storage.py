@@ -74,6 +74,9 @@ class LocalStorage:
         if path.is_file():
             path.unlink()
 
+    def presigned_url(self, key: str, expires_seconds: int = 900) -> str | None:
+        return None
+
 
 class S3Storage:
     """Thin S3-compatible adapter; configured only for production."""
@@ -121,6 +124,15 @@ class S3Storage:
 
     def delete(self, key: str) -> None:
         self.client.delete_object(Bucket=self.bucket, Key=key)
+
+    def presigned_url(self, key: str, expires_seconds: int = 900) -> str | None:
+        return str(
+            self.client.generate_presigned_url(
+                "get_object",
+                Params={"Bucket": self.bucket, "Key": key},
+                ExpiresIn=expires_seconds,
+            )
+        )
 
 
 @lru_cache

@@ -144,3 +144,7 @@ from app.modules.generations.models import (  # noqa: E402, F401
     GenerationRequest,
 )
 from app.modules.products.models import Product, ProductImage  # noqa: E402, F401
+from app.modules.publishing.models import (  # noqa: E402, F401
+    PublishJob,
+    SocialConnection,
+)

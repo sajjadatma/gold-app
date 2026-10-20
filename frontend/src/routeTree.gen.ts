@@ -30,6 +30,7 @@ import { Route as LayoutModelsNewRouteImport } from './routes/_layout/models/new
 import { Route as LayoutProductsIndexRouteImport } from './routes/_layout/products/index'
 import { Route as LayoutProductsIdRouteImport } from './routes/_layout/products/$id'
 import { Route as LayoutProductsNewRouteImport } from './routes/_layout/products/new'
+import { Route as LayoutSocialIndexRouteImport } from './routes/_layout/social/index'
 import { Route as LayoutStudioIndexRouteImport } from './routes/_layout/studio/index'
 import { Route as LayoutBrandImportsIdRouteImport } from './routes/_layout/brand/imports.$id'
 import { Route as LayoutStudioGenerationsIdRouteImport } from './routes/_layout/studio/generations/$id'
@@ -138,6 +139,11 @@ const LayoutProductsNewRoute = LayoutProductsNewRouteImport.update({
   path: '/products/new',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutSocialIndexRoute = LayoutSocialIndexRouteImport.update({
+  id: '/social/',
+  path: '/social/',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutStudioIndexRoute = LayoutStudioIndexRouteImport.update({
   id: '/studio/',
   path: '/studio/',
@@ -176,6 +182,7 @@ export interface FileRoutesByFullPath {
   '/content/': typeof LayoutContentIndexRoute
   '/models/': typeof LayoutModelsIndexRoute
   '/products/': typeof LayoutProductsIndexRoute
+  '/social/': typeof LayoutSocialIndexRoute
   '/studio/': typeof LayoutStudioIndexRoute
   '/brand/imports/$id': typeof LayoutBrandImportsIdRoute
   '/studio/generations/$id': typeof LayoutStudioGenerationsIdRoute
@@ -201,6 +208,7 @@ export interface FileRoutesByTo {
   '/content': typeof LayoutContentIndexRoute
   '/models': typeof LayoutModelsIndexRoute
   '/products': typeof LayoutProductsIndexRoute
+  '/social': typeof LayoutSocialIndexRoute
   '/studio': typeof LayoutStudioIndexRoute
   '/brand/imports/$id': typeof LayoutBrandImportsIdRoute
   '/studio/generations/$id': typeof LayoutStudioGenerationsIdRoute
@@ -228,6 +236,7 @@ export interface FileRoutesById {
   '/_layout/content/': typeof LayoutContentIndexRoute
   '/_layout/models/': typeof LayoutModelsIndexRoute
   '/_layout/products/': typeof LayoutProductsIndexRoute
+  '/_layout/social/': typeof LayoutSocialIndexRoute
   '/_layout/studio/': typeof LayoutStudioIndexRoute
   '/_layout/brand/imports/$id': typeof LayoutBrandImportsIdRoute
   '/_layout/studio/generations/$id': typeof LayoutStudioGenerationsIdRoute
@@ -255,6 +264,7 @@ export interface FileRouteTypes {
     | '/content/'
     | '/models/'
     | '/products/'
+    | '/social/'
     | '/studio/'
     | '/brand/imports/$id'
     | '/studio/generations/$id'
@@ -280,6 +290,7 @@ export interface FileRouteTypes {
     | '/content'
     | '/models'
     | '/products'
+    | '/social'
     | '/studio'
     | '/brand/imports/$id'
     | '/studio/generations/$id'
@@ -306,6 +317,7 @@ export interface FileRouteTypes {
     | '/_layout/content/'
     | '/_layout/models/'
     | '/_layout/products/'
+    | '/_layout/social/'
     | '/_layout/studio/'
     | '/_layout/brand/imports/$id'
     | '/_layout/studio/generations/$id'
@@ -468,6 +480,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutProductsNewRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/social/': {
+      id: '/_layout/social/'
+      path: '/social'
+      fullPath: '/social/'
+      preLoaderRoute: typeof LayoutSocialIndexRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/studio/': {
       id: '/_layout/studio/'
       path: '/studio'
@@ -509,6 +528,7 @@ interface LayoutRouteChildren {
   LayoutContentIndexRoute: typeof LayoutContentIndexRoute
   LayoutModelsIndexRoute: typeof LayoutModelsIndexRoute
   LayoutProductsIndexRoute: typeof LayoutProductsIndexRoute
+  LayoutSocialIndexRoute: typeof LayoutSocialIndexRoute
   LayoutStudioIndexRoute: typeof LayoutStudioIndexRoute
   LayoutBrandImportsIdRoute: typeof LayoutBrandImportsIdRoute
   LayoutStudioGenerationsIdRoute: typeof LayoutStudioGenerationsIdRoute
@@ -531,6 +551,7 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutContentIndexRoute: LayoutContentIndexRoute,
   LayoutModelsIndexRoute: LayoutModelsIndexRoute,
   LayoutProductsIndexRoute: LayoutProductsIndexRoute,
+  LayoutSocialIndexRoute: LayoutSocialIndexRoute,
   LayoutStudioIndexRoute: LayoutStudioIndexRoute,
   LayoutBrandImportsIdRoute: LayoutBrandImportsIdRoute,
   LayoutStudioGenerationsIdRoute: LayoutStudioGenerationsIdRoute,

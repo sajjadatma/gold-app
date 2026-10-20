@@ -5,6 +5,7 @@ import {
   Home,
   Images,
   Palette,
+  Share2,
   Upload,
   UserRound,
   Users,
@@ -32,6 +33,7 @@ const baseItems: Item[] = [
   { icon: Gem, title: "Products", path: "/products" },
   { icon: Camera, title: "Studio", path: "/studio" },
   { icon: FileText, title: "Content", path: "/content" },
+  { icon: Share2, title: "Social", path: "/social" },
   { icon: Users, title: "Team", path: "/team" },
 ]
 

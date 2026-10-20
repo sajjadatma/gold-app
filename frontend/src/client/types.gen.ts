@@ -1382,6 +1382,118 @@ export type ProfilesPublic = {
 };
 
 /**
+ * PublishJobPublic
+ */
+export type PublishJobPublic = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Draft Id
+     */
+    draft_id: string;
+    /**
+     * Provider
+     */
+    provider: string;
+    /**
+     * Status
+     */
+    status: string;
+    /**
+     * Remote Post Id
+     */
+    remote_post_id: string | null;
+    /**
+     * Remote Post Url
+     */
+    remote_post_url: string | null;
+    /**
+     * Error Message
+     */
+    error_message: string | null;
+    /**
+     * Attempt Count
+     */
+    attempt_count: number;
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Updated At
+     */
+    updated_at: string;
+};
+
+/**
+ * PublishJobsPublic
+ */
+export type PublishJobsPublic = {
+    /**
+     * Data
+     */
+    data: Array<PublishJobPublic>;
+    /**
+     * Count
+     */
+    count: number;
+};
+
+/**
+ * SocialConnectionPublic
+ */
+export type SocialConnectionPublic = {
+    /**
+     * Provider
+     */
+    provider: string;
+    /**
+     * External Account Id
+     */
+    external_account_id: string | null;
+    /**
+     * Account Name
+     */
+    account_name: string | null;
+    /**
+     * Status
+     */
+    status: string;
+    /**
+     * Token Expires At
+     */
+    token_expires_at: string | null;
+    /**
+     * Updated At
+     */
+    updated_at: string | null;
+};
+
+/**
+ * SocialConnectionUpdate
+ */
+export type SocialConnectionUpdate = {
+    /**
+     * External Account Id
+     */
+    external_account_id?: string | null;
+    /**
+     * Account Name
+     */
+    account_name?: string | null;
+    /**
+     * Access Token
+     */
+    access_token?: string | null;
+    /**
+     * Token Expires At
+     */
+    token_expires_at?: string | null;
+};
+
+/**
  * Token
  */
 export type Token = {
@@ -3535,6 +3647,200 @@ export type contentSubmitDraftResponses = {
 };
 
 export type contentSubmitDraftResponse = contentSubmitDraftResponses[keyof contentSubmitDraftResponses];
+
+export type publishingDisconnectSocialData = {
+    body?: never;
+    path: {
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/social';
+};
+
+export type publishingDisconnectSocialErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type publishingDisconnectSocialError = publishingDisconnectSocialErrors[keyof publishingDisconnectSocialErrors];
+
+export type publishingDisconnectSocialResponses = {
+    /**
+     * Successful Response
+     */
+    200: SocialConnectionPublic;
+};
+
+export type publishingDisconnectSocialResponse = publishingDisconnectSocialResponses[keyof publishingDisconnectSocialResponses];
+
+export type publishingReadConnectionData = {
+    body?: never;
+    path: {
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/social';
+};
+
+export type publishingReadConnectionErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type publishingReadConnectionError = publishingReadConnectionErrors[keyof publishingReadConnectionErrors];
+
+export type publishingReadConnectionResponses = {
+    /**
+     * Response Publishing-Read Connection
+     *
+     * Successful Response
+     */
+    200: SocialConnectionPublic | null;
+};
+
+export type publishingReadConnectionResponse = publishingReadConnectionResponses[keyof publishingReadConnectionResponses];
+
+export type publishingConnectSocialData = {
+    body: SocialConnectionUpdate;
+    path: {
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/social';
+};
+
+export type publishingConnectSocialErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type publishingConnectSocialError = publishingConnectSocialErrors[keyof publishingConnectSocialErrors];
+
+export type publishingConnectSocialResponses = {
+    /**
+     * Successful Response
+     */
+    200: SocialConnectionPublic;
+};
+
+export type publishingConnectSocialResponse = publishingConnectSocialResponses[keyof publishingConnectSocialResponses];
+
+export type publishingPublishDraftData = {
+    body?: never;
+    path: {
+        /**
+         * Draft Id
+         */
+        draft_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/drafts/{draft_id}/publish';
+};
+
+export type publishingPublishDraftErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type publishingPublishDraftError = publishingPublishDraftErrors[keyof publishingPublishDraftErrors];
+
+export type publishingPublishDraftResponses = {
+    /**
+     * Successful Response
+     */
+    200: PublishJobPublic;
+};
+
+export type publishingPublishDraftResponse = publishingPublishDraftResponses[keyof publishingPublishDraftResponses];
+
+export type publishingReadPublishJobsData = {
+    body?: never;
+    path: {
+        /**
+         * Draft Id
+         */
+        draft_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/drafts/{draft_id}/publish-jobs';
+};
+
+export type publishingReadPublishJobsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type publishingReadPublishJobsError = publishingReadPublishJobsErrors[keyof publishingReadPublishJobsErrors];
+
+export type publishingReadPublishJobsResponses = {
+    /**
+     * Successful Response
+     */
+    200: PublishJobsPublic;
+};
+
+export type publishingReadPublishJobsResponse = publishingReadPublishJobsResponses[keyof publishingReadPublishJobsResponses];
+
+export type publishingRetryPublishData = {
+    body?: never;
+    path: {
+        /**
+         * Job Id
+         */
+        job_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/publish-jobs/{job_id}/retry';
+};
+
+export type publishingRetryPublishErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type publishingRetryPublishError = publishingRetryPublishErrors[keyof publishingRetryPublishErrors];
+
+export type publishingRetryPublishResponses = {
+    /**
+     * Successful Response
+     */
+    200: PublishJobPublic;
+};
+
+export type publishingRetryPublishResponse = publishingRetryPublishResponses[keyof publishingRetryPublishResponses];
 
 export type productsReadProductsData = {
     body?: never;

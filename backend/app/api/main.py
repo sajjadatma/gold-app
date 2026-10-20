@@ -8,6 +8,7 @@ from app.modules.brands.api import router as brands_router
 from app.modules.content.api import router as content_router
 from app.modules.generations.api import router as generations_router
 from app.modules.products.api import router as products_router
+from app.modules.publishing.api import router as publishing_router
 
 api_router = APIRouter()
 api_router.include_router(login.router)
@@ -19,6 +20,7 @@ api_router.include_router(brand_assets_router)
 api_router.include_router(brand_models_router)
 api_router.include_router(generations_router)
 api_router.include_router(content_router)
+api_router.include_router(publishing_router)
 api_router.include_router(products_router)
 
 

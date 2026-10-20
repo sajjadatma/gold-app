@@ -1,9 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { createFileRoute, Link } from "@tanstack/react-router"
-import { ArrowLeft, CheckCircle2, Send, Sparkles, XCircle } from "lucide-react"
+import {
+  ArrowLeft,
+  CheckCircle2,
+  ExternalLink,
+  RefreshCw,
+  Send,
+  Share2,
+  Sparkles,
+  XCircle,
+} from "lucide-react"
 import { useEffect, useState } from "react"
 
-import { ContentService, ProductsService } from "@/client"
+import { ContentService, ProductsService, PublishingService } from "@/client"
 import { NoBrand } from "@/components/Common/NoBrand"
 import { GeneratedImage } from "@/components/Generations/GeneratedImage"
 import { ProductImage } from "@/components/Products/ProductImage"
@@ -57,6 +66,17 @@ function ContentDetailPage() {
             brand_id: brand?.id ?? "",
             product_id: data?.product_id ?? "",
           },
+        })
+      ).data,
+    enabled: Boolean(brand && data),
+  })
+
+  const { data: publishJobs } = useQuery({
+    queryKey: ["publish-jobs", brand?.id, id],
+    queryFn: async () =>
+      (
+        await PublishingService.readPublishJobs({
+          path: { brand_id: brand?.id ?? "", draft_id: id },
         })
       ).data,
     enabled: Boolean(brand && data),
@@ -121,6 +141,35 @@ function ContentDetailPage() {
     onSuccess: async () => {
       await refresh()
       showSuccessToast("Content rejected")
+    },
+    onError: handleError.bind(showErrorToast),
+  })
+
+  const publish = useMutation({
+    mutationFn: async () =>
+      PublishingService.publishDraft({
+        path: { brand_id: brand?.id ?? "", draft_id: id },
+      }),
+    onSuccess: async () => {
+      await refresh()
+      await queryClient.invalidateQueries({
+        queryKey: ["publish-jobs", brand?.id, id],
+      })
+      showSuccessToast("Publish job finished")
+    },
+    onError: handleError.bind(showErrorToast),
+  })
+
+  const retryPublish = useMutation({
+    mutationFn: async (jobId: string) =>
+      PublishingService.retryPublish({
+        path: { brand_id: brand?.id ?? "", job_id: jobId },
+      }),
+    onSuccess: async () => {
+      await refresh()
+      await queryClient.invalidateQueries({
+        queryKey: ["publish-jobs", brand?.id, id],
+      })
     },
     onError: handleError.bind(showErrorToast),
   })
@@ -360,6 +409,62 @@ function ContentDetailPage() {
           ) : null}
         </CardContent>
       </Card>
+
+      {["approved", "published", "publish_failed"].includes(data.status) ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Instagram publishing</CardTitle>
+            <CardDescription>
+              Single-image feed post. Only the Owner can publish.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {data.status === "published" && publishJobs?.data[0] ? (
+              <div className="space-y-1 text-sm">
+                <p>Published successfully.</p>
+                <a
+                  href={publishJobs.data[0].remote_post_url ?? "#"}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 text-primary underline"
+                >
+                  View post <ExternalLink className="h-3 w-3" />
+                </a>
+              </div>
+            ) : null}
+            {publishJobs?.data[0]?.status === "failed" ? (
+              <p className="text-sm text-destructive">
+                {publishJobs.data[0].error_message ?? "Publishing failed"}
+              </p>
+            ) : null}
+            <div className="flex flex-wrap gap-2">
+              {isOwner && data.status === "approved" ? (
+                <Button
+                  onClick={() => publish.mutate()}
+                  disabled={publish.isPending}
+                >
+                  <Share2 className="mr-2 h-4 w-4" />
+                  {publish.isPending ? "Publishing..." : "Publish to Instagram"}
+                </Button>
+              ) : null}
+              {isOwner && publishJobs?.data[0]?.status === "failed" ? (
+                <Button
+                  variant="outline"
+                  onClick={() => retryPublish.mutate(publishJobs.data[0].id)}
+                  disabled={retryPublish.isPending}
+                >
+                  <RefreshCw className="mr-2 h-4 w-4" /> Retry publish
+                </Button>
+              ) : null}
+              {!isOwner ? (
+                <p className="text-sm text-muted-foreground">
+                  The brand Owner performs the final publish.
+                </p>
+              ) : null}
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
     </div>
   )
 }

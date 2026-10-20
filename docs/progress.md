@@ -17,8 +17,8 @@ MVP1 execution status. Updated at the end of every completed stage.
 | T10 | AI photography studio | complete | `a0cdd53` |
 | T11 | Product integrity evaluation | complete | `c083049` |
 | T12 | Caption & content draft | complete | `c083049` |
-| T13 | Approval workflow | complete | pending push |
-| T14 | Instagram publishing | pending | — |
+| T13 | Approval workflow | complete | `33c6ed9` |
+| T14 | Instagram publishing | complete | pending push |
 | T15 | Complete E2E workflow | pending | — |
 | T16 | Hardening | pending | — |
 | T17 | Delivery | pending | — |
