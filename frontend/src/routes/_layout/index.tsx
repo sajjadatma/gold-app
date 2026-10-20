@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router"
-import { Users } from "lucide-react"
+import { LogOut, Users } from "lucide-react"
 
 import { CreateBrandDialog } from "@/components/Brand/CreateBrandDialog"
 import { NoBrand } from "@/components/Common/NoBrand"
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_layout/")({
 })
 
 function Dashboard() {
-  const { user: currentUser } = useAuth()
+  const { user: currentUser, logout } = useAuth()
   const { brand, brands } = useBrand()
 
   return (
@@ -36,7 +36,13 @@ function Dashboard() {
               : "Create a brand workspace to get started."}
           </p>
         </div>
-        {brand ? <CreateBrandDialog /> : null}
+        <div className="flex flex-wrap items-center gap-2">
+          {brand ? <CreateBrandDialog /> : null}
+          <Button variant="outline" onClick={logout}>
+            <LogOut className="mr-2 h-4 w-4" />
+            Log out
+          </Button>
+        </div>
       </div>
 
       {!brand ? <NoBrand /> : null}
