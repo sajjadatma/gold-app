@@ -10,3 +10,5 @@ backend/app/frontend/
 /blob-report/
 /playwright/.cache/
 backend/storage/
+
+.DS_Store
