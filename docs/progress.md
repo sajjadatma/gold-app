@@ -4,8 +4,8 @@ MVP1 execution status. Updated at the end of every completed stage.
 
 | Stage | Scope | Status | Commit |
 | --- | --- | --- | --- |
-| T00 | Bootstrap & baseline | in progress | — |
-| T01 | MVP contracts | pending | — |
+| T00 | Bootstrap & baseline | complete | `3ad0d4f` |
+| T01 | MVP contracts | in progress | — |
 | T02 | Brand + multi-tenant access | pending | — |
 | T03 | Private storage | pending | — |
 | T04 | Brand import | pending | — |
