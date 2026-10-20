@@ -132,4 +132,9 @@ from app.modules.brand_import.models import (  # noqa: E402, F401
     BrandImport,
     BrandProfile,
 )
+from app.modules.brand_models.models import (  # noqa: E402, F401
+    BrandModel,
+    BrandModelReference,
+    ConsentRecord,
+)
 from app.modules.brands.models import Brand, Membership  # noqa: E402, F401

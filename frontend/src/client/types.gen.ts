@@ -31,6 +31,16 @@ export type Body_Brand_Import_create_import = {
 };
 
 /**
+ * Body_Brand Models-upload_reference
+ */
+export type Body_Brand_Models_upload_reference = {
+    /**
+     * File
+     */
+    file: Blob | File;
+};
+
+/**
  * Body_login-login_access_token
  */
 export type Body_login_login_access_token = {
@@ -197,6 +207,153 @@ export type BrandImportPublic = {
 };
 
 /**
+ * BrandModelCreate
+ */
+export type BrandModelCreate = {
+    /**
+     * Type
+     */
+    type: 'virtual' | 'real';
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Config Json
+     */
+    config_json?: {
+        [key: string]: unknown;
+    };
+};
+
+/**
+ * BrandModelDetail
+ */
+export type BrandModelDetail = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Brand Id
+     */
+    brand_id: string;
+    /**
+     * Type
+     */
+    type: string;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Status
+     */
+    status: string;
+    /**
+     * Is Default
+     */
+    is_default: boolean;
+    /**
+     * Config Json
+     */
+    config_json: {
+        [key: string]: unknown;
+    };
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Updated At
+     */
+    updated_at: string;
+    /**
+     * References
+     */
+    references: Array<ModelReferencePublic>;
+    consent: ConsentPublic | null;
+};
+
+/**
+ * BrandModelPublic
+ */
+export type BrandModelPublic = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Brand Id
+     */
+    brand_id: string;
+    /**
+     * Type
+     */
+    type: string;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Status
+     */
+    status: string;
+    /**
+     * Is Default
+     */
+    is_default: boolean;
+    /**
+     * Config Json
+     */
+    config_json: {
+        [key: string]: unknown;
+    };
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Updated At
+     */
+    updated_at: string;
+};
+
+/**
+ * BrandModelUpdate
+ */
+export type BrandModelUpdate = {
+    /**
+     * Name
+     */
+    name?: string | null;
+    /**
+     * Config Json
+     */
+    config_json?: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * Status
+     */
+    status?: 'archived' | null;
+};
+
+/**
+ * BrandModelsPublic
+ */
+export type BrandModelsPublic = {
+    /**
+     * Data
+     */
+    data: Array<BrandModelPublic>;
+    /**
+     * Count
+     */
+    count: number;
+};
+
+/**
  * BrandProfilePublic
  */
 export type BrandProfilePublic = {
@@ -283,6 +440,56 @@ export type BrandsPublic = {
      * Count
      */
     count: number;
+};
+
+/**
+ * CanonicalReferenceUpdate
+ */
+export type CanonicalReferenceUpdate = {
+    /**
+     * Reference Id
+     */
+    reference_id: string;
+};
+
+/**
+ * ConsentCreate
+ */
+export type ConsentCreate = {
+    /**
+     * Confirmation Text Version
+     */
+    confirmation_text_version: string;
+    /**
+     * Permission Scope
+     */
+    permission_scope: string;
+};
+
+/**
+ * ConsentPublic
+ */
+export type ConsentPublic = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Confirmed By User Id
+     */
+    confirmed_by_user_id: string;
+    /**
+     * Confirmation Text Version
+     */
+    confirmation_text_version: string;
+    /**
+     * Permission Scope
+     */
+    permission_scope: string;
+    /**
+     * Confirmed At
+     */
+    confirmed_at: string;
 };
 
 /**
@@ -449,6 +656,28 @@ export type Message = {
      * Message
      */
     message: string;
+};
+
+/**
+ * ModelReferencePublic
+ */
+export type ModelReferencePublic = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Content Type
+     */
+    content_type: string;
+    /**
+     * Is Canonical
+     */
+    is_canonical: boolean;
+    /**
+     * Created At
+     */
+    created_at: string;
 };
 
 /**
@@ -1909,6 +2138,340 @@ export type brandImportActivateProfileResponses = {
 };
 
 export type brandImportActivateProfileResponse = brandImportActivateProfileResponses[keyof brandImportActivateProfileResponses];
+
+export type brandModelsReadModelsData = {
+    body?: never;
+    path: {
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/models';
+};
+
+export type brandModelsReadModelsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandModelsReadModelsError = brandModelsReadModelsErrors[keyof brandModelsReadModelsErrors];
+
+export type brandModelsReadModelsResponses = {
+    /**
+     * Successful Response
+     */
+    200: BrandModelsPublic;
+};
+
+export type brandModelsReadModelsResponse = brandModelsReadModelsResponses[keyof brandModelsReadModelsResponses];
+
+export type brandModelsCreateModelData = {
+    body: BrandModelCreate;
+    path: {
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/models';
+};
+
+export type brandModelsCreateModelErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandModelsCreateModelError = brandModelsCreateModelErrors[keyof brandModelsCreateModelErrors];
+
+export type brandModelsCreateModelResponses = {
+    /**
+     * Successful Response
+     */
+    200: BrandModelDetail;
+};
+
+export type brandModelsCreateModelResponse = brandModelsCreateModelResponses[keyof brandModelsCreateModelResponses];
+
+export type brandModelsReadModelData = {
+    body?: never;
+    path: {
+        /**
+         * Model Id
+         */
+        model_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/models/{model_id}';
+};
+
+export type brandModelsReadModelErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandModelsReadModelError = brandModelsReadModelErrors[keyof brandModelsReadModelErrors];
+
+export type brandModelsReadModelResponses = {
+    /**
+     * Successful Response
+     */
+    200: BrandModelDetail;
+};
+
+export type brandModelsReadModelResponse = brandModelsReadModelResponses[keyof brandModelsReadModelResponses];
+
+export type brandModelsUpdateModelData = {
+    body: BrandModelUpdate;
+    path: {
+        /**
+         * Model Id
+         */
+        model_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/models/{model_id}';
+};
+
+export type brandModelsUpdateModelErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandModelsUpdateModelError = brandModelsUpdateModelErrors[keyof brandModelsUpdateModelErrors];
+
+export type brandModelsUpdateModelResponses = {
+    /**
+     * Successful Response
+     */
+    200: BrandModelDetail;
+};
+
+export type brandModelsUpdateModelResponse = brandModelsUpdateModelResponses[keyof brandModelsUpdateModelResponses];
+
+export type brandModelsUploadReferenceData = {
+    body: Body_Brand_Models_upload_reference;
+    path: {
+        /**
+         * Model Id
+         */
+        model_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/models/{model_id}/references';
+};
+
+export type brandModelsUploadReferenceErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandModelsUploadReferenceError = brandModelsUploadReferenceErrors[keyof brandModelsUploadReferenceErrors];
+
+export type brandModelsUploadReferenceResponses = {
+    /**
+     * Successful Response
+     */
+    200: BrandModelDetail;
+};
+
+export type brandModelsUploadReferenceResponse = brandModelsUploadReferenceResponses[keyof brandModelsUploadReferenceResponses];
+
+export type brandModelsGeneratePreviewsData = {
+    body?: never;
+    path: {
+        /**
+         * Model Id
+         */
+        model_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/models/{model_id}/generate-previews';
+};
+
+export type brandModelsGeneratePreviewsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandModelsGeneratePreviewsError = brandModelsGeneratePreviewsErrors[keyof brandModelsGeneratePreviewsErrors];
+
+export type brandModelsGeneratePreviewsResponses = {
+    /**
+     * Successful Response
+     */
+    200: BrandModelDetail;
+};
+
+export type brandModelsGeneratePreviewsResponse = brandModelsGeneratePreviewsResponses[keyof brandModelsGeneratePreviewsResponses];
+
+export type brandModelsSetCanonicalReferenceData = {
+    body: CanonicalReferenceUpdate;
+    path: {
+        /**
+         * Model Id
+         */
+        model_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/models/{model_id}/canonical';
+};
+
+export type brandModelsSetCanonicalReferenceErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandModelsSetCanonicalReferenceError = brandModelsSetCanonicalReferenceErrors[keyof brandModelsSetCanonicalReferenceErrors];
+
+export type brandModelsSetCanonicalReferenceResponses = {
+    /**
+     * Successful Response
+     */
+    200: BrandModelDetail;
+};
+
+export type brandModelsSetCanonicalReferenceResponse = brandModelsSetCanonicalReferenceResponses[keyof brandModelsSetCanonicalReferenceResponses];
+
+export type brandModelsRecordConsentData = {
+    body: ConsentCreate;
+    path: {
+        /**
+         * Model Id
+         */
+        model_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/models/{model_id}/consent';
+};
+
+export type brandModelsRecordConsentErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandModelsRecordConsentError = brandModelsRecordConsentErrors[keyof brandModelsRecordConsentErrors];
+
+export type brandModelsRecordConsentResponses = {
+    /**
+     * Successful Response
+     */
+    200: BrandModelDetail;
+};
+
+export type brandModelsRecordConsentResponse = brandModelsRecordConsentResponses[keyof brandModelsRecordConsentResponses];
+
+export type brandModelsSetDefaultModelData = {
+    body?: never;
+    path: {
+        /**
+         * Model Id
+         */
+        model_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/models/{model_id}/default';
+};
+
+export type brandModelsSetDefaultModelErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandModelsSetDefaultModelError = brandModelsSetDefaultModelErrors[keyof brandModelsSetDefaultModelErrors];
+
+export type brandModelsSetDefaultModelResponses = {
+    /**
+     * Successful Response
+     */
+    200: BrandModelDetail;
+};
+
+export type brandModelsSetDefaultModelResponse = brandModelsSetDefaultModelResponses[keyof brandModelsSetDefaultModelResponses];
+
+export type brandModelsDownloadReferenceData = {
+    body?: never;
+    path: {
+        /**
+         * Model Id
+         */
+        model_id: string;
+        /**
+         * Reference Id
+         */
+        reference_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/models/{model_id}/references/{reference_id}/download';
+};
+
+export type brandModelsDownloadReferenceErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandModelsDownloadReferenceError = brandModelsDownloadReferenceErrors[keyof brandModelsDownloadReferenceErrors];
+
+export type brandModelsDownloadReferenceResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
 
 export type privateCreateUserData = {
     body: PrivateUserCreate;

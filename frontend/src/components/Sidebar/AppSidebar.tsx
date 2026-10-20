@@ -1,4 +1,4 @@
-import { Home, Images, Palette, Upload, Users } from "lucide-react"
+import { Home, Images, Palette, Upload, UserRound, Users } from "lucide-react"
 
 import { BrandSwitcher } from "@/components/Brand/BrandSwitcher"
 import { SidebarAppearance } from "@/components/Common/Appearance"
@@ -18,6 +18,7 @@ const baseItems: Item[] = [
   { icon: Upload, title: "Brand Import", path: "/brand/import" },
   { icon: Images, title: "Brand Assets", path: "/brand/assets" },
   { icon: Palette, title: "Brand Profile", path: "/brand/profile" },
+  { icon: UserRound, title: "Models", path: "/models" },
   { icon: Users, title: "Team", path: "/team" },
 ]
 

@@ -10,8 +10,8 @@ MVP1 execution status. Updated at the end of every completed stage.
 | T03 | Private storage | complete | `a712bd9` |
 | T04 | Brand import | complete | `df11d1f` |
 | T05 | Brand intelligence | complete | `45fc6e6` |
-| T06 | Brand validation & activation | complete | pending push |
-| T07 | Real & virtual brand models | pending | — |
+| T06 | Brand validation & activation | complete | `b4db9de` |
+| T07 | Real & virtual brand models | complete | pending push |
 | T08 | Product catalog | pending | — |
 | T09 | AI generation foundation | pending | — |
 | T10 | AI photography studio | pending | — |

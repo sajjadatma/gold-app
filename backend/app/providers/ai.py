@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import Any, cast
 
 import httpx
-from PIL import Image
+from PIL import Image, ImageDraw
 
 from app.core.config import settings
 
@@ -226,3 +226,92 @@ def analyze_brand(brand_name: str, sources: list[AnalysisSource]) -> dict[str, A
     if settings.AI_PROVIDER == "openai" and settings.AI_API_KEY:
         return _real_analysis(brand_name, sources)
     return _fake_analysis(brand_name, sources)
+
+
+ASPECT_SIZES: dict[str, tuple[int, int]] = {
+    "1:1": (1024, 1024),
+    "4:5": (1024, 1280),
+    "9:16": (1024, 1792),
+    "16:9": (1792, 1024),
+}
+
+
+def _fake_canvas(width: int, height: int) -> Image.Image:
+    canvas = Image.new("RGB", (width, height), (238, 232, 220))
+    draw = ImageDraw.Draw(canvas)
+    for y in range(height):
+        shade = 238 - int(24 * y / max(height - 1, 1))
+        draw.line([(0, y), (width, y)], fill=(shade, shade - 4, shade - 12))
+    return canvas
+
+
+def _fake_image(prompt: str, sources: list[bytes], aspect_ratio: str) -> bytes:
+    width, height = ASPECT_SIZES.get(aspect_ratio, (1024, 1024))
+    canvas = _fake_canvas(width, height)
+    if sources:
+        try:
+            source = Image.open(io.BytesIO(sources[0])).convert("RGBA")
+            source.thumbnail((int(width * 0.62), int(height * 0.62)))
+            x = (width - source.width) // 2
+            y = (height - source.height) // 2 - int(height * 0.04)
+            canvas.paste(source, (x, y), source)
+        except Exception:  # noqa: BLE001
+            pass
+    draw = ImageDraw.Draw(canvas)
+    label = "Fake provider preview"
+    draw.rectangle([0, height - 48, width, height], fill=(24, 22, 20))
+    draw.text((24, height - 36), label, fill=(230, 220, 200))
+    draw.text((24, 24), prompt[:60], fill=(70, 62, 52))
+    buffer = io.BytesIO()
+    canvas.save(buffer, format="PNG")
+    return buffer.getvalue()
+
+
+def _real_image(prompt: str, sources: list[bytes], aspect_ratio: str) -> bytes:
+    width, height = ASPECT_SIZES.get(aspect_ratio, (1024, 1024))
+    size = f"{width}x{height}"
+    headers = {"Authorization": f"Bearer {settings.AI_API_KEY}"}
+    base = settings.AI_API_BASE.rstrip("/")
+    if sources:
+        files = {"image": ("source.png", sources[0], "image/png")}
+        data = {
+            "model": settings.AI_IMAGE_MODEL,
+            "prompt": prompt,
+            "size": size,
+            "n": "1",
+        }
+        response = httpx.post(
+            f"{base}/images/edits", headers=headers, data=data, files=files, timeout=180
+        )
+    else:
+        response = httpx.post(
+            f"{base}/images/generations",
+            headers=headers,
+            json={"model": settings.AI_IMAGE_MODEL, "prompt": prompt, "size": size, "n": 1},
+            timeout=180,
+        )
+    response.raise_for_status()
+    item = response.json()["data"][0]
+    if item.get("b64_json"):
+        from base64 import b64decode
+
+        return b64decode(item["b64_json"])
+    image_response = httpx.get(item["url"], timeout=120)
+    image_response.raise_for_status()
+    return image_response.content
+
+
+def generate_image(prompt: str, sources: list[bytes], aspect_ratio: str) -> bytes:
+    if settings.AI_PROVIDER == "openai" and settings.AI_API_KEY:
+        return _real_image(prompt, sources, aspect_ratio)
+    return _fake_image(prompt, sources, aspect_ratio)
+
+
+def generate_model_previews(
+    brand_name: str, config: dict[str, Any], count: int = 3
+) -> list[bytes]:
+    prompt = (
+        f"Professional jewelry brand model reference for {brand_name}. "
+        f"Direction: {json.dumps(config, ensure_ascii=True)[:1200]}"
+    )
+    return [generate_image(prompt, [], "4:5") for _ in range(count)]
