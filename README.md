@@ -84,6 +84,8 @@ The UI ships with **English** and **Farsi**. Use the language control in the sid
 
 Translation resources live in `frontend/src/i18n/fa.ts`; the i18n provider and hooks are in `frontend/src/i18n/index.tsx`.
 
+Farsi uses **Vazirmatn**, bundled locally as a variable font in `frontend/public/fonts/` (SIL OFL 1.1, license included). This avoids Google Fonts/CDN dependency. To use Yekanbakh instead, add your licensed font files and replace the `@font-face` rule in `frontend/src/index.css`.
+
 ## Providers
 
 | Area | Default | Production configuration |

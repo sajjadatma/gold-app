@@ -28,7 +28,7 @@
 | Approval | Owner-only approve/reject with actor/timestamp audit; edits after approval require reapproval |
 | Publishing | Instagram connection (token never exposed), fake and Graph adapters, approved-only single-image post, idempotent jobs, bounded retry |
 | Platform | Private local/S3 storage, one Redis+arq worker, deterministic fakes, security headers, tenant-isolated downloads |
-| Localization | English + Farsi UI, RTL layout, Persian dates, persisted language choice, translated forms/statuses/empty states |
+| Localization | English + Farsi UI, RTL layout, Vazirmatn variable font (bundled, OFL), Persian dates, persisted language choice, translated forms/statuses/empty states |
 
 ## Migrations
 
