@@ -5,6 +5,32 @@ export type ClientOptions = {
 };
 
 /**
+ * AssetsPublic
+ */
+export type AssetsPublic = {
+    /**
+     * Data
+     */
+    data: Array<BrandAssetPublic>;
+    /**
+     * Count
+     */
+    count: number;
+};
+
+/**
+ * Body_Brand Import-create_import
+ */
+export type Body_Brand_Import_create_import = {
+    /**
+     * Files
+     *
+     * Brand files to import
+     */
+    files: Array<Blob | File>;
+};
+
+/**
  * Body_login-login_access_token
  */
 export type Body_login_login_access_token = {
@@ -35,6 +61,60 @@ export type Body_login_login_access_token = {
 };
 
 /**
+ * BrandAssetPublic
+ */
+export type BrandAssetPublic = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Asset Type
+     */
+    asset_type: string;
+    /**
+     * Original Filename
+     */
+    original_filename: string;
+    /**
+     * Content Type
+     */
+    content_type: string;
+    /**
+     * Size Bytes
+     */
+    size_bytes: number;
+    /**
+     * Checksum
+     */
+    checksum: string;
+    /**
+     * Width
+     */
+    width: number | null;
+    /**
+     * Height
+     */
+    height: number | null;
+    /**
+     * Page Count
+     */
+    page_count: number | null;
+    /**
+     * Processing Status
+     */
+    processing_status: string;
+    /**
+     * Is Active
+     */
+    is_active: boolean;
+    /**
+     * Created At
+     */
+    created_at: string;
+};
+
+/**
  * BrandCreate
  */
 export type BrandCreate = {
@@ -42,6 +122,78 @@ export type BrandCreate = {
      * Name
      */
     name: string;
+};
+
+/**
+ * BrandImportDetail
+ */
+export type BrandImportDetail = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Status
+     */
+    status: string;
+    /**
+     * Uploaded File Count
+     */
+    uploaded_file_count: number;
+    /**
+     * Processed File Count
+     */
+    processed_file_count: number;
+    /**
+     * Error Count
+     */
+    error_count: number;
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Updated At
+     */
+    updated_at: string;
+    /**
+     * Assets
+     */
+    assets: Array<BrandAssetPublic>;
+};
+
+/**
+ * BrandImportPublic
+ */
+export type BrandImportPublic = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Status
+     */
+    status: string;
+    /**
+     * Uploaded File Count
+     */
+    uploaded_file_count: number;
+    /**
+     * Processed File Count
+     */
+    processed_file_count: number;
+    /**
+     * Error Count
+     */
+    error_count: number;
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Updated At
+     */
+    updated_at: string;
 };
 
 /**
@@ -97,6 +249,20 @@ export type HTTPValidationError = {
      * Detail
      */
     detail?: Array<ValidationError>;
+};
+
+/**
+ * ImportsPublic
+ */
+export type ImportsPublic = {
+    /**
+     * Data
+     */
+    data: Array<BrandImportPublic>;
+    /**
+     * Count
+     */
+    count: number;
 };
 
 /**
@@ -1242,6 +1408,241 @@ export type brandsUpdateMemberResponses = {
 };
 
 export type brandsUpdateMemberResponse = brandsUpdateMemberResponses[keyof brandsUpdateMemberResponses];
+
+export type brandImportReadImportsData = {
+    body?: never;
+    path: {
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/imports';
+};
+
+export type brandImportReadImportsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandImportReadImportsError = brandImportReadImportsErrors[keyof brandImportReadImportsErrors];
+
+export type brandImportReadImportsResponses = {
+    /**
+     * Successful Response
+     */
+    200: ImportsPublic;
+};
+
+export type brandImportReadImportsResponse = brandImportReadImportsResponses[keyof brandImportReadImportsResponses];
+
+export type brandImportCreateImportData = {
+    body: Body_Brand_Import_create_import;
+    path: {
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/imports';
+};
+
+export type brandImportCreateImportErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandImportCreateImportError = brandImportCreateImportErrors[keyof brandImportCreateImportErrors];
+
+export type brandImportCreateImportResponses = {
+    /**
+     * Successful Response
+     */
+    200: BrandImportDetail;
+};
+
+export type brandImportCreateImportResponse = brandImportCreateImportResponses[keyof brandImportCreateImportResponses];
+
+export type brandImportReadImportData = {
+    body?: never;
+    path: {
+        /**
+         * Import Id
+         */
+        import_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/imports/{import_id}';
+};
+
+export type brandImportReadImportErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandImportReadImportError = brandImportReadImportErrors[keyof brandImportReadImportErrors];
+
+export type brandImportReadImportResponses = {
+    /**
+     * Successful Response
+     */
+    200: BrandImportDetail;
+};
+
+export type brandImportReadImportResponse = brandImportReadImportResponses[keyof brandImportReadImportResponses];
+
+export type brandImportReadAssetsData = {
+    body?: never;
+    path: {
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: {
+        /**
+         * Asset Type
+         */
+        asset_type?: string | null;
+        /**
+         * Active Only
+         */
+        active_only?: boolean;
+    };
+    url: '/api/v1/brands/{brand_id}/assets';
+};
+
+export type brandImportReadAssetsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandImportReadAssetsError = brandImportReadAssetsErrors[keyof brandImportReadAssetsErrors];
+
+export type brandImportReadAssetsResponses = {
+    /**
+     * Successful Response
+     */
+    200: AssetsPublic;
+};
+
+export type brandImportReadAssetsResponse = brandImportReadAssetsResponses[keyof brandImportReadAssetsResponses];
+
+export type brandImportArchiveAssetData = {
+    body?: never;
+    path: {
+        /**
+         * Asset Id
+         */
+        asset_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/assets/{asset_id}';
+};
+
+export type brandImportArchiveAssetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandImportArchiveAssetError = brandImportArchiveAssetErrors[keyof brandImportArchiveAssetErrors];
+
+export type brandImportArchiveAssetResponses = {
+    /**
+     * Response Brand Import-Archive Asset
+     *
+     * Successful Response
+     */
+    200: {
+        [key: string]: string;
+    };
+};
+
+export type brandImportArchiveAssetResponse = brandImportArchiveAssetResponses[keyof brandImportArchiveAssetResponses];
+
+export type brandImportDownloadAssetData = {
+    body?: never;
+    path: {
+        /**
+         * Asset Id
+         */
+        asset_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/assets/{asset_id}/download';
+};
+
+export type brandImportDownloadAssetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandImportDownloadAssetError = brandImportDownloadAssetErrors[keyof brandImportDownloadAssetErrors];
+
+export type brandImportDownloadAssetResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
+export type brandImportPreviewAssetData = {
+    body?: never;
+    path: {
+        /**
+         * Asset Id
+         */
+        asset_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/assets/{asset_id}/preview';
+};
+
+export type brandImportPreviewAssetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type brandImportPreviewAssetError = brandImportPreviewAssetErrors[keyof brandImportPreviewAssetErrors];
+
+export type brandImportPreviewAssetResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
 
 export type privateCreateUserData = {
     body: PrivateUserCreate;

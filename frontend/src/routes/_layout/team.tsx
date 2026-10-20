@@ -3,11 +3,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { Plus, Trash2 } from "lucide-react"
 import { useState } from "react"
 
-import {
-  BrandsService,
-  type MemberPublic,
-  type MemberRole,
-} from "@/client"
+import { BrandsService, type MemberPublic, type MemberRole } from "@/client"
 import { NoBrand } from "@/components/Common/NoBrand"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -200,7 +196,9 @@ function TeamPage() {
             People with access to {brand.name}.
           </p>
         </div>
-        {isOwner ? <AddMemberDialog brandId={brand.id} onAdded={refresh} /> : null}
+        {isOwner ? (
+          <AddMemberDialog brandId={brand.id} onAdded={refresh} />
+        ) : null}
       </div>
 
       {isLoading ? (
@@ -232,7 +230,10 @@ function TeamPage() {
                           })
                         }
                       >
-                        <SelectTrigger className="w-44" aria-label="Member role">
+                        <SelectTrigger
+                          className="w-44"
+                          aria-label="Member role"
+                        >
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>

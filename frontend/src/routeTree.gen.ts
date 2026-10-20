@@ -19,6 +19,9 @@ import { Route as LayoutAdminRouteImport } from './routes/_layout/admin'
 import { Route as LayoutItemsRouteImport } from './routes/_layout/items'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 import { Route as LayoutTeamRouteImport } from './routes/_layout/team'
+import { Route as LayoutBrandAssetsRouteImport } from './routes/_layout/brand/assets'
+import { Route as LayoutBrandImportRouteImport } from './routes/_layout/brand/import'
+import { Route as LayoutBrandImportsIdRouteImport } from './routes/_layout/brand/imports.$id'
 
 const LayoutRoute = LayoutRouteImport.update({
   id: '/_layout',
@@ -69,6 +72,21 @@ const LayoutTeamRoute = LayoutTeamRouteImport.update({
   path: '/team',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutBrandAssetsRoute = LayoutBrandAssetsRouteImport.update({
+  id: '/brand/assets',
+  path: '/brand/assets',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutBrandImportRoute = LayoutBrandImportRouteImport.update({
+  id: '/brand/import',
+  path: '/brand/import',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutBrandImportsIdRoute = LayoutBrandImportsIdRouteImport.update({
+  id: '/brand/imports/$id',
+  path: '/brand/imports/$id',
+  getParentRoute: () => LayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof LayoutIndexRoute
@@ -80,6 +98,9 @@ export interface FileRoutesByFullPath {
   '/items': typeof LayoutItemsRoute
   '/settings': typeof LayoutSettingsRoute
   '/team': typeof LayoutTeamRoute
+  '/brand/assets': typeof LayoutBrandAssetsRoute
+  '/brand/import': typeof LayoutBrandImportRoute
+  '/brand/imports/$id': typeof LayoutBrandImportsIdRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -91,6 +112,9 @@ export interface FileRoutesByTo {
   '/settings': typeof LayoutSettingsRoute
   '/team': typeof LayoutTeamRoute
   '/': typeof LayoutIndexRoute
+  '/brand/assets': typeof LayoutBrandAssetsRoute
+  '/brand/import': typeof LayoutBrandImportRoute
+  '/brand/imports/$id': typeof LayoutBrandImportsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -104,6 +128,9 @@ export interface FileRoutesById {
   '/_layout/settings': typeof LayoutSettingsRoute
   '/_layout/team': typeof LayoutTeamRoute
   '/_layout/': typeof LayoutIndexRoute
+  '/_layout/brand/assets': typeof LayoutBrandAssetsRoute
+  '/_layout/brand/import': typeof LayoutBrandImportRoute
+  '/_layout/brand/imports/$id': typeof LayoutBrandImportsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -117,6 +144,9 @@ export interface FileRouteTypes {
     | '/items'
     | '/settings'
     | '/team'
+    | '/brand/assets'
+    | '/brand/import'
+    | '/brand/imports/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -128,6 +158,9 @@ export interface FileRouteTypes {
     | '/settings'
     | '/team'
     | '/'
+    | '/brand/assets'
+    | '/brand/import'
+    | '/brand/imports/$id'
   id:
     | '__root__'
     | '/_layout'
@@ -140,6 +173,9 @@ export interface FileRouteTypes {
     | '/_layout/settings'
     | '/_layout/team'
     | '/_layout/'
+    | '/_layout/brand/assets'
+    | '/_layout/brand/import'
+    | '/_layout/brand/imports/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -222,6 +258,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutTeamRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/brand/assets': {
+      id: '/_layout/brand/assets'
+      path: '/brand/assets'
+      fullPath: '/brand/assets'
+      preLoaderRoute: typeof LayoutBrandAssetsRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/brand/import': {
+      id: '/_layout/brand/import'
+      path: '/brand/import'
+      fullPath: '/brand/import'
+      preLoaderRoute: typeof LayoutBrandImportRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/brand/imports/$id': {
+      id: '/_layout/brand/imports/$id'
+      path: '/brand/imports/$id'
+      fullPath: '/brand/imports/$id'
+      preLoaderRoute: typeof LayoutBrandImportsIdRouteImport
+      parentRoute: typeof LayoutRoute
+    }
   }
 }
 
@@ -231,6 +288,9 @@ interface LayoutRouteChildren {
   LayoutSettingsRoute: typeof LayoutSettingsRoute
   LayoutTeamRoute: typeof LayoutTeamRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
+  LayoutBrandAssetsRoute: typeof LayoutBrandAssetsRoute
+  LayoutBrandImportRoute: typeof LayoutBrandImportRoute
+  LayoutBrandImportsIdRoute: typeof LayoutBrandImportsIdRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
@@ -239,6 +299,9 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutSettingsRoute: LayoutSettingsRoute,
   LayoutTeamRoute: LayoutTeamRoute,
   LayoutIndexRoute: LayoutIndexRoute,
+  LayoutBrandAssetsRoute: LayoutBrandAssetsRoute,
+  LayoutBrandImportRoute: LayoutBrandImportRoute,
+  LayoutBrandImportsIdRoute: LayoutBrandImportsIdRoute,
 }
 
 const LayoutRouteWithChildren =

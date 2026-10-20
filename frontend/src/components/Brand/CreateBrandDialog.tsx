@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query"
 import { Plus } from "lucide-react"
-import { useState } from "react"
 import type { ReactNode } from "react"
+import { useState } from "react"
 
 import { BrandsService } from "@/client"
 import { Button } from "@/components/ui/button"
@@ -74,10 +74,7 @@ export function CreateBrandDialog({ trigger }: { trigger?: ReactNode }) {
             />
           </div>
           <DialogFooter>
-            <Button
-              type="submit"
-              disabled={!name.trim() || mutation.isPending}
-            >
+            <Button type="submit" disabled={!name.trim() || mutation.isPending}>
               {mutation.isPending ? "Creating..." : "Create brand"}
             </Button>
           </DialogFooter>

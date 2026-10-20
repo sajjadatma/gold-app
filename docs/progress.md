@@ -6,9 +6,9 @@ MVP1 execution status. Updated at the end of every completed stage.
 | --- | --- | --- | --- |
 | T00 | Bootstrap & baseline | complete | `3ad0d4f` |
 | T01 | MVP contracts | complete | `4f3277f` |
-| T02 | Brand + multi-tenant access | complete | pending push |
-| T03 | Private storage | pending | — |
-| T04 | Brand import | pending | — |
+| T02 | Brand + multi-tenant access | complete | `089d99f` |
+| T03 | Private storage | complete | `a712bd9` |
+| T04 | Brand import | complete | pending push |
 | T05 | Brand intelligence | pending | — |
 | T06 | Brand validation & activation | pending | — |
 | T07 | Real & virtual brand models | pending | — |

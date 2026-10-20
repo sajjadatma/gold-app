@@ -19,6 +19,9 @@ dependencies = [
     "pyjwt>=2.15.0,<3.0.0",
     "pwdlib[argon2,bcrypt]>=0.3.1",
     "boto3>=1.43.115",
+    "pillow>=13.0.0",
+    "pypdf>=6.21.1",
+    "defusedxml>=0.7.1",
 ]
 
 [dependency-groups]
