@@ -25,7 +25,8 @@ services:
       - --api.insecure=true
   db:
     ports:
-      - "5432:5432"
+      # Host 5432 is commonly used by a local PostgreSQL; keep the project DB isolated.
+      - "5433:5432"
 
   adminer:
     ports:

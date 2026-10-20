@@ -1,0 +1,34 @@
+# Progress
+
+MVP1 execution status. Updated at the end of every completed stage.
+
+| Stage | Scope | Status | Commit |
+| --- | --- | --- | --- |
+| T00 | Bootstrap & baseline | in progress | — |
+| T01 | MVP contracts | pending | — |
+| T02 | Brand + multi-tenant access | pending | — |
+| T03 | Private storage | pending | — |
+| T04 | Brand import | pending | — |
+| T05 | Brand intelligence | pending | — |
+| T06 | Brand validation & activation | pending | — |
+| T07 | Real & virtual brand models | pending | — |
+| T08 | Product catalog | pending | — |
+| T09 | AI generation foundation | pending | — |
+| T10 | AI photography studio | pending | — |
+| T11 | Product integrity evaluation | pending | — |
+| T12 | Caption & content draft | pending | — |
+| T13 | Approval workflow | pending | — |
+| T14 | Instagram publishing | pending | — |
+| T15 | Complete E2E workflow | pending | — |
+| T16 | Hardening | pending | — |
+| T17 | Delivery | pending | — |
+
+## Baseline notes (T00)
+
+- Repository started from `fastapi/full-stack-fastapi-template`; `upstream` points at the template, `origin` at the delivery repository.
+- Host port `5432` is occupied by a pre-existing local PostgreSQL installation. The project database is mapped to host port `5433` (`compose.override.yml`) so the unrelated local database is never touched.
+- `DATABASE_URL` in the local `.env` targets `localhost:5433`.
+- The template tracks `.env`; it has been untracked and ignored. `.env.example` contains placeholders only.
+- `backend/alembic.ini` now sets `prepend_sys_path = .`, and `backend/scripts/prestart.sh` runs `python -m app.initial_data` so the backend package is importable when commands run outside Docker.
+- Baseline backend suite: 58 passed.
+- Baseline frontend production build: passed.
