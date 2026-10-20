@@ -30,6 +30,13 @@ class LogoEntry(SQLModel):
     provenance: Provenance | None = None
 
 
+class AdditionalSection(SQLModel):
+    title: str
+    content: list[str] = Field(default_factory=list)
+    page_number: int | None = None
+    confidence: float = Field(default=0.6, ge=0, le=1)
+
+
 class Identity(SQLModel):
     brand_name: str = ""
     tagline: str = ""
@@ -89,6 +96,7 @@ class BrandProfileData(SQLModel):
     tone_of_voice: ToneOfVoice = Field(default_factory=ToneOfVoice)
     graphic_system: GraphicSystem = Field(default_factory=GraphicSystem)
     social_media: SocialMedia = Field(default_factory=SocialMedia)
+    additional_sections: list[AdditionalSection] = Field(default_factory=list)
     dos: list[str] = Field(default_factory=list)
     donts: list[str] = Field(default_factory=list)
     uncertainties: list[str] = Field(default_factory=list)

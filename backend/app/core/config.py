@@ -66,6 +66,12 @@ class Settings(BaseSettings):
     MAX_ZIP_BYTES: int = 250 * 1024 * 1024
     MAX_ARCHIVE_FILES: int = 500
     MAX_UPLOAD_FILES: int = 100
+    MAX_PDF_PAGES: int = 500
+    MAX_PDF_TEXT_CHARS: int = 400_000
+
+    # Brand-book analysis
+    AI_ANALYSIS_CHUNK_CHARS: int = 30_000
+    AI_MAX_ANALYSIS_CHUNKS: int = 16
     MAX_ARCHIVE_EXPANDED_BYTES: int = 500 * 1024 * 1024
     MAX_IMAGE_PIXELS: int = 80_000_000
 

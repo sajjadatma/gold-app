@@ -18,7 +18,7 @@
 | --- | --- |
 | Brands & tenancy | Brand creation, memberships, Owner/Content Manager roles, tenant-scoped access, team management |
 | Brand import | Multi-file upload, PDF/images/SVG/fonts/AI/EPS/PSD/ZIP, MIME+signature validation, ZIP traversal/limits, SVG sanitization, private asset library |
-| Brand intelligence | PDF text extraction, deterministic visual/color/font/logo analysis, Pydantic-validated profile, provenance/uncertainty, real AI adapter |
+| Brand intelligence | Full PDF brand-book text extraction, chunked real-AI analysis, deterministic visual/color/font/logo/text parsing, extra brand-book sections, Pydantic-validated profile, provenance/uncertainty |
 | Brand validation | Owner review/edit, logo selection, activation, single active profile, archival of prior versions |
 | Brand models | Virtual models with generated previews and canonical reference; real models with reference uploads and consent gate; default model |
 | Products | CRUD/archive, jewelry metadata, source images, primary image, advisory quality checks |
@@ -92,7 +92,7 @@ Full contract: [`docs/api-contracts.md`](api-contracts.md).
 
 | Check | Result |
 | --- | --- |
-| `uv run pytest` | **156 passed** |
+| `uv run pytest` | **158 passed** |
 | `uv run ruff check app tests` | clean |
 | `uv run mypy app` | clean |
 | `bun run lint` (Biome) | clean |
@@ -113,7 +113,7 @@ No live external calls were made:
 
 ## Known MVP limitations
 
-- Brand intelligence uses embedded PDF text, not OCR for image-only PDFs.
+- Brand intelligence uses embedded PDF text, not OCR for image-only PDFs; text-based brand books are analyzed in full up to configurable page/text/chunk limits.
 - Fake generated images are deterministic placeholders labeled as such; real image quality was not verified.
 - The real Instagram path is implemented but unverified against Meta.
 - Access tokens are stored in the database (never exposed); production must use encryption at rest.

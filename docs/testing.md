@@ -33,8 +33,13 @@ CI must not depend on paid AI, real Instagram, or real S3. Fake providers are th
 
 ## Delivery verification (MVP1)
 
-- Backend: 156 tests passed; Ruff clean; mypy clean.
+- Backend: 158 tests passed; Ruff clean; mypy clean.
 - Frontend: Biome clean; production build passes.
 - Fresh database migrated through all ten revisions to `f1eb7aefef7a`.
 - OpenAPI client regenerated with no pending diff.
 - Playwright: complete fake-provider workflow and real-model consent path passed.
+
+## Brand-book regression coverage
+
+- A text-based PDF fixture is uploaded through the API and analyzed end-to-end.
+- Assertions cover identity, positioning, audience, tone, photography, colors, typography, model style, social rules, dos/don'ts, and extra PDF sections (packaging, sustainability).

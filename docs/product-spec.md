@@ -32,7 +32,7 @@ import assets → analyze → validate/activate BrandProfile
 1. Authentication reuses the template (login, recovery, settings).
 2. Users can create/select a brand; membership is tenant-scoped.
 3. Brand bundles (PDF, images, SVG, fonts, AI/EPS/PSD, ZIP) import securely and are listed in a library.
-4. Import analysis produces a Pydantic-validated BrandProfile candidate with provenance and uncertainty notes.
+4. Import analysis reads the full embedded text of brand-book PDFs and produces a Pydantic-validated BrandProfile candidate, preserving extra sections and recording provenance/uncertainty.
 5. Owner can correct and activate exactly one profile per brand; generation requires an active profile.
 6. Virtual models generate deterministic previews with a fake provider; real models require a consent record before ready/default.
 7. Products require name, category, and at least one source image before generation; images get advisory quality feedback.

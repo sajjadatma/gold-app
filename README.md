@@ -1,6 +1,8 @@
 # Jewelry Brand Studio — MVP1
 
-A multi-tenant SaaS for jewelry brands that already have an identity. Import the brand's own material, validate the extracted profile, photograph products with AI, verify jewelry fidelity, draft social copy, approve as Owner, and publish a single-image Instagram post.
+A multi-tenant SaaS for jewelry brands that already have an identity. Import the brand's own material — including full brand-book PDFs — validate the extracted profile, photograph products with AI, verify jewelry fidelity, draft social copy, approve as Owner, and publish a single-image Instagram post.
+
+PDF brand books are read in full from their embedded text (up to configurable limits). Real AI analysis is chunked across the whole document, and any extra sections such as packaging, values, materials, or sustainability are preserved in the profile.
 
 Built on the [Full Stack FastAPI Template](https://github.com/fastapi/full-stack-fastapi-template).
 

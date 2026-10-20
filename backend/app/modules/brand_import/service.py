@@ -48,14 +48,23 @@ def _pdf_metadata(data: bytes) -> dict[str, Any]:
     try:
         reader = PdfReader(io.BytesIO(data))
         page_count = len(reader.pages)
-        text_parts: list[str] = []
-        for page in reader.pages[:20]:
+        page_texts: list[str] = []
+        for index, page in enumerate(reader.pages[: settings.MAX_PDF_PAGES]):
             try:
-                text_parts.append(page.extract_text() or "")
+                page_text = (page.extract_text() or "").strip()
             except Exception:  # noqa: BLE001
-                continue
-        text = "\n".join(text_parts).strip()[:20_000]
-        return {"page_count": page_count, "text_preview": text}
+                page_text = ""
+            if page_text:
+                page_texts.append(f"[Page {index + 1}]\n{page_text}")
+        text = "\n\n".join(page_texts).strip()
+        truncated = len(text) > settings.MAX_PDF_TEXT_CHARS
+        text = text[: settings.MAX_PDF_TEXT_CHARS]
+        return {
+            "page_count": page_count,
+            "text": text,
+            "text_chars": len(text),
+            "text_truncated": truncated,
+        }
     except Exception as exc:  # noqa: BLE001
         return {"metadata_error": f"PDF could not be parsed: {type(exc).__name__}"}
 

@@ -38,8 +38,10 @@ def analyze_import(
         text: str | None = None
         image: bytes | None = None
         metadata: dict[str, Any] = asset.metadata_json or {}
-        if isinstance(metadata.get("text_preview"), str):
-            text = metadata["text_preview"]
+        for key in ("text", "text_preview"):
+            if isinstance(metadata.get(key), str) and metadata[key].strip():
+                text = metadata[key]
+                break
         if asset.content_type.startswith("image/") and asset.content_type != "image/svg+xml":
             try:
                 image = get_storage().read(asset.storage_key)

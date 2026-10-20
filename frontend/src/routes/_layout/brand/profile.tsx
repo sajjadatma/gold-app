@@ -76,6 +76,30 @@ type ProfileData = {
     cta_style: string
     hashtag_style: string
   }
+  human_model_style: {
+    appearance: string[]
+    makeup: string[]
+    hair: string[]
+    wardrobe: string[]
+    hands_and_nails: string[]
+    posing: string[]
+  }
+  graphic_system: {
+    patterns: string[]
+    decorative_elements: string[]
+    layout_principles: string[]
+  }
+  social_media: {
+    preferred_ratios: string[]
+    visual_rules: string[]
+    logo_rules: string[]
+  }
+  additional_sections: {
+    title: string
+    content: string[]
+    page_number?: number | null
+    confidence?: number
+  }[]
   dos: string[]
   donts: string[]
   uncertainties: string[]
@@ -151,7 +175,31 @@ function BrandProfilePage() {
 
   useEffect(() => {
     if (data) {
-      setForm(structuredClone(data.profile_json as unknown as ProfileData))
+      const profile = structuredClone(
+        data.profile_json as unknown as ProfileData,
+      )
+      setForm({
+        ...profile,
+        human_model_style: profile.human_model_style ?? {
+          appearance: [],
+          makeup: [],
+          hair: [],
+          wardrobe: [],
+          hands_and_nails: [],
+          posing: [],
+        },
+        graphic_system: profile.graphic_system ?? {
+          patterns: [],
+          decorative_elements: [],
+          layout_principles: [],
+        },
+        social_media: profile.social_media ?? {
+          preferred_ratios: [],
+          visual_rules: [],
+          logo_rules: [],
+        },
+        additional_sections: profile.additional_sections ?? [],
+      })
     }
   }, [data])
 
@@ -686,6 +734,200 @@ function BrandProfilePage() {
               </div>
             ))
           )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Human model style</CardTitle>
+          <CardDescription>
+            How people wearing the jewelry should look and pose.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4 md:grid-cols-2">
+          {(
+            [
+              ["appearance", "Appearance"],
+              ["makeup", "Makeup"],
+              ["hair", "Hair"],
+              ["wardrobe", "Wardrobe"],
+              ["hands_and_nails", "Hands and nails"],
+              ["posing", "Posing"],
+            ] as const
+          ).map(([key, label]) => (
+            <ListField
+              key={key}
+              label={label}
+              value={form.human_model_style[key]}
+              disabled={disabled}
+              onChange={(value) =>
+                patch({
+                  human_model_style: {
+                    ...form.human_model_style,
+                    [key]: value,
+                  },
+                })
+              }
+            />
+          ))}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Graphic system</CardTitle>
+          <CardDescription>
+            Patterns and layout rules found in the brand book.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4 md:grid-cols-2">
+          {(
+            [
+              ["patterns", "Patterns"],
+              ["decorative_elements", "Decorative elements"],
+              ["layout_principles", "Layout principles"],
+            ] as const
+          ).map(([key, label]) => (
+            <ListField
+              key={key}
+              label={label}
+              value={form.graphic_system[key]}
+              disabled={disabled}
+              onChange={(value) =>
+                patch({
+                  graphic_system: { ...form.graphic_system, [key]: value },
+                })
+              }
+            />
+          ))}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Social media</CardTitle>
+          <CardDescription>
+            Ratios and visual rules for social posts.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4 md:grid-cols-2">
+          {(
+            [
+              ["preferred_ratios", "Preferred ratios"],
+              ["visual_rules", "Visual rules"],
+              ["logo_rules", "Logo rules"],
+            ] as const
+          ).map(([key, label]) => (
+            <ListField
+              key={key}
+              label={label}
+              value={form.social_media[key]}
+              disabled={disabled}
+              onChange={(value) =>
+                patch({
+                  social_media: { ...form.social_media, [key]: value },
+                })
+              }
+            />
+          ))}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Additional sections from the brand book</CardTitle>
+          <CardDescription>
+            Other topics found in the PDF (packaging, values, materials, care,
+            partnerships, and more).
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {form.additional_sections.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              No additional sections were found.
+            </p>
+          ) : (
+            form.additional_sections.map((section, index) => (
+              <div
+                key={`${section.title}-${index}`}
+                className="space-y-2 rounded-md border p-3"
+              >
+                <div className="flex items-end gap-2">
+                  <div className="grid flex-1 gap-2">
+                    <Label htmlFor={`section-title-${index}`}>
+                      Section title
+                    </Label>
+                    <Input
+                      id={`section-title-${index}`}
+                      value={section.title}
+                      disabled={disabled}
+                      onChange={(event) => {
+                        const sections = [...form.additional_sections]
+                        sections[index] = {
+                          ...section,
+                          title: event.target.value,
+                        }
+                        patch({ additional_sections: sections })
+                      }}
+                    />
+                  </div>
+                  {isOwner ? (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() =>
+                        patch({
+                          additional_sections: form.additional_sections.filter(
+                            (_, sectionIndex) => sectionIndex !== index,
+                          ),
+                        })
+                      }
+                    >
+                      Remove
+                    </Button>
+                  ) : null}
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor={`section-content-${index}`}>Content</Label>
+                  <Textarea
+                    id={`section-content-${index}`}
+                    rows={3}
+                    value={section.content.join("\n")}
+                    disabled={disabled}
+                    onChange={(event) => {
+                      const sections = [...form.additional_sections]
+                      sections[index] = {
+                        ...section,
+                        content: event.target.value.split("\n"),
+                      }
+                      patch({ additional_sections: sections })
+                    }}
+                  />
+                </div>
+                {section.page_number ? (
+                  <p className="text-xs text-muted-foreground">
+                    Found on page {section.page_number}
+                  </p>
+                ) : null}
+              </div>
+            ))
+          )}
+          {isOwner ? (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                patch({
+                  additional_sections: [
+                    ...form.additional_sections,
+                    { title: "New section", content: [""] },
+                  ],
+                })
+              }
+            >
+              Add section
+            </Button>
+          ) : null}
         </CardContent>
       </Card>
 

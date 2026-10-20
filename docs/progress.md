@@ -32,3 +32,8 @@ MVP1 execution status. Updated at the end of every completed stage.
 - `backend/alembic.ini` now sets `prepend_sys_path = .`, and `backend/scripts/prestart.sh` runs `python -m app.initial_data` so the backend package is importable when commands run outside Docker.
 - Baseline backend suite: 58 passed.
 - Baseline frontend production build: passed.
+
+## Post-delivery changes
+
+- Dashboard logout button.
+- Brand-book PDFs are read in full from embedded text; real AI analysis is chunked across the document and unknown sections are stored in `additional_sections`.
