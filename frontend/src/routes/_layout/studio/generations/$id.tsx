@@ -138,7 +138,11 @@ function GenerationDetailPage() {
             {t(data.status)}
           </Badge>
           {data.status === "failed" ? (
-            <Button variant="outline" onClick={() => retry.mutate()}>
+            <Button
+              variant="outline"
+              onClick={() => retry.mutate()}
+              disabled={retry.isPending}
+            >
               <RefreshCw className="mr-2 h-4 w-4" /> {t("Retry")}
             </Button>
           ) : null}

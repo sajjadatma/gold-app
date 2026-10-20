@@ -5,6 +5,7 @@ import { useState } from "react"
 
 import { type BrandImportPublic, BrandImportService } from "@/client"
 import { NoBrand } from "@/components/Common/NoBrand"
+import { QueryError } from "@/components/Common/QueryError"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -49,7 +50,7 @@ function ImportPage() {
   const [files, setFiles] = useState<File[]>([])
   const [uploading, setUploading] = useState(false)
 
-  const { data, refetch } = useQuery({
+  const { data, isError, refetch } = useQuery({
     queryKey: ["imports", brand?.id],
     queryFn: async () =>
       (
@@ -61,6 +62,7 @@ function ImportPage() {
   })
 
   if (!brand) return <NoBrand />
+  if (isError) return <QueryError onRetry={() => refetch()} />
 
   const upload = async () => {
     if (!files.length) return

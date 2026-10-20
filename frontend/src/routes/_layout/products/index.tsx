@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 
 import { ProductsService } from "@/client"
 import { NoBrand } from "@/components/Common/NoBrand"
+import { QueryError } from "@/components/Common/QueryError"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -69,7 +70,7 @@ function ProductThumb({
 function ProductsPage() {
   const { brand } = useBrand()
   const { t } = useI18n()
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["products", brand?.id],
     queryFn: async () =>
       (
@@ -82,6 +83,7 @@ function ProductsPage() {
   })
 
   if (!brand) return <NoBrand />
+  if (isError) return <QueryError onRetry={() => refetch()} />
 
   return (
     <div className="space-y-6">

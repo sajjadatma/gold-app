@@ -43,11 +43,13 @@ function ReferenceImage({
   modelId,
   reference,
   onCanonical,
+  disabled = false,
 }: {
   brandId: string
   modelId: string
   reference: ModelReferencePublic
   onCanonical: () => void
+  disabled?: boolean
 }) {
   const [url, setUrl] = useState<string | null>(null)
   const { t } = useI18n()
@@ -73,6 +75,7 @@ function ReferenceImage({
     <button
       type="button"
       onClick={onCanonical}
+      disabled={disabled}
       className={`overflow-hidden rounded-lg border text-left transition-colors ${
         reference.is_canonical ? "border-primary ring-2 ring-primary/30" : ""
       }`}
@@ -159,7 +162,10 @@ function ModelDetailPage() {
         path: { brand_id: brand?.id ?? "", model_id: id },
         body: { reference_id: referenceId },
       }),
-    onSuccess: refresh,
+    onSuccess: async () => {
+      await refresh()
+      showSuccessToast(t("Canonical reference updated"))
+    },
     onError: handleError.bind(showErrorToast),
   })
 
@@ -238,7 +244,11 @@ function ModelDetailPage() {
           <Button
             variant="outline"
             onClick={() => makeDefault.mutate()}
-            disabled={data.is_default || data.status !== "ready"}
+            disabled={
+              data.is_default ||
+              data.status !== "ready" ||
+              makeDefault.isPending
+            }
           >
             {t("Set default")}
           </Button>
@@ -277,6 +287,7 @@ function ModelDetailPage() {
                 brandId={brand.id}
                 modelId={data.id}
                 reference={reference}
+                disabled={canonical.isPending}
                 onCanonical={() => canonical.mutate(reference.id)}
               />
             ))}

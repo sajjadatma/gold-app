@@ -74,6 +74,13 @@ OCR_MODEL=gpt-6-luna
 
 OpenCode Go is intended for coding-agent traffic and is monitored for abuse. For document/OCR workloads, the OpenCode **Console pay-as-you-go** endpoint (`https://opencode.ai/inference/openai/v1`) uses the same model and is the safer choice. OpenAI's GPT-6 Luna requests are retained for up to 30 days for abuse monitoring.
 
+## Request states
+
+- A slim global progress bar appears for initial data loads and active mutations.
+- Mutating actions disable their controls while pending and show success or failure toasts.
+- List and detail screens have loading, empty, and error-with-retry states.
+- Long-running jobs (generation, publishing) expose persisted `queued`, `processing`, `completed`, and `failed` states and poll while active.
+
 ## Languages
 
 The UI ships with **English** and **Farsi**. Use the language control in the sidebar (or the auth pages) to switch; the choice is saved in localStorage.

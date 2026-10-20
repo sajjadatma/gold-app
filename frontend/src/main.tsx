@@ -9,6 +9,7 @@ import { AxiosError } from "axios"
 import { StrictMode } from "react"
 import ReactDOM from "react-dom/client"
 import { client } from "./client/client.gen"
+import { GlobalRequestIndicator } from "./components/Common/GlobalRequestIndicator"
 import { ThemeProvider } from "./components/theme-provider"
 import { Toaster } from "./components/ui/sonner"
 import { I18nProvider } from "./i18n"
@@ -50,6 +51,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <I18nProvider>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <QueryClientProvider client={queryClient}>
+          <GlobalRequestIndicator />
           <RouterProvider router={router} />
           <Toaster richColors closeButton />
         </QueryClientProvider>

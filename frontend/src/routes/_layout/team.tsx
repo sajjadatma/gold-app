@@ -5,6 +5,7 @@ import { useState } from "react"
 
 import { BrandsService, type MemberPublic, type MemberRole } from "@/client"
 import { NoBrand } from "@/components/Common/NoBrand"
+import { QueryError } from "@/components/Common/QueryError"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -148,7 +149,7 @@ function TeamPage() {
   const { showErrorToast, showSuccessToast } = useCustomToast()
   const { t } = useI18n()
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["members", brand?.id],
     queryFn: async () =>
       (
@@ -195,6 +196,7 @@ function TeamPage() {
   })
 
   if (!brand) return <NoBrand />
+  if (isError) return <QueryError onRetry={() => refetch()} />
 
   const isOwner = brand.role === "owner"
   const members: MemberPublic[] = data?.data ?? []
@@ -237,6 +239,7 @@ function TeamPage() {
                     {isOwner ? (
                       <Select
                         value={member.role}
+                        disabled={updateMutation.isPending}
                         onValueChange={(value) =>
                           updateMutation.mutate({
                             membershipId: member.id,

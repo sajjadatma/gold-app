@@ -148,7 +148,10 @@ function ProductDetailPage() {
       ProductsService.setPrimaryImage({
         path: { brand_id: brand?.id ?? "", product_id: id, image_id: imageId },
       }),
-    onSuccess: refresh,
+    onSuccess: async () => {
+      await refresh()
+      showSuccessToast(t("Primary image updated"))
+    },
     onError: handleError.bind(showErrorToast),
   })
 
@@ -378,6 +381,7 @@ function ProductDetailPage() {
                             size="sm"
                             variant="ghost"
                             onClick={() => setPrimary.mutate(image.id)}
+                            disabled={setPrimary.isPending}
                           >
                             {t("Set primary")}
                           </Button>

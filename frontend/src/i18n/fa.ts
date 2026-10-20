@@ -350,6 +350,8 @@ export const fa: Record<string, string> = {
   "Model previews generated": "پیش‌نمایش‌های مدل تولید شد",
   "Reference uploaded": "مرجع بارگذاری شد",
   "Default model updated": "مدل پیش‌فرض به‌روزرسانی شد",
+  "Canonical reference updated": "مرجع اصلی به‌روزرسانی شد",
+  "Primary image updated": "عکس اصلی به‌روزرسانی شد",
   "Set a ready model as default": "یک مدل آماده را پیش‌فرض تعیین کنید",
   "Only ready models can be default": "فقط مدل‌های آماده می‌توانند پیش‌فرض باشند",
   "A real model needs a consent record first":

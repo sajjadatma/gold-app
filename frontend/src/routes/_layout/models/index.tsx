@@ -4,6 +4,7 @@ import { Plus, UserRound } from "lucide-react"
 
 import { BrandModelsService } from "@/client"
 import { NoBrand } from "@/components/Common/NoBrand"
+import { QueryError } from "@/components/Common/QueryError"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -33,7 +34,7 @@ export const Route = createFileRoute("/_layout/models/")({
 function ModelsPage() {
   const { brand } = useBrand()
   const { t, formatDate } = useI18n()
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["models", brand?.id],
     queryFn: async () =>
       (
@@ -45,6 +46,7 @@ function ModelsPage() {
   })
 
   if (!brand) return <NoBrand />
+  if (isError) return <QueryError onRetry={() => refetch()} />
 
   return (
     <div className="space-y-6">

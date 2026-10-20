@@ -4,6 +4,7 @@ import { FileText } from "lucide-react"
 
 import { ContentService, ProductsService } from "@/client"
 import { NoBrand } from "@/components/Common/NoBrand"
+import { QueryError } from "@/components/Common/QueryError"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useBrand } from "@/hooks/useBrand"
@@ -33,7 +34,7 @@ const statusVariant = (status: string) => {
 function ContentPage() {
   const { brand } = useBrand()
   const { t, formatDate } = useI18n()
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["drafts", brand?.id],
     queryFn: async () =>
       (
@@ -57,6 +58,7 @@ function ContentPage() {
   })
 
   if (!brand) return <NoBrand />
+  if (isError) return <QueryError onRetry={() => refetch()} />
   const productNames = new Map(
     (products?.data ?? []).map((product) => [product.id, product.name]),
   )

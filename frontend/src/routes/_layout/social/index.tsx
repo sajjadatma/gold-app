@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 
 import { PublishingService } from "@/client"
 import { NoBrand } from "@/components/Common/NoBrand"
+import { QueryError } from "@/components/Common/QueryError"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -44,7 +45,7 @@ function SocialPage() {
   const [accountName, setAccountName] = useState("")
   const [token, setToken] = useState("")
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["social", brand?.id],
     queryFn: async () =>
       (
@@ -97,6 +98,7 @@ function SocialPage() {
   })
 
   if (!brand) return <NoBrand />
+  if (isError) return <QueryError onRetry={() => refetch()} />
   if (isLoading)
     return (
       <p className="text-sm text-muted-foreground">
@@ -181,6 +183,7 @@ function SocialPage() {
               {connected ? (
                 <Button
                   variant="outline"
+                  disabled={disconnect.isPending}
                   onClick={() => {
                     if (
                       window.confirm("Disconnect Instagram for this brand?")

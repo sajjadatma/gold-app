@@ -6,6 +6,7 @@ import { useState } from "react"
 import { BrandImportService } from "@/client"
 import { AssetThumb } from "@/components/Assets/AssetThumb"
 import { NoBrand } from "@/components/Common/NoBrand"
+import { QueryError } from "@/components/Common/QueryError"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -55,7 +56,7 @@ function AssetsPage() {
   const { t } = useI18n()
   const [filter, setFilter] = useState("all")
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["assets", brand?.id, filter],
     queryFn: async () =>
       (
@@ -80,6 +81,7 @@ function AssetsPage() {
   })
 
   if (!brand) return <NoBrand />
+  if (isError) return <QueryError onRetry={() => refetch()} />
   const isOwner = brand.role === "owner"
 
   return (
