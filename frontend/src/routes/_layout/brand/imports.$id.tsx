@@ -9,11 +9,21 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { useBrand } from "@/hooks/useBrand"
 import useCustomToast from "@/hooks/useCustomToast"
+import { pageTitle, useI18n } from "@/i18n"
 import { downloadPrivateFile } from "@/lib/privateFiles"
 
 export const Route = createFileRoute("/_layout/brand/imports/$id")({
   component: ImportDetailPage,
-  head: () => ({ meta: [{ title: "Import Detail - Jewelry Brand Studio" }] }),
+  head: () => ({
+    meta: [
+      {
+        title: pageTitle(
+          "Import Detail - Jewelry Brand Studio",
+          "جزئیات ورود - استودیوی برند جواهرات",
+        ),
+      },
+    ],
+  }),
 })
 
 function ImportDetailPage() {
@@ -22,6 +32,7 @@ function ImportDetailPage() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { showErrorToast, showSuccessToast } = useCustomToast()
+  const { t } = useI18n()
 
   const { data, isLoading } = useQuery({
     queryKey: ["import", brand?.id, id],
@@ -43,33 +54,38 @@ function ImportDetailPage() {
       ).data,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["profile", brand?.id] })
-      showSuccessToast("Brand profile ready for review")
+      showSuccessToast(t("Brand profile ready for review"))
       navigate({ to: "/brand/profile" })
     },
-    onError: () => showErrorToast("Brand analysis failed. Please retry."),
+    onError: () => showErrorToast(t("Brand analysis failed. Please retry.")),
   })
 
   if (!brand) return <NoBrand />
   if (isLoading) {
-    return <p className="text-sm text-muted-foreground">Loading import...</p>
+    return <p className="text-sm text-muted-foreground">{t("Loading...")}</p>
   }
   if (!data) {
-    return <p className="text-sm text-muted-foreground">Import not found.</p>
+    return (
+      <p className="text-sm text-muted-foreground">{t("Import not found")}</p>
+    )
   }
 
   return (
     <div className="space-y-6">
       <Button variant="ghost" size="sm" asChild className="-ml-2">
         <Link to="/brand/import">
-          <ArrowLeft className="mr-2 h-4 w-4" /> Back to import
+          <ArrowLeft className="mr-2 h-4 w-4" /> {t("Back to import")}
         </Link>
       </Button>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Import detail</h1>
+          <h1 className="text-2xl font-semibold">{t("Import detail")}</h1>
           <p className="text-sm text-muted-foreground">
-            {data.processed_file_count} processed · {data.error_count} errors
+            {t("{count} processed · {errors} errors", {
+              count: data.processed_file_count,
+              errors: data.error_count,
+            })}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -77,21 +93,21 @@ function ImportDetailPage() {
             variant={data.status === "completed" ? "default" : "secondary"}
             className="capitalize"
           >
-            {data.status.replace("_", " ")}
+            {t(data.status)}
           </Badge>
           <Button
             onClick={() => analyze.mutate()}
             disabled={analyze.isPending || data.assets.length === 0}
           >
             <Sparkles className="mr-2 h-4 w-4" />
-            {analyze.isPending ? "Analyzing..." : "Analyze brand"}
+            {analyze.isPending ? t("Analyzing") : t("Analyze brand")}
           </Button>
         </div>
       </div>
 
       {data.assets.length === 0 ? (
         <p className="rounded-lg border border-dashed p-6 text-sm text-muted-foreground">
-          No files were stored from this import.
+          {t("No files were stored from this import.")}
         </p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -109,7 +125,7 @@ function ImportDetailPage() {
                 </p>
                 <div className="flex items-center justify-between gap-2">
                   <Badge variant="outline" className="capitalize">
-                    {asset.asset_type.replace("_", " ")}
+                    {t(asset.asset_type.replace(/_/g, " "))}
                   </Badge>
                   <Button
                     variant="ghost"

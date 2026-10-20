@@ -37,3 +37,5 @@ MVP1 execution status. Updated at the end of every completed stage.
 
 - Dashboard logout button.
 - Brand-book PDFs are read in full from embedded text; real AI analysis is chunked across the document and unknown sections are stored in `additional_sections`.
+
+- Added English/Farsi localization with RTL, Persian dates, persisted language selection, and a sidebar/auth language switcher.

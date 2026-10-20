@@ -18,11 +18,21 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useBrand } from "@/hooks/useBrand"
 import useCustomToast from "@/hooks/useCustomToast"
+import { pageTitle, useI18n } from "@/i18n"
 import { uploadBrandFiles } from "@/lib/privateFiles"
 
 export const Route = createFileRoute("/_layout/brand/import")({
   component: ImportPage,
-  head: () => ({ meta: [{ title: "Brand Import - Jewelry Brand Studio" }] }),
+  head: () => ({
+    meta: [
+      {
+        title: pageTitle(
+          "Brand Import - Jewelry Brand Studio",
+          "ورود برند - استودیوی برند جواهرات",
+        ),
+      },
+    ],
+  }),
 })
 
 const statusVariant = (status: string) => {
@@ -35,6 +45,7 @@ function ImportPage() {
   const { brand } = useBrand()
   const navigate = useNavigate()
   const { showErrorToast, showSuccessToast } = useCustomToast()
+  const { t, formatDate } = useI18n()
   const [files, setFiles] = useState<File[]>([])
   const [uploading, setUploading] = useState(false)
 
@@ -56,12 +67,14 @@ function ImportPage() {
     setUploading(true)
     try {
       const result = (await uploadBrandFiles(brand.id, files)) as { id: string }
-      showSuccessToast("Import processed")
+      showSuccessToast(t("Import processed"))
       setFiles([])
       await refetch()
       navigate({ to: "/brand/imports/$id", params: { id: result.id } })
     } catch (error) {
-      showErrorToast(error instanceof Error ? error.message : "Upload failed")
+      showErrorToast(
+        error instanceof Error ? error.message : t("Upload failed"),
+      )
     } finally {
       setUploading(false)
     }
@@ -72,24 +85,24 @@ function ImportPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold">Import brand assets</h1>
+        <h1 className="text-2xl font-semibold">{t("Import brand assets")}</h1>
         <p className="max-w-2xl text-sm text-muted-foreground">
-          Upload the brand book, logos, fonts, campaign references, patterns,
-          and design sources your brand already uses. PDF, images, SVG, fonts,
-          ZIP, AI, EPS, and PSD are accepted.
+          {t(
+            "Upload the brand book, logos, fonts, campaign references, patterns, and design sources your brand already uses. PDF, images, SVG, fonts, ZIP, AI, EPS, and PSD are accepted.",
+          )}
         </p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>New import</CardTitle>
+          <CardTitle>{t("New import")}</CardTitle>
           <CardDescription>
-            Files are stored privately and validated before processing.
+            {t("Files are stored privately and validated before processing.")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-2">
-            <Label htmlFor="brand-files">Files</Label>
+            <Label htmlFor="brand-files">{t("Files")}</Label>
             <Input
               id="brand-files"
               type="file"
@@ -100,21 +113,28 @@ function ImportPage() {
             />
             {files.length ? (
               <p className="text-xs text-muted-foreground">
-                {files.length} file{files.length === 1 ? "" : "s"} selected
+                {t(
+                  files.length === 1
+                    ? "{count} file selected"
+                    : "{count} files selected",
+                  { count: files.length },
+                )}
               </p>
             ) : null}
           </div>
           <Button onClick={upload} disabled={!files.length || uploading}>
             <Upload className="mr-2 h-4 w-4" />
-            {uploading ? "Processing..." : "Upload and process"}
+            {uploading ? t("Processing...") : t("Upload and process")}
           </Button>
         </CardContent>
       </Card>
 
       <div className="space-y-3">
-        <h2 className="text-lg font-semibold">Recent imports</h2>
+        <h2 className="text-lg font-semibold">{t("Recent imports")}</h2>
         {imports.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No imports yet.</p>
+          <p className="text-sm text-muted-foreground">
+            {t("No imports yet.")}
+          </p>
         ) : (
           <div className="divide-y rounded-lg border">
             {imports.map((item) => (
@@ -126,15 +146,20 @@ function ImportPage() {
               >
                 <div>
                   <p className="text-sm font-medium">
-                    {new Date(item.created_at).toLocaleString()}
+                    {formatDate(item.created_at, {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {item.processed_file_count} processed · {item.error_count}{" "}
-                    errors
+                    {t("{count} processed · {errors} errors", {
+                      count: item.processed_file_count,
+                      errors: item.error_count,
+                    })}
                   </p>
                 </div>
                 <Badge variant={statusVariant(item.status)}>
-                  {item.status.replace("_", " ")}
+                  {t(item.status)}
                 </Badge>
               </Link>
             ))}

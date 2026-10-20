@@ -74,6 +74,16 @@ OCR_MODEL=gpt-6-luna
 
 OpenCode Go is intended for coding-agent traffic and is monitored for abuse. For document/OCR workloads, the OpenCode **Console pay-as-you-go** endpoint (`https://opencode.ai/inference/openai/v1`) uses the same model and is the safer choice. OpenAI's GPT-6 Luna requests are retained for up to 30 days for abuse monitoring.
 
+## Languages
+
+The UI ships with **English** and **Farsi**. Use the language control in the sidebar (or the auth pages) to switch; the choice is saved in localStorage.
+
+- Farsi switches the document to RTL (`dir="rtl"`) and uses Persian date formatting.
+- Navigation, forms, buttons, validation messages, statuses, empty states, dialogs, and accessibility labels are translated.
+- Brand names, user-entered content, AI-generated copy, and backend error details remain in their source language by design.
+
+Translation resources live in `frontend/src/i18n/fa.ts`; the i18n provider and hooks are in `frontend/src/i18n/index.tsx`.
+
 ## Providers
 
 | Area | Default | Production configuration |

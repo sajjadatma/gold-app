@@ -10,10 +10,12 @@ export type UserTableData = UserPublic & {
   isCurrentUser: boolean
 }
 
-export const columns: ColumnDef<DataTableFeatures, UserTableData>[] = [
+export const getColumns = (
+  t: (key: string) => string,
+): ColumnDef<DataTableFeatures, UserTableData>[] => [
   {
     accessorKey: "full_name",
-    header: "Full Name",
+    header: t("Full Name"),
     cell: ({ row }) => {
       const fullName = row.original.full_name
       return (
@@ -21,11 +23,11 @@ export const columns: ColumnDef<DataTableFeatures, UserTableData>[] = [
           <span
             className={cn("font-medium", !fullName && "text-muted-foreground")}
           >
-            {fullName || "N/A"}
+            {fullName || t("N/A")}
           </span>
           {row.original.isCurrentUser && (
             <Badge variant="outline" className="text-xs">
-              You
+              {t("You")}
             </Badge>
           )}
         </div>
@@ -34,23 +36,23 @@ export const columns: ColumnDef<DataTableFeatures, UserTableData>[] = [
   },
   {
     accessorKey: "email",
-    header: "Email",
+    header: t("Email"),
     cell: ({ row }) => (
       <span className="text-muted-foreground">{row.original.email}</span>
     ),
   },
   {
     accessorKey: "is_superuser",
-    header: "Role",
+    header: t("Role"),
     cell: ({ row }) => (
       <Badge variant={row.original.is_superuser ? "default" : "secondary"}>
-        {row.original.is_superuser ? "Superuser" : "User"}
+        {row.original.is_superuser ? t("Superuser") : t("User")}
       </Badge>
     ),
   },
   {
     accessorKey: "is_active",
-    header: "Status",
+    header: t("Status"),
     cell: ({ row }) => (
       <div className="flex items-center gap-2">
         <span
@@ -60,14 +62,14 @@ export const columns: ColumnDef<DataTableFeatures, UserTableData>[] = [
           )}
         />
         <span className={row.original.is_active ? "" : "text-muted-foreground"}>
-          {row.original.is_active ? "Active" : "Inactive"}
+          {row.original.is_active ? t("Active") : t("Inactive")}
         </span>
       </div>
     ),
   },
   {
     id: "actions",
-    header: () => <span className="sr-only">Actions</span>,
+    header: () => <span className="sr-only">{t("Actions")}</span>,
     cell: ({ row }) => (
       <div className="flex justify-end">
         <UserActionsMenu user={row.original} />

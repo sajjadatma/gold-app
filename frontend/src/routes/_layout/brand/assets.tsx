@@ -18,12 +18,22 @@ import {
 } from "@/components/ui/select"
 import { useBrand } from "@/hooks/useBrand"
 import useCustomToast from "@/hooks/useCustomToast"
+import { pageTitle, useI18n } from "@/i18n"
 import { downloadPrivateFile } from "@/lib/privateFiles"
 import { handleError } from "@/utils"
 
 export const Route = createFileRoute("/_layout/brand/assets")({
   component: AssetsPage,
-  head: () => ({ meta: [{ title: "Brand Assets - Jewelry Brand Studio" }] }),
+  head: () => ({
+    meta: [
+      {
+        title: pageTitle(
+          "Brand Assets - Jewelry Brand Studio",
+          "دارایی‌های برند - استودیوی برند جواهرات",
+        ),
+      },
+    ],
+  }),
 })
 
 const assetTypes = [
@@ -42,6 +52,7 @@ function AssetsPage() {
   const { brand } = useBrand()
   const queryClient = useQueryClient()
   const { showErrorToast, showSuccessToast } = useCustomToast()
+  const { t } = useI18n()
   const [filter, setFilter] = useState("all")
 
   const { data, isLoading } = useQuery({
@@ -63,7 +74,7 @@ function AssetsPage() {
       }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["assets", brand?.id] })
-      showSuccessToast("Asset removed from active use")
+      showSuccessToast(t("Asset removed from active use"))
     },
     onError: handleError.bind(showErrorToast),
   })
@@ -75,23 +86,24 @@ function AssetsPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">Brand assets</h1>
+          <h1 className="text-2xl font-semibold">{t("Brand assets")}</h1>
           <p className="text-sm text-muted-foreground">
-            Originals are preserved. Removing an asset only takes it out of
-            active use.
+            {t(
+              "Originals are preserved. Removing an asset only takes it out of active use.",
+            )}
           </p>
         </div>
         <div className="grid w-56 gap-2">
-          <Label htmlFor="asset-filter">Filter by type</Label>
+          <Label htmlFor="asset-filter">{t("Filter by type")}</Label>
           <Select value={filter} onValueChange={setFilter}>
             <SelectTrigger id="asset-filter">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All types</SelectItem>
+              <SelectItem value="all">{t("All types")}</SelectItem>
               {assetTypes.map((type) => (
                 <SelectItem key={type} value={type}>
-                  {type.replace("_", " ")}
+                  {t(type.replace(/_/g, " "))}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -103,7 +115,7 @@ function AssetsPage() {
         <p className="text-sm text-muted-foreground">Loading assets...</p>
       ) : !data?.data.length ? (
         <p className="rounded-lg border border-dashed p-6 text-sm text-muted-foreground">
-          No assets yet. Import brand material to get started.
+          {t("No assets yet. Import brand material to get started.")}
         </p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -121,13 +133,15 @@ function AssetsPage() {
                 </p>
                 <div className="flex items-center justify-between gap-1">
                   <Badge variant="outline" className="capitalize">
-                    {asset.asset_type.replace("_", " ")}
+                    {t(asset.asset_type.replace(/_/g, " "))}
                   </Badge>
                   <div className="flex">
                     <Button
                       variant="ghost"
                       size="icon"
-                      aria-label={`Download ${asset.original_filename}`}
+                      aria-label={t("Download {name}", {
+                        name: asset.original_filename,
+                      })}
                       onClick={() =>
                         downloadPrivateFile(
                           `/api/v1/brands/${brand.id}/assets/${asset.id}/download`,
@@ -141,11 +155,15 @@ function AssetsPage() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        aria-label={`Archive ${asset.original_filename}`}
+                        aria-label={t("Archive {name}", {
+                          name: asset.original_filename,
+                        })}
                         onClick={() => {
                           if (
                             window.confirm(
-                              `Remove ${asset.original_filename} from active use?`,
+                              t("Remove {name} from active use?", {
+                                name: asset.original_filename,
+                              }),
                             )
                           ) {
                             archive.mutate(asset.id)

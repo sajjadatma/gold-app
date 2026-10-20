@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useBrand } from "@/hooks/useBrand"
 import useCustomToast from "@/hooks/useCustomToast"
+import { useI18n } from "@/i18n"
 import { handleError } from "@/utils"
 
 export function CreateBrandDialog({ trigger }: { trigger?: ReactNode }) {
@@ -24,11 +25,12 @@ export function CreateBrandDialog({ trigger }: { trigger?: ReactNode }) {
   const [name, setName] = useState("")
   const { showErrorToast, showSuccessToast } = useCustomToast()
   const { createBrand } = useBrand()
+  const { t } = useI18n()
 
   const mutation = useMutation({
     mutationFn: async () => createBrand(name),
     onSuccess: () => {
-      showSuccessToast("Brand created")
+      showSuccessToast(t("Brand created"))
       setName("")
       setOpen(false)
     },
@@ -40,15 +42,15 @@ export function CreateBrandDialog({ trigger }: { trigger?: ReactNode }) {
       <DialogTrigger asChild>
         {trigger ?? (
           <Button size="sm">
-            <Plus className="mr-1 h-4 w-4" /> New brand
+            <Plus className="mr-1 h-4 w-4" /> {t("New brand")}
           </Button>
         )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create brand</DialogTitle>
+          <DialogTitle>{t("Create brand")}</DialogTitle>
           <DialogDescription>
-            Add a jewelry brand workspace. You become its owner.
+            {t("Add a jewelry brand workspace. You become its owner.")}
           </DialogDescription>
         </DialogHeader>
         <form
@@ -58,18 +60,18 @@ export function CreateBrandDialog({ trigger }: { trigger?: ReactNode }) {
           }}
         >
           <div className="grid gap-2 py-2">
-            <Label htmlFor="brand-name">Brand name</Label>
+            <Label htmlFor="brand-name">{t("Brand name")}</Label>
             <Input
               id="brand-name"
               value={name}
               onChange={(event) => setName(event.target.value)}
-              placeholder="e.g. Aurum Atelier"
+              placeholder={t("e.g. Aurum Atelier")}
               autoFocus
             />
           </div>
           <DialogFooter>
             <Button type="submit" disabled={!name.trim() || mutation.isPending}>
-              {mutation.isPending ? "Creating..." : "Create brand"}
+              {mutation.isPending ? t("Creating...") : t("Create brand")}
             </Button>
           </DialogFooter>
         </form>

@@ -35,11 +35,21 @@ import {
 } from "@/components/ui/table"
 import { useBrand } from "@/hooks/useBrand"
 import useCustomToast from "@/hooks/useCustomToast"
+import { pageTitle, useI18n } from "@/i18n"
 import { handleError } from "@/utils"
 
 export const Route = createFileRoute("/_layout/team")({
   component: TeamPage,
-  head: () => ({ meta: [{ title: "Team - Jewelry Brand Studio" }] }),
+  head: () => ({
+    meta: [
+      {
+        title: pageTitle(
+          "Team - Jewelry Brand Studio",
+          "تیم - استودیوی برند جواهرات",
+        ),
+      },
+    ],
+  }),
 })
 
 function AddMemberDialog({
@@ -53,6 +63,7 @@ function AddMemberDialog({
   const [email, setEmail] = useState("")
   const [role, setRole] = useState<MemberRole>("content_manager")
   const { showErrorToast, showSuccessToast } = useCustomToast()
+  const { t } = useI18n()
 
   const mutation = useMutation({
     mutationFn: async () =>
@@ -64,7 +75,7 @@ function AddMemberDialog({
       ).data,
     onSuccess: async () => {
       await onAdded()
-      showSuccessToast("Member added")
+      showSuccessToast(t("Member added"))
       setEmail("")
       setOpen(false)
     },
@@ -75,14 +86,14 @@ function AddMemberDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size="sm">
-          <Plus className="mr-1 h-4 w-4" /> Add member
+          <Plus className="mr-1 h-4 w-4" /> {t("Add member")}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add team member</DialogTitle>
+          <DialogTitle>{t("Add team member")}</DialogTitle>
           <DialogDescription>
-            The person must already have an account in this application.
+            {t("The person must already have an account in this application.")}
           </DialogDescription>
         </DialogHeader>
         <form
@@ -93,7 +104,7 @@ function AddMemberDialog({
         >
           <div className="grid gap-3 py-2">
             <div className="grid gap-2">
-              <Label htmlFor="member-email">Email</Label>
+              <Label htmlFor="member-email">{t("Email")}</Label>
               <Input
                 id="member-email"
                 type="email"
@@ -103,7 +114,7 @@ function AddMemberDialog({
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="member-role">Role</Label>
+              <Label htmlFor="member-role">{t("Role")}</Label>
               <Select
                 value={role}
                 onValueChange={(value) => setRole(value as MemberRole)}
@@ -113,16 +124,16 @@ function AddMemberDialog({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="content_manager">
-                    Content Manager
+                    {t("Content Manager")}
                   </SelectItem>
-                  <SelectItem value="owner">Owner</SelectItem>
+                  <SelectItem value="owner">{t("Owner")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
           <DialogFooter>
             <Button type="submit" disabled={mutation.isPending}>
-              {mutation.isPending ? "Adding..." : "Add member"}
+              {mutation.isPending ? t("Adding...") : t("Add member")}
             </Button>
           </DialogFooter>
         </form>
@@ -135,6 +146,7 @@ function TeamPage() {
   const { brand } = useBrand()
   const queryClient = useQueryClient()
   const { showErrorToast, showSuccessToast } = useCustomToast()
+  const { t } = useI18n()
 
   const { data, isLoading } = useQuery({
     queryKey: ["members", brand?.id],
@@ -165,7 +177,7 @@ function TeamPage() {
       }),
     onSuccess: async () => {
       await refresh()
-      showSuccessToast("Role updated")
+      showSuccessToast(t("Role updated"))
     },
     onError: handleError.bind(showErrorToast),
   })
@@ -177,7 +189,7 @@ function TeamPage() {
       }),
     onSuccess: async () => {
       await refresh()
-      showSuccessToast("Member removed")
+      showSuccessToast(t("Member removed"))
     },
     onError: handleError.bind(showErrorToast),
   })
@@ -191,9 +203,9 @@ function TeamPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Team</h1>
+          <h1 className="text-2xl font-semibold">{t("Team")}</h1>
           <p className="text-sm text-muted-foreground">
-            People with access to {brand.name}.
+            {t("People with access to {name}.", { name: brand.name })}
           </p>
         </div>
         {isOwner ? (
@@ -202,15 +214,17 @@ function TeamPage() {
       </div>
 
       {isLoading ? (
-        <p className="text-sm text-muted-foreground">Loading members...</p>
+        <p className="text-sm text-muted-foreground">
+          {t("Loading members...")}
+        </p>
       ) : (
         <div className="rounded-lg border">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Role</TableHead>
+                <TableHead>{t("Name")}</TableHead>
+                <TableHead>{t("Email")}</TableHead>
+                <TableHead>{t("Role")}</TableHead>
                 {isOwner ? <TableHead className="w-16" /> : null}
               </TableRow>
             </TableHeader>
@@ -232,20 +246,20 @@ function TeamPage() {
                       >
                         <SelectTrigger
                           className="w-44"
-                          aria-label="Member role"
+                          aria-label={t("Member role")}
                         >
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="owner">Owner</SelectItem>
+                          <SelectItem value="owner">{t("Owner")}</SelectItem>
                           <SelectItem value="content_manager">
-                            Content Manager
+                            {t("Content Manager")}
                           </SelectItem>
                         </SelectContent>
                       </Select>
                     ) : (
                       <Badge variant="outline" className="capitalize">
-                        {member.role.replace("_", " ")}
+                        {t(member.role)}
                       </Badge>
                     )}
                   </TableCell>
@@ -254,11 +268,16 @@ function TeamPage() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        aria-label={`Remove ${member.email}`}
+                        aria-label={t("Remove {email}", {
+                          email: member.email,
+                        })}
                         onClick={() => {
                           if (
                             window.confirm(
-                              `Remove ${member.email} from ${brand.name}?`,
+                              t("Remove {email} from {brand}?", {
+                                email: member.email,
+                                brand: brand.name,
+                              }),
                             )
                           ) {
                             removeMutation.mutate(member.id)

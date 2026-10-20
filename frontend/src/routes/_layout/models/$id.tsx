@@ -20,12 +20,22 @@ import { Label } from "@/components/ui/label"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useBrand } from "@/hooks/useBrand"
 import useCustomToast from "@/hooks/useCustomToast"
+import { pageTitle, useI18n } from "@/i18n"
 import { fetchPrivateFile } from "@/lib/privateFiles"
 import { handleError } from "@/utils"
 
 export const Route = createFileRoute("/_layout/models/$id")({
   component: ModelDetailPage,
-  head: () => ({ meta: [{ title: "Brand Model - Jewelry Brand Studio" }] }),
+  head: () => ({
+    meta: [
+      {
+        title: pageTitle(
+          "Brand Model - Jewelry Brand Studio",
+          "مدل برند - استودیوی برند جواهرات",
+        ),
+      },
+    ],
+  }),
 })
 
 function ReferenceImage({
@@ -40,6 +50,7 @@ function ReferenceImage({
   onCanonical: () => void
 }) {
   const [url, setUrl] = useState<string | null>(null)
+  const { t } = useI18n()
 
   useEffect(() => {
     let active = true
@@ -70,7 +81,7 @@ function ReferenceImage({
         {url ? (
           <img
             src={url}
-            alt="Model reference"
+            alt={t("Model reference")}
             className="h-full w-full object-cover"
           />
         ) : (
@@ -78,7 +89,9 @@ function ReferenceImage({
         )}
       </div>
       <div className="flex items-center justify-between p-2 text-xs">
-        <span>{reference.is_canonical ? "Canonical" : "Set canonical"}</span>
+        <span>
+          {reference.is_canonical ? t("Canonical") : t("Set canonical")}
+        </span>
         {reference.is_canonical ? (
           <CheckCircle2 className="h-4 w-4 text-primary" />
         ) : null}
@@ -92,6 +105,7 @@ function ModelDetailPage() {
   const { brand } = useBrand()
   const queryClient = useQueryClient()
   const { showErrorToast, showSuccessToast } = useCustomToast()
+  const { t, formatDate } = useI18n()
   const [file, setFile] = useState<File | null>(null)
   const [consentChecked, setConsentChecked] = useState(false)
   const [scope, setScope] = useState("brand_imagery")
@@ -118,14 +132,14 @@ function ModelDetailPage() {
       }),
     onSuccess: async () => {
       await refresh()
-      showSuccessToast("Model previews generated")
+      showSuccessToast(t("Model previews generated"))
     },
     onError: handleError.bind(showErrorToast),
   })
 
   const upload = useMutation({
     mutationFn: async () => {
-      if (!file) throw new Error("Choose an image first")
+      if (!file) throw new Error(t("Choose an image first"))
       return BrandModelsService.uploadReference({
         path: { brand_id: brand?.id ?? "", model_id: id },
         body: { file },
@@ -134,7 +148,7 @@ function ModelDetailPage() {
     onSuccess: async () => {
       setFile(null)
       await refresh()
-      showSuccessToast("Reference uploaded")
+      showSuccessToast(t("Reference uploaded"))
     },
     onError: handleError.bind(showErrorToast),
   })
@@ -160,7 +174,7 @@ function ModelDetailPage() {
       }),
     onSuccess: async () => {
       await refresh()
-      showSuccessToast("Consent recorded")
+      showSuccessToast(t("Consent recorded"))
     },
     onError: handleError.bind(showErrorToast),
   })
@@ -172,16 +186,18 @@ function ModelDetailPage() {
       }),
     onSuccess: async () => {
       await refresh()
-      showSuccessToast("Default model updated")
+      showSuccessToast(t("Default model updated"))
     },
     onError: handleError.bind(showErrorToast),
   })
 
   if (!brand) return <NoBrand />
   if (isLoading)
-    return <p className="text-sm text-muted-foreground">Loading model...</p>
+    return <p className="text-sm text-muted-foreground">{t("Loading...")}</p>
   if (!data)
-    return <p className="text-sm text-muted-foreground">Model not found.</p>
+    return (
+      <p className="text-sm text-muted-foreground">{t("Model not found")}</p>
+    )
 
   const configEntries = Object.entries(data.config_json).filter(
     ([, value]) => typeof value === "string" && value.trim(),
@@ -191,7 +207,7 @@ function ModelDetailPage() {
     <div className="space-y-6">
       <Button variant="ghost" size="sm" asChild className="-ml-2">
         <Link to="/models">
-          <ArrowLeft className="mr-2 h-4 w-4" /> All models
+          <ArrowLeft className="mr-2 h-4 w-4" /> {t("All models")}
         </Link>
       </Button>
 
@@ -199,16 +215,14 @@ function ModelDetailPage() {
         <div>
           <h1 className="text-2xl font-semibold">{data.name}</h1>
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <Badge variant="outline" className="capitalize">
-              {data.type}
-            </Badge>
+            <Badge variant="outline">{t(data.type)}</Badge>
             <Badge
               variant={data.status === "ready" ? "default" : "secondary"}
               className="capitalize"
             >
-              {data.status}
+              {t(data.status)}
             </Badge>
-            {data.is_default ? <Badge>Default</Badge> : null}
+            {data.is_default ? <Badge>{t("Default")}</Badge> : null}
           </div>
         </div>
         <div className="flex gap-2">
@@ -218,7 +232,7 @@ function ModelDetailPage() {
               disabled={previews.isPending}
             >
               <RefreshCw className="mr-2 h-4 w-4" />
-              {previews.isPending ? "Generating..." : "Generate previews"}
+              {previews.isPending ? t("Generating...") : t("Generate previews")}
             </Button>
           ) : null}
           <Button
@@ -226,7 +240,7 @@ function ModelDetailPage() {
             onClick={() => makeDefault.mutate()}
             disabled={data.is_default || data.status !== "ready"}
           >
-            Set default
+            {t("Set default")}
           </Button>
         </div>
       </div>
@@ -234,13 +248,13 @@ function ModelDetailPage() {
       {configEntries.length ? (
         <Card>
           <CardHeader>
-            <CardTitle>Visual direction</CardTitle>
+            <CardTitle>{t("Visual direction")}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-2 text-sm sm:grid-cols-2">
             {configEntries.map(([key, value]) => (
               <div key={key}>
                 <span className="capitalize text-muted-foreground">
-                  {key.replace(/_/g, " ")}:{" "}
+                  {t(key.replace(/_/g, " "))}:{" "}
                 </span>
                 <span>{String(value)}</span>
               </div>
@@ -250,10 +264,10 @@ function ModelDetailPage() {
       ) : null}
 
       <div className="space-y-3">
-        <h2 className="text-lg font-semibold">References</h2>
+        <h2 className="text-lg font-semibold">{t("References")}</h2>
         {data.references.length === 0 ? (
           <p className="rounded-lg border border-dashed p-6 text-sm text-muted-foreground">
-            No references yet.
+            {t("No references yet.")}
           </p>
         ) : (
           <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-4">
@@ -273,15 +287,16 @@ function ModelDetailPage() {
       {data.type === "real" ? (
         <Card>
           <CardHeader>
-            <CardTitle>Real model references and consent</CardTitle>
+            <CardTitle>{t("Real model references and consent")}</CardTitle>
             <CardDescription>
-              Upload reference photos, then record the person's consent before
-              this model can be used or made default.
+              {t(
+                "Upload reference photos, then record the person's consent before this model can be used or made default.",
+              )}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-2">
-              <Label htmlFor="reference-file">Reference photo</Label>
+              <Label htmlFor="reference-file">{t("Reference photo")}</Label>
               <Input
                 id="reference-file"
                 type="file"
@@ -294,17 +309,22 @@ function ModelDetailPage() {
                 disabled={!file || upload.isPending}
               >
                 <Upload className="mr-2 h-4 w-4" />
-                {upload.isPending ? "Uploading..." : "Upload reference"}
+                {upload.isPending ? t("Uploading...") : t("Upload reference")}
               </Button>
             </div>
 
             {data.consent ? (
               <div className="rounded-md border border-emerald-500/40 bg-emerald-500/5 p-4 text-sm">
-                <p className="font-medium">Consent recorded</p>
+                <p className="font-medium">{t("Consent recorded")}</p>
                 <p className="text-muted-foreground">
-                  Scope: {data.consent.permission_scope} · Version:{" "}
-                  {data.consent.confirmation_text_version} ·{" "}
-                  {new Date(data.consent.confirmed_at).toLocaleString()}
+                  {t("Scope: {scope} · Version: {version} · {date}", {
+                    scope: data.consent.permission_scope,
+                    version: data.consent.confirmation_text_version,
+                    date: formatDate(data.consent.confirmed_at, {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    }),
+                  })}
                 </p>
               </div>
             ) : (
@@ -321,12 +341,13 @@ function ModelDetailPage() {
                     htmlFor="consent-check"
                     className="font-normal leading-relaxed"
                   >
-                    I confirm that this person has consented to their likeness
-                    being used to create branded jewelry imagery for this brand.
+                    {t(
+                      "I confirm that this person has consented to their likeness being used to create branded jewelry imagery for this brand.",
+                    )}
                   </Label>
                 </div>
                 <div className="grid max-w-xs gap-2">
-                  <Label htmlFor="consent-scope">Permission scope</Label>
+                  <Label htmlFor="consent-scope">{t("Permission scope")}</Label>
                   <Input
                     id="consent-scope"
                     value={scope}
@@ -339,7 +360,7 @@ function ModelDetailPage() {
                     !consentChecked || !scope.trim() || consent.isPending
                   }
                 >
-                  Record consent
+                  {t("Record consent")}
                 </Button>
               </div>
             )}

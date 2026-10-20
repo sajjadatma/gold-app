@@ -28,6 +28,7 @@
 | Approval | Owner-only approve/reject with actor/timestamp audit; edits after approval require reapproval |
 | Publishing | Instagram connection (token never exposed), fake and Graph adapters, approved-only single-image post, idempotent jobs, bounded retry |
 | Platform | Private local/S3 storage, one Redis+arq worker, deterministic fakes, security headers, tenant-isolated downloads |
+| Localization | English + Farsi UI, RTL layout, Persian dates, persisted language choice, translated forms/statuses/empty states |
 
 ## Migrations
 
@@ -99,7 +100,7 @@ Full contract: [`docs/api-contracts.md`](api-contracts.md).
 | `bun run build` | passed |
 | Fresh DB `alembic upgrade head` | passed (18 tables, head `f1eb7aefef7a`) |
 | OpenAPI client regeneration | no pending diff |
-| Playwright critical path + real-model consent | **3 passed** (setup + 2 tests) |
+| Playwright full frontend suite | **65 passed** (includes language switching/RTL, critical path, consent) |
 
 The Playwright path covers: login → brand → brand asset import → analysis → profile activation → virtual model previews → product + source image → studio generation → content draft → caption → submit → Owner approval → Instagram connection → fake publish → published state, plus real-model consent enforcement.
 
@@ -122,6 +123,7 @@ No live external calls were made:
 - Import analysis runs synchronously; bounded by upload/archive limits.
 - Local storage is node-local; use S3 for multi-replica deployments.
 - No billing, inventory, or e-commerce.
+- Backend-generated content (AI copy, stored error/detail strings) is displayed in its source language; only frontend UI strings are localized.
 - Automated dependency-CVE scanning is not wired into CI.
 
 ## Required external credentials

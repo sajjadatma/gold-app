@@ -27,11 +27,21 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { useBrand } from "@/hooks/useBrand"
 import useCustomToast from "@/hooks/useCustomToast"
+import { pageTitle, useI18n } from "@/i18n"
 import { handleError } from "@/utils"
 
 export const Route = createFileRoute("/_layout/products/$id")({
   component: ProductDetailPage,
-  head: () => ({ meta: [{ title: "Product - Jewelry Brand Studio" }] }),
+  head: () => ({
+    meta: [
+      {
+        title: pageTitle(
+          "Product - Jewelry Brand Studio",
+          "محصول - استودیوی برند جواهرات",
+        ),
+      },
+    ],
+  }),
 })
 
 const categories: ProductCategory[] = [
@@ -49,6 +59,7 @@ function ProductDetailPage() {
   const { brand } = useBrand()
   const queryClient = useQueryClient()
   const { showErrorToast, showSuccessToast } = useCustomToast()
+  const { t } = useI18n()
   const [file, setFile] = useState<File | null>(null)
   const [form, setForm] = useState({
     name: "",
@@ -111,14 +122,14 @@ function ProductDetailPage() {
       }),
     onSuccess: async () => {
       await refresh()
-      showSuccessToast("Product saved")
+      showSuccessToast(t("Product saved"))
     },
     onError: handleError.bind(showErrorToast),
   })
 
   const upload = useMutation({
     mutationFn: async () => {
-      if (!file) throw new Error("Choose an image first")
+      if (!file) throw new Error(t("Choose an image first"))
       return ProductsService.uploadProductImage({
         path: { brand_id: brand?.id ?? "", product_id: id },
         body: { file },
@@ -127,7 +138,7 @@ function ProductDetailPage() {
     onSuccess: async () => {
       setFile(null)
       await refresh()
-      showSuccessToast("Source image uploaded")
+      showSuccessToast(t("Source image uploaded"))
     },
     onError: handleError.bind(showErrorToast),
   })
@@ -148,22 +159,24 @@ function ProductDetailPage() {
       }),
     onSuccess: async () => {
       await refresh()
-      showSuccessToast("Product archived")
+      showSuccessToast(t("Product archived"))
     },
     onError: handleError.bind(showErrorToast),
   })
 
   if (!brand) return <NoBrand />
   if (isLoading)
-    return <p className="text-sm text-muted-foreground">Loading product...</p>
+    return <p className="text-sm text-muted-foreground">{t("Loading...")}</p>
   if (!data)
-    return <p className="text-sm text-muted-foreground">Product not found.</p>
+    return (
+      <p className="text-sm text-muted-foreground">{t("Product not found.")}</p>
+    )
 
   return (
     <div className="space-y-6">
       <Button variant="ghost" size="sm" asChild className="-ml-2">
         <Link to="/products">
-          <ArrowLeft className="mr-2 h-4 w-4" /> All products
+          <ArrowLeft className="mr-2 h-4 w-4" /> {t("All products")}
         </Link>
       </Button>
 
@@ -171,11 +184,9 @@ function ProductDetailPage() {
         <div>
           <h1 className="text-2xl font-semibold">{data.name}</h1>
           <div className="mt-2 flex items-center gap-2">
-            <Badge variant="outline" className="capitalize">
-              {data.category}
-            </Badge>
+            <Badge variant="outline">{t(data.category)}</Badge>
             <Badge variant={data.status === "active" ? "default" : "secondary"}>
-              {data.status}
+              {t(data.status)}
             </Badge>
           </div>
         </div>
@@ -183,10 +194,11 @@ function ProductDetailPage() {
           <Button
             variant="outline"
             onClick={() => {
-              if (window.confirm(`Archive ${data.name}?`)) archive.mutate()
+              if (window.confirm(t("Archive {name}?", { name: data.name })))
+                archive.mutate()
             }}
           >
-            <Archive className="mr-2 h-4 w-4" /> Archive
+            <Archive className="mr-2 h-4 w-4" /> {t("Archive")}
           </Button>
         </div>
       </div>
@@ -194,14 +206,14 @@ function ProductDetailPage() {
       <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
         <Card>
           <CardHeader>
-            <CardTitle>Details</CardTitle>
+            <CardTitle>{t("Product details")}</CardTitle>
             <CardDescription>
-              Metadata used in generation and captions.
+              {t("Metadata used in generation and captions.")}
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">{t("Name")}</Label>
               <Input
                 id="name"
                 value={form.name}
@@ -211,7 +223,7 @@ function ProductDetailPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="category">Category</Label>
+              <Label htmlFor="category">{t("Category")}</Label>
               <Select
                 value={form.category}
                 onValueChange={(value) =>
@@ -235,7 +247,7 @@ function ProductDetailPage() {
               </Select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="sku">SKU</Label>
+              <Label htmlFor="sku">{t("SKU")}</Label>
               <Input
                 id="sku"
                 value={form.sku}
@@ -245,7 +257,7 @@ function ProductDetailPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="metal_type">Metal type</Label>
+              <Label htmlFor="metal_type">{t("Metal type")}</Label>
               <Input
                 id="metal_type"
                 value={form.metal_type}
@@ -255,7 +267,7 @@ function ProductDetailPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="metal_color">Metal color</Label>
+              <Label htmlFor="metal_color">{t("Metal color")}</Label>
               <Input
                 id="metal_color"
                 value={form.metal_color}
@@ -265,7 +277,7 @@ function ProductDetailPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="stone_type">Stone type</Label>
+              <Label htmlFor="stone_type">{t("Stone type")}</Label>
               <Input
                 id="stone_type"
                 value={form.stone_type}
@@ -275,7 +287,7 @@ function ProductDetailPage() {
               />
             </div>
             <div className="grid gap-2 sm:col-span-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">{t("Description")}</Label>
               <Textarea
                 id="description"
                 rows={3}
@@ -286,7 +298,7 @@ function ProductDetailPage() {
               />
             </div>
             <div className="grid gap-2 sm:col-span-2">
-              <Label htmlFor="integrity_notes">Integrity notes</Label>
+              <Label htmlFor="integrity_notes">{t("Integrity notes")}</Label>
               <Textarea
                 id="integrity_notes"
                 rows={2}
@@ -298,7 +310,7 @@ function ProductDetailPage() {
             </div>
             <div className="sm:col-span-2">
               <Button onClick={() => save.mutate()} disabled={save.isPending}>
-                {save.isPending ? "Saving..." : "Save product"}
+                {save.isPending ? t("Saving...") : t("Save product")}
               </Button>
             </div>
           </CardContent>
@@ -306,14 +318,14 @@ function ProductDetailPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Source images</CardTitle>
+            <CardTitle>{t("Source images")}</CardTitle>
             <CardDescription>
-              At least one photo is required before generation.
+              {t("At least one photo is required before generation.")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-2">
-              <Label htmlFor="source-image">Add image</Label>
+              <Label htmlFor="source-image">{t("Add image")}</Label>
               <Input
                 id="source-image"
                 type="file"
@@ -326,13 +338,13 @@ function ProductDetailPage() {
                 disabled={!file || upload.isPending}
               >
                 <Upload className="mr-2 h-4 w-4" />
-                {upload.isPending ? "Uploading..." : "Upload"}
+                {upload.isPending ? t("Uploading...") : t("Upload")}
               </Button>
             </div>
 
             {data.images.length === 0 ? (
               <p className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
-                No source images yet.
+                {t("No source images yet.")}
               </p>
             ) : (
               <div className="grid gap-3 sm:grid-cols-2">
@@ -357,17 +369,17 @@ function ProductDetailPage() {
                               : "secondary"
                           }
                         >
-                          {image.quality_status}
+                          {t(image.quality_status)}
                         </Badge>
                         {image.is_primary ? (
-                          <Badge>Primary</Badge>
+                          <Badge>{t("Primary")}</Badge>
                         ) : (
                           <Button
                             size="sm"
                             variant="ghost"
                             onClick={() => setPrimary.mutate(image.id)}
                           >
-                            Set primary
+                            {t("Set primary")}
                           </Button>
                         )}
                       </div>
@@ -375,8 +387,8 @@ function ProductDetailPage() {
                       image.quality_findings_json.warnings.length ? (
                         <p className="text-xs text-muted-foreground">
                           {(image.quality_findings_json.warnings as string[])
-                            .map((warning) => warning.replace(/_/g, " "))
-                            .join(", ")}
+                            .map((warning) => t(warning.replace(/_/g, " ")))
+                            .join("، ")}
                         </p>
                       ) : null}
                     </div>

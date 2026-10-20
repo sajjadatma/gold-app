@@ -24,11 +24,21 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { useBrand } from "@/hooks/useBrand"
 import useCustomToast from "@/hooks/useCustomToast"
+import { pageTitle, useI18n } from "@/i18n"
 import { handleError } from "@/utils"
 
 export const Route = createFileRoute("/_layout/products/new")({
   component: NewProductPage,
-  head: () => ({ meta: [{ title: "New Product - Jewelry Brand Studio" }] }),
+  head: () => ({
+    meta: [
+      {
+        title: pageTitle(
+          "New Product - Jewelry Brand Studio",
+          "محصول جدید - استودیوی برند جواهرات",
+        ),
+      },
+    ],
+  }),
 })
 
 const categories: ProductCategory[] = [
@@ -45,6 +55,7 @@ function NewProductPage() {
   const { brand } = useBrand()
   const navigate = useNavigate()
   const { showErrorToast } = useCustomToast()
+  const { t } = useI18n()
   const [form, setForm] = useState({
     name: "",
     category: "ring" as ProductCategory,
@@ -57,7 +68,7 @@ function NewProductPage() {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      if (!brand) throw new Error("No brand selected")
+      if (!brand) throw new Error(t("No brand selected"))
       return (
         await ProductsService.createProduct({
           path: { brand_id: brand.id },
@@ -96,10 +107,11 @@ function NewProductPage() {
   return (
     <div className="max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">New product</h1>
+        <h1 className="text-2xl font-semibold">{t("New product")}</h1>
         <p className="text-sm text-muted-foreground">
-          Add the piece's details. Source photos can be uploaded on the next
-          screen.
+          {t(
+            "Add the piece's details. Source photos can be uploaded on the next screen.",
+          )}
         </p>
       </div>
 
@@ -111,25 +123,25 @@ function NewProductPage() {
       >
         <Card>
           <CardHeader>
-            <CardTitle>Product details</CardTitle>
+            <CardTitle>{t("Product details")}</CardTitle>
             <CardDescription>
-              Only name and category are required.
+              {t("Only name and category are required.")}
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2">
             <div className="grid gap-2">
-              <Label htmlFor="product-name">Name</Label>
+              <Label htmlFor="product-name">{t("Name")}</Label>
               <Input
                 id="product-name"
                 value={form.name}
                 onChange={(event) =>
                   setForm({ ...form, name: event.target.value })
                 }
-                placeholder="e.g. Solitaire Ring"
+                placeholder={t("e.g. Solitaire Ring")}
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="product-category">Category</Label>
+              <Label htmlFor="product-category">{t("Category")}</Label>
               <Select
                 value={form.category}
                 onValueChange={(value) =>
@@ -146,18 +158,18 @@ function NewProductPage() {
                       value={category}
                       className="capitalize"
                     >
-                      {category}
+                      {t(category)}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-            {text("sku", "SKU (optional)")}
-            {text("metal_type", "Metal type", "e.g. 18k gold")}
-            {text("metal_color", "Metal color", "e.g. yellow gold")}
-            {text("stone_type", "Stone type", "e.g. diamond")}
+            {text("sku", t("SKU (optional)"))}
+            {text("metal_type", t("Metal type"), t("e.g. 18k gold"))}
+            {text("metal_color", t("Metal color"), t("e.g. yellow gold"))}
+            {text("stone_type", t("Stone type"), t("e.g. diamond"))}
             <div className="grid gap-2 md:col-span-2">
-              <Label htmlFor="product-description">Description</Label>
+              <Label htmlFor="product-description">{t("Description")}</Label>
               <Textarea
                 id="product-description"
                 rows={3}
@@ -172,7 +184,7 @@ function NewProductPage() {
                 type="submit"
                 disabled={!form.name.trim() || mutation.isPending}
               >
-                {mutation.isPending ? "Creating..." : "Create product"}
+                {mutation.isPending ? t("Creating...") : t("Create product")}
               </Button>
             </div>
           </CardContent>

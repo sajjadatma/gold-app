@@ -18,17 +18,28 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useBrand } from "@/hooks/useBrand"
 import useCustomToast from "@/hooks/useCustomToast"
+import { pageTitle, useI18n } from "@/i18n"
 import { handleError } from "@/utils"
 
 export const Route = createFileRoute("/_layout/social/")({
   component: SocialPage,
-  head: () => ({ meta: [{ title: "Social - Jewelry Brand Studio" }] }),
+  head: () => ({
+    meta: [
+      {
+        title: pageTitle(
+          "Social - Jewelry Brand Studio",
+          "شبکه اجتماعی - استودیوی برند جواهرات",
+        ),
+      },
+    ],
+  }),
 })
 
 function SocialPage() {
   const { brand } = useBrand()
   const queryClient = useQueryClient()
   const { showErrorToast, showSuccessToast } = useCustomToast()
+  const { t } = useI18n()
   const [accountId, setAccountId] = useState("")
   const [accountName, setAccountName] = useState("")
   const [token, setToken] = useState("")
@@ -68,7 +79,7 @@ function SocialPage() {
     onSuccess: async () => {
       setToken("")
       await refresh()
-      showSuccessToast("Instagram connection saved")
+      showSuccessToast(t("Instagram connection saved"))
     },
     onError: handleError.bind(showErrorToast),
   })
@@ -80,7 +91,7 @@ function SocialPage() {
       }),
     onSuccess: async () => {
       await refresh()
-      showSuccessToast("Instagram disconnected")
+      showSuccessToast(t("Instagram disconnected"))
     },
     onError: handleError.bind(showErrorToast),
   })
@@ -88,7 +99,9 @@ function SocialPage() {
   if (!brand) return <NoBrand />
   if (isLoading)
     return (
-      <p className="text-sm text-muted-foreground">Loading connection...</p>
+      <p className="text-sm text-muted-foreground">
+        {t("Loading connection...")}
+      </p>
     )
 
   const isOwner = brand.role === "owner"
@@ -97,29 +110,31 @@ function SocialPage() {
   return (
     <div className="max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Instagram</h1>
+        <h1 className="text-2xl font-semibold">{t("Instagram")}</h1>
         <p className="text-sm text-muted-foreground">
-          Connect a professional account to publish approved single-image feed
-          posts.
+          {t(
+            "Connect a professional account to publish approved single-image feed posts.",
+          )}
         </p>
       </div>
 
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            Connection
+            {t("Connection")}
             <Badge variant={connected ? "default" : "secondary"}>
-              {data?.status ?? "disconnected"}
+              {t(data?.status ?? "disconnected")}
             </Badge>
           </CardTitle>
           <CardDescription>
-            Tokens are stored server-side and never returned to the browser.
-            Fake publishing is used unless the Graph provider is configured.
+            {t(
+              "Tokens are stored server-side and never returned to the browser. Fake publishing is used unless the Graph provider is configured.",
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-2">
-            <Label htmlFor="account-id">Instagram account id</Label>
+            <Label htmlFor="account-id">{t("Instagram account id")}</Label>
             <Input
               id="account-id"
               value={accountId}
@@ -128,7 +143,7 @@ function SocialPage() {
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="account-name">Account name</Label>
+            <Label htmlFor="account-name">{t("Account name")}</Label>
             <Input
               id="account-name"
               value={accountName}
@@ -137,7 +152,7 @@ function SocialPage() {
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="token">Access token</Label>
+            <Label htmlFor="token">{t("Access token")}</Label>
             <Input
               id="token"
               type="password"
@@ -145,12 +160,12 @@ function SocialPage() {
               value={token}
               disabled={!isOwner}
               placeholder={
-                connected ? "Leave blank to keep the current token" : ""
+                connected ? t("Leave blank to keep the current token") : ""
               }
               onChange={(event) => setToken(event.target.value)}
             />
             <p className="text-xs text-muted-foreground">
-              In fake mode a token is optional.
+              {t("In fake mode a token is optional.")}
             </p>
           </div>
 
@@ -161,7 +176,7 @@ function SocialPage() {
                 disabled={!accountId.trim() || connect.isPending}
               >
                 <Link2 className="mr-2 h-4 w-4" />
-                {connected ? "Update connection" : "Connect Instagram"}
+                {connected ? t("Update connection") : t("Connect Instagram")}
               </Button>
               {connected ? (
                 <Button
@@ -174,21 +189,22 @@ function SocialPage() {
                     }
                   }}
                 >
-                  <Unplug className="mr-2 h-4 w-4" /> Disconnect
+                  <Unplug className="mr-2 h-4 w-4" /> {t("Disconnect")}
                 </Button>
               ) : null}
             </div>
           ) : (
             <p className="text-sm text-muted-foreground">
-              Only the brand Owner can change the social connection.
+              {t("Only the brand Owner can change the social connection.")}
             </p>
           )}
         </CardContent>
       </Card>
 
       <p className="text-xs text-muted-foreground">
-        MVP supports single-image feed posts only. Reels, stories, carousels,
-        and scheduling are out of scope.
+        {t(
+          "MVP supports single-image feed posts only. Reels, stories, carousels, and scheduling are out of scope.",
+        )}
       </p>
     </div>
   )

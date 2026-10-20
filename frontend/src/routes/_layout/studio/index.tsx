@@ -30,17 +30,28 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { useBrand } from "@/hooks/useBrand"
 import useCustomToast from "@/hooks/useCustomToast"
+import { pageTitle, useI18n } from "@/i18n"
 import { handleError } from "@/utils"
 
 export const Route = createFileRoute("/_layout/studio/")({
   component: StudioPage,
-  head: () => ({ meta: [{ title: "Studio - Jewelry Brand Studio" }] }),
+  head: () => ({
+    meta: [
+      {
+        title: pageTitle(
+          "Studio - Jewelry Brand Studio",
+          "استودیو - استودیوی برند جواهرات",
+        ),
+      },
+    ],
+  }),
 })
 
 function StudioPage() {
   const { brand } = useBrand()
   const navigate = useNavigate()
   const { showErrorToast } = useCustomToast()
+  const { t, formatDate } = useI18n()
   const [productId, setProductId] = useState("")
   const [mode, setMode] = useState<GenerationCreate["mode"]>("studio")
   const [aspectRatio, setAspectRatio] =
@@ -85,7 +96,7 @@ function StudioPage() {
 
   const create = useMutation({
     mutationFn: async () => {
-      if (!brand) throw new Error("No brand selected")
+      if (!brand) throw new Error(t("No brand selected"))
       return (
         await GenerationsService.createGeneration({
           path: { brand_id: brand.id },
@@ -117,32 +128,38 @@ function StudioPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold">AI photography studio</h1>
+        <h1 className="text-2xl font-semibold">{t("AI photography studio")}</h1>
         <p className="text-sm text-muted-foreground">
-          Generate branded jewelry imagery with the active brand profile.
+          {t("Generate branded jewelry imagery with the active brand profile.")}
         </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
         <Card>
           <CardHeader>
-            <CardTitle>New generation</CardTitle>
+            <CardTitle>{t("New generation")}</CardTitle>
             <CardDescription>
-              Source fidelity is prioritized over creative changes.
+              {t("Source fidelity is prioritized over creative changes.")}
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="product">Product</Label>
+              <Label htmlFor="product">{t("Product")}</Label>
               <Select value={productId} onValueChange={setProductId}>
                 <SelectTrigger id="product">
-                  <SelectValue placeholder="Select a product" />
+                  <SelectValue placeholder={t("Select a product")} />
                 </SelectTrigger>
                 <SelectContent>
                   {(products?.data ?? []).map((product) => (
                     <SelectItem key={product.id} value={product.id}>
-                      {product.name} ({product.images.length} image
-                      {product.images.length === 1 ? "" : "s"})
+                      {product.name} (
+                      {t(
+                        product.images.length === 1
+                          ? "{count} source image"
+                          : "{count} source images",
+                        { count: product.images.length },
+                      )}
+                      )
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -151,7 +168,7 @@ function StudioPage() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="grid gap-2">
-                <Label htmlFor="mode">Mode</Label>
+                <Label htmlFor="mode">{t("Mode")}</Label>
                 <Select
                   value={mode}
                   onValueChange={(value) =>
@@ -162,14 +179,14 @@ function StudioPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="studio">Studio</SelectItem>
-                    <SelectItem value="on_model">On model</SelectItem>
-                    <SelectItem value="campaign">Campaign</SelectItem>
+                    <SelectItem value="studio">{t("Studio")}</SelectItem>
+                    <SelectItem value="on_model">{t("on_model")}</SelectItem>
+                    <SelectItem value="campaign">{t("Campaign")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="ratio">Aspect ratio</Label>
+                <Label htmlFor="ratio">{t("Aspect ratio")}</Label>
                 <Select
                   value={aspectRatio}
                   onValueChange={(value) =>
@@ -180,10 +197,10 @@ function StudioPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="1:1">1:1 feed</SelectItem>
-                    <SelectItem value="4:5">4:5 portrait</SelectItem>
-                    <SelectItem value="9:16">9:16 story</SelectItem>
-                    <SelectItem value="16:9">16:9 landscape</SelectItem>
+                    <SelectItem value="1:1">{t("1:1 feed")}</SelectItem>
+                    <SelectItem value="4:5">{t("4:5 portrait")}</SelectItem>
+                    <SelectItem value="9:16">{t("9:16 story")}</SelectItem>
+                    <SelectItem value="16:9">{t("16:9 landscape")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -191,35 +208,35 @@ function StudioPage() {
 
             {mode === "on_model" ? (
               <div className="grid gap-2">
-                <Label htmlFor="model">Brand model</Label>
+                <Label htmlFor="model">{t("Brand model")}</Label>
                 <Select value={modelId} onValueChange={setModelId}>
                   <SelectTrigger id="model">
-                    <SelectValue placeholder="Select a ready model" />
+                    <SelectValue placeholder={t("Select a ready model")} />
                   </SelectTrigger>
                   <SelectContent>
                     {readyModels.map((model) => (
                       <SelectItem key={model.id} value={model.id}>
-                        {model.name} ({model.type})
+                        {model.name} ({t(model.type)})
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
                 {readyModels.length === 0 ? (
                   <p className="text-xs text-muted-foreground">
-                    No ready models. Create and prepare a model first.
+                    {t("No ready models. Create and prepare a model first.")}
                   </p>
                 ) : null}
               </div>
             ) : null}
 
             <div className="grid gap-2">
-              <Label htmlFor="notes">Style notes (optional)</Label>
+              <Label htmlFor="notes">{t("Style notes (optional)")}</Label>
               <Textarea
                 id="notes"
                 rows={2}
                 value={notes}
                 onChange={(event) => setNotes(event.target.value)}
-                placeholder="e.g. keep the background warm ivory"
+                placeholder={t("e.g. keep the background warm ivory")}
               />
             </div>
 
@@ -232,16 +249,16 @@ function StudioPage() {
               }
             >
               <Camera className="mr-2 h-4 w-4" />
-              {create.isPending ? "Generating..." : "Generate image"}
+              {create.isPending ? t("Generating...") : t("Generate image")}
             </Button>
           </CardContent>
         </Card>
 
         <div className="space-y-3">
-          <h2 className="text-lg font-semibold">Recent generations</h2>
+          <h2 className="text-lg font-semibold">{t("Recent generations")}</h2>
           {!generations?.data.length ? (
             <p className="rounded-lg border border-dashed p-6 text-sm text-muted-foreground">
-              No generations yet.
+              {t("No generations yet.")}
             </p>
           ) : (
             <div className="divide-y rounded-lg border">
@@ -254,11 +271,13 @@ function StudioPage() {
                 >
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium capitalize">
-                      {generation.mode.replace("_", " ")} ·{" "}
-                      {generation.aspect_ratio}
+                      {t(generation.mode)} · {generation.aspect_ratio}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {new Date(generation.created_at).toLocaleString()}
+                      {formatDate(generation.created_at, {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })}
                     </p>
                   </div>
                   <Badge
@@ -271,7 +290,7 @@ function StudioPage() {
                     }
                     className="capitalize"
                   >
-                    {generation.status}
+                    {t(generation.status)}
                   </Badge>
                 </Link>
               ))}

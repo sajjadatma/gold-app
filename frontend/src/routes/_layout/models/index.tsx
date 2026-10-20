@@ -14,14 +14,25 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { useBrand } from "@/hooks/useBrand"
+import { pageTitle, useI18n } from "@/i18n"
 
 export const Route = createFileRoute("/_layout/models/")({
   component: ModelsPage,
-  head: () => ({ meta: [{ title: "Brand Models - Jewelry Brand Studio" }] }),
+  head: () => ({
+    meta: [
+      {
+        title: pageTitle(
+          "Brand Models - Jewelry Brand Studio",
+          "مدل‌های برند - استودیوی برند جواهرات",
+        ),
+      },
+    ],
+  }),
 })
 
 function ModelsPage() {
   const { brand } = useBrand()
+  const { t, formatDate } = useI18n()
   const { data, isLoading } = useQuery({
     queryKey: ["models", brand?.id],
     queryFn: async () =>
@@ -39,25 +50,28 @@ function ModelsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Brand models</h1>
+          <h1 className="text-2xl font-semibold">{t("Brand models")}</h1>
           <p className="text-sm text-muted-foreground">
-            Real or virtual people who wear the jewelry.
+            {t("Real or virtual people who wear the jewelry.")}
           </p>
         </div>
         <Button asChild>
           <Link to="/models/new">
-            <Plus className="mr-2 h-4 w-4" /> New model
+            <Plus className="mr-2 h-4 w-4" /> {t("New model")}
           </Link>
         </Button>
       </div>
 
       {isLoading ? (
-        <p className="text-sm text-muted-foreground">Loading models...</p>
+        <p className="text-sm text-muted-foreground">
+          {t("Loading models...")}
+        </p>
       ) : !data?.data.length ? (
         <div className="rounded-lg border border-dashed p-8">
           <p className="text-sm text-muted-foreground">
-            No models yet. Create a virtual model or add a real model with
-            consent.
+            {t(
+              "No models yet. Create a virtual model or add a real model with consent.",
+            )}
           </p>
         </div>
       ) : (
@@ -71,14 +85,16 @@ function ModelsPage() {
                       <UserRound className="h-4 w-4" />
                       {model.name}
                     </CardTitle>
-                    {model.is_default ? <Badge>Default</Badge> : null}
+                    {model.is_default ? <Badge>{t("Default")}</Badge> : null}
                   </div>
                   <CardDescription className="capitalize">
-                    {model.type} · {model.status}
+                    {t(model.type)} · {t(model.status)}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="text-xs text-muted-foreground">
-                  Updated {new Date(model.updated_at).toLocaleDateString()}
+                  {t("Updated {date}", {
+                    date: formatDate(model.updated_at),
+                  })}
                 </CardContent>
               </Card>
             </Link>

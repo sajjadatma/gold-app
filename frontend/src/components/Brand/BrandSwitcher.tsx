@@ -7,13 +7,17 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useBrand } from "@/hooks/useBrand"
+import { useI18n } from "@/i18n"
 
 export function BrandSwitcher() {
   const { brands, brand, selectBrand } = useBrand()
+  const { t } = useI18n()
 
   if (!brands.length) {
     return (
-      <p className="px-2 text-xs text-muted-foreground">No brand selected</p>
+      <p className="px-2 text-xs text-muted-foreground">
+        {t("No brand selected")}
+      </p>
     )
   }
 
@@ -21,10 +25,10 @@ export function BrandSwitcher() {
     <div className="flex items-center gap-2 px-1">
       <Select value={brand?.id} onValueChange={selectBrand}>
         <SelectTrigger
-          aria-label="Select brand"
+          aria-label={t("Select brand")}
           className="h-9 flex-1 group-data-[collapsible=icon]:hidden"
         >
-          <SelectValue placeholder="Select brand" />
+          <SelectValue placeholder={t("Select brand")} />
         </SelectTrigger>
         <SelectContent>
           {brands.map((item) => (
@@ -39,7 +43,7 @@ export function BrandSwitcher() {
           variant="outline"
           className="capitalize group-data-[collapsible=icon]:hidden"
         >
-          {brand.role.replace("_", " ")}
+          {t(brand.role)}
         </Badge>
       ) : null}
     </div>

@@ -122,3 +122,73 @@
     cursor: pointer;
   }
 }
+
+/* RTL / Farsi support */
+html[dir="rtl"] body {
+  font-family:
+    "Vazirmatn", "IRANSansX", "IRANSans", Tahoma, system-ui, sans-serif;
+}
+
+[dir="rtl"] th,
+[dir="rtl"] td {
+  text-align: right;
+}
+
+[dir="rtl"] ul.list-disc,
+[dir="rtl"] ol.list-decimal {
+  padding-left: 0;
+  padding-right: 1.25rem;
+}
+
+/* Inline icons use physical margins; flip the common spacing utilities. */
+[dir="rtl"] .mr-1 {
+  margin-right: 0;
+  margin-left: 0.25rem;
+}
+[dir="rtl"] .mr-2 {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+[dir="rtl"] .ml-1 {
+  margin-left: 0;
+  margin-right: 0.25rem;
+}
+[dir="rtl"] .ml-2 {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+[dir="rtl"] .-ml-2 {
+  margin-left: 0;
+  margin-right: -0.5rem;
+}
+[dir="rtl"] .ml-auto {
+  margin-left: 0;
+  margin-right: auto;
+}
+[dir="rtl"] .text-left {
+  text-align: right;
+}
+[dir="rtl"] .text-right {
+  text-align: left;
+}
+
+/* Directional icons */
+[dir="rtl"] .lucide-arrow-left,
+[dir="rtl"] .lucide-chevron-left,
+[dir="rtl"] .lucide-chevrons-left,
+[dir="rtl"] .lucide-panel-left {
+  transform: scaleX(-1);
+}
+[dir="rtl"] .lucide-arrow-right,
+[dir="rtl"] .lucide-chevron-right,
+[dir="rtl"] .lucide-chevrons-right {
+  transform: scaleX(-1);
+}
+
+/* Profile page action bar follows the sidebar side. */
+@media (min-width: 768px) {
+  [dir="rtl"] .md\:left-64 {
+    left: auto;
+    right: 16rem;
+  }
+}

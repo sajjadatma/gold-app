@@ -24,17 +24,28 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { useBrand } from "@/hooks/useBrand"
 import useCustomToast from "@/hooks/useCustomToast"
+import { pageTitle, useI18n } from "@/i18n"
 import { handleError } from "@/utils"
 
 export const Route = createFileRoute("/_layout/models/new")({
   component: NewModelPage,
-  head: () => ({ meta: [{ title: "New Brand Model - Jewelry Brand Studio" }] }),
+  head: () => ({
+    meta: [
+      {
+        title: pageTitle(
+          "New Brand Model - Jewelry Brand Studio",
+          "مدل جدید برند - استودیوی برند جواهرات",
+        ),
+      },
+    ],
+  }),
 })
 
 function NewModelPage() {
   const { brand } = useBrand()
   const navigate = useNavigate()
   const { showErrorToast } = useCustomToast()
+  const { t } = useI18n()
   const [type, setType] = useState<"virtual" | "real">("virtual")
   const [name, setName] = useState("")
   const [config, setConfig] = useState({
@@ -50,7 +61,7 @@ function NewModelPage() {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      if (!brand) throw new Error("No brand selected")
+      if (!brand) throw new Error(t("No brand selected"))
       return (
         await BrandModelsService.createModel({
           path: { brand_id: brand.id },
@@ -82,10 +93,11 @@ function NewModelPage() {
   return (
     <div className="max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">New brand model</h1>
+        <h1 className="text-2xl font-semibold">{t("New brand model")}</h1>
         <p className="text-sm text-muted-foreground">
-          Virtual models use reference-based generation. Real models require
-          reference photos and a consent record.
+          {t(
+            "Virtual models use reference-based generation. Real models require reference photos and a consent record.",
+          )}
         </p>
       </div>
 
@@ -97,14 +109,14 @@ function NewModelPage() {
       >
         <Card>
           <CardHeader>
-            <CardTitle>Model basics</CardTitle>
+            <CardTitle>{t("Model basics")}</CardTitle>
             <CardDescription>
-              The active brand profile guides the style.
+              {t("The active brand profile guides the style.")}
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="model-type">Type</Label>
+              <Label htmlFor="model-type">{t("Type")}</Label>
               <Select
                 value={type}
                 onValueChange={(value) => setType(value as "virtual" | "real")}
@@ -113,32 +125,32 @@ function NewModelPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="virtual">Virtual model</SelectItem>
-                  <SelectItem value="real">Real model</SelectItem>
+                  <SelectItem value="virtual">{t("Virtual model")}</SelectItem>
+                  <SelectItem value="real">{t("Real model")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="model-name">Name</Label>
+              <Label htmlFor="model-name">{t("Name")}</Label>
               <Input
                 id="model-name"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
-                placeholder="e.g. Aria"
+                placeholder={t("e.g. Aria")}
               />
             </div>
 
             {type === "virtual" ? (
               <div className="grid gap-4 md:grid-cols-2">
-                {field("gender_presentation", "Gender presentation")}
-                {field("age_range", "Apparent age range")}
-                {field("skin", "Skin appearance")}
-                {field("hair", "Hair")}
-                {field("makeup", "Makeup")}
-                {field("wardrobe", "Wardrobe")}
-                {field("hands_and_nails", "Hands and nails")}
+                {field("gender_presentation", t("Gender presentation"))}
+                {field("age_range", t("Apparent age range"))}
+                {field("skin", t("Skin appearance"))}
+                {field("hair", t("Hair"))}
+                {field("makeup", t("Makeup"))}
+                {field("wardrobe", t("Wardrobe"))}
+                {field("hands_and_nails", t("Hands and nails"))}
                 <div className="grid gap-2 md:col-span-2">
-                  <Label htmlFor="notes">Notes</Label>
+                  <Label htmlFor="notes">{t("Notes")}</Label>
                   <Textarea
                     id="notes"
                     rows={3}
@@ -151,13 +163,14 @@ function NewModelPage() {
               </div>
             ) : (
               <p className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
-                Create the model first, then upload reference photos and record
-                the model's consent on the detail page.
+                {t(
+                  "Create the model first, then upload reference photos and record the model's consent on the detail page.",
+                )}
               </p>
             )}
 
             <Button type="submit" disabled={!name.trim() || mutation.isPending}>
-              {mutation.isPending ? "Creating..." : "Create model"}
+              {mutation.isPending ? t("Creating...") : t("Create model")}
             </Button>
           </CardContent>
         </Card>

@@ -24,11 +24,21 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useBrand } from "@/hooks/useBrand"
 import useCustomToast from "@/hooks/useCustomToast"
+import { pageTitle, useI18n } from "@/i18n"
 import { handleError } from "@/utils"
 
 export const Route = createFileRoute("/_layout/brand/profile")({
   component: BrandProfilePage,
-  head: () => ({ meta: [{ title: "Brand Profile - Jewelry Brand Studio" }] }),
+  head: () => ({
+    meta: [
+      {
+        title: pageTitle(
+          "Brand Profile - Jewelry Brand Studio",
+          "پروفایل برند - استودیوی برند جواهرات",
+        ),
+      },
+    ],
+  }),
 })
 
 type ColorEntry = {
@@ -117,6 +127,7 @@ function ListField({
   onChange: (value: string[]) => void
   disabled: boolean
 }) {
+  const { t } = useI18n()
   const [text, setText] = useState(value.join(", "))
   useEffect(() => setText(value.join(", ")), [value])
   return (
@@ -137,7 +148,7 @@ function ListField({
         }
       />
       <p className="text-xs text-muted-foreground">
-        Separate values with commas.
+        {t("Separate values with commas.")}
       </p>
     </div>
   )
@@ -147,6 +158,7 @@ function BrandProfilePage() {
   const { brand } = useBrand()
   const queryClient = useQueryClient()
   const { showErrorToast, showSuccessToast } = useCustomToast()
+  const { t } = useI18n()
   const [form, setForm] = useState<ProfileData | null>(null)
 
   const { data, isLoading, isError } = useQuery({
@@ -205,7 +217,7 @@ function BrandProfilePage() {
 
   const save = useMutation({
     mutationFn: async () => {
-      if (!brand || !data || !form) throw new Error("Nothing to save")
+      if (!brand || !data || !form) throw new Error(t("Nothing to save"))
       return (
         await ImportService.updateProfile({
           path: { brand_id: brand.id, profile_id: data.id },
@@ -215,14 +227,14 @@ function BrandProfilePage() {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["profile", brand?.id] })
-      showSuccessToast("Brand profile saved")
+      showSuccessToast(t("Brand profile saved"))
     },
     onError: handleError.bind(showErrorToast),
   })
 
   const activate = useMutation({
     mutationFn: async () => {
-      if (!brand || !data) throw new Error("Nothing to activate")
+      if (!brand || !data) throw new Error(t("Nothing to activate"))
       return (
         await ImportService.activateProfile({
           path: { brand_id: brand.id, profile_id: data.id },
@@ -231,23 +243,25 @@ function BrandProfilePage() {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["profile", brand?.id] })
-      showSuccessToast("Brand profile activated")
+      showSuccessToast(t("Brand profile activated"))
     },
     onError: handleError.bind(showErrorToast),
   })
 
   if (!brand) return <NoBrand />
   if (isLoading)
-    return <p className="text-sm text-muted-foreground">Loading profile...</p>
+    return (
+      <p className="text-sm text-muted-foreground">{t("Loading profile...")}</p>
+    )
   if (isError || !data || !form) {
     return (
       <div className="space-y-4 rounded-lg border border-dashed p-8">
-        <h1 className="text-lg font-semibold">No brand profile yet</h1>
+        <h1 className="text-lg font-semibold">{t("No brand profile yet")}</h1>
         <p className="text-sm text-muted-foreground">
-          Import brand material and run brand intelligence first.
+          {t("Import brand material and run brand intelligence first.")}
         </p>
         <Button asChild variant="outline">
-          <Link to="/brand/import">Go to brand import</Link>
+          <Link to="/brand/import">{t("Go to brand import")}</Link>
         </Button>
       </div>
     )
@@ -272,14 +286,19 @@ function BrandProfilePage() {
     <div className="space-y-6 pb-16">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">Brand profile</h1>
+          <h1 className="text-2xl font-semibold">{t("Brand Profile")}</h1>
           <p className="text-sm text-muted-foreground">
-            Validate what was extracted from your existing brand material.
+            {t(
+              "Validate what was extracted from your existing brand material.",
+            )}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant={data.status === "active" ? "default" : "secondary"}>
-            v{data.version} · {data.status.replace("_", " ")}
+            {t("v{version} · {status}", {
+              version: data.version,
+              status: t(data.status),
+            })}
           </Badge>
           {isOwner ? (
             <>
@@ -289,13 +308,15 @@ function BrandProfilePage() {
                 disabled={save.isPending}
               >
                 <Save className="mr-2 h-4 w-4" />
-                {save.isPending ? "Saving..." : "Save changes"}
+                {save.isPending ? t("Saving...") : t("Save changes")}
               </Button>
               <Button
                 onClick={() => {
                   if (
                     window.confirm(
-                      "Activate this profile? The previous active profile will be archived.",
+                      t(
+                        "Activate this profile? The previous active profile will be archived.",
+                      ),
                     )
                   ) {
                     activate.mutate()
@@ -304,11 +325,11 @@ function BrandProfilePage() {
                 disabled={activate.isPending || data.status === "active"}
               >
                 <CheckCircle2 className="mr-2 h-4 w-4" />
-                {data.status === "active" ? "Active" : "Activate"}
+                {data.status === "active" ? t("Active") : t("Activate")}
               </Button>
             </>
           ) : (
-            <Badge variant="outline">Owner can edit</Badge>
+            <Badge variant="outline">{t("Owner can edit")}</Badge>
           )}
         </div>
       </div>
@@ -316,10 +337,12 @@ function BrandProfilePage() {
       {data.profile_json.uncertainties &&
       (data.profile_json.uncertainties as string[]).length ? (
         <div className="rounded-lg border border-amber-500/40 bg-amber-500/5 p-4">
-          <p className="text-sm font-medium">Review these uncertainties</p>
+          <p className="text-sm font-medium">
+            {t("Review these uncertainties")}
+          </p>
           <ul className="mt-2 list-disc pl-5 text-sm text-muted-foreground">
             {(data.profile_json.uncertainties as string[]).map((item) => (
-              <li key={item}>{item}</li>
+              <li key={item}>{t(item)}</li>
             ))}
           </ul>
         </div>
@@ -327,14 +350,14 @@ function BrandProfilePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Identity</CardTitle>
+          <CardTitle>{t("Identity")}</CardTitle>
           <CardDescription>
-            Existing brand voice only. Do not invent a new identity.
+            {t("Existing brand voice only. Do not invent a new identity.")}
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="grid gap-2">
-            <Label htmlFor="brand-name">Brand name</Label>
+            <Label htmlFor="brand-name">{t("Brand name")}</Label>
             <Input
               id="brand-name"
               value={form.identity.brand_name}
@@ -350,7 +373,7 @@ function BrandProfilePage() {
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="tagline">Tagline</Label>
+            <Label htmlFor="tagline">{t("Tagline")}</Label>
             <Input
               id="tagline"
               value={form.identity.tagline}
@@ -363,7 +386,7 @@ function BrandProfilePage() {
             />
           </div>
           <div className="grid gap-2 md:col-span-2">
-            <Label htmlFor="story">Story</Label>
+            <Label htmlFor="story">{t("Story")}</Label>
             <Textarea
               id="story"
               rows={3}
@@ -377,7 +400,7 @@ function BrandProfilePage() {
             />
           </div>
           <div className="grid gap-2 md:col-span-2">
-            <Label htmlFor="positioning">Positioning</Label>
+            <Label htmlFor="positioning">{t("Positioning")}</Label>
             <Textarea
               id="positioning"
               rows={2}
@@ -394,7 +417,7 @@ function BrandProfilePage() {
             />
           </div>
           <ListField
-            label="Audience"
+            label={t("Audience")}
             value={form.identity.audience}
             disabled={disabled}
             onChange={(audience) =>
@@ -402,7 +425,7 @@ function BrandProfilePage() {
             }
           />
           <ListField
-            label="Personality"
+            label={t("Personality")}
             value={form.identity.personality}
             disabled={disabled}
             onChange={(personality) =>
@@ -414,9 +437,9 @@ function BrandProfilePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Colors</CardTitle>
+          <CardTitle>{t("Colors")}</CardTitle>
           <CardDescription>
-            Correct extracted values or add missing colors.
+            {t("Correct extracted values or add missing colors.")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -426,8 +449,8 @@ function BrandProfilePage() {
               className="flex flex-wrap items-end gap-2"
             >
               <Input
-                aria-label="Color name"
-                placeholder="Name"
+                aria-label={t("Color name")}
+                placeholder={t("Name")}
                 className="w-40"
                 value={color.name ?? ""}
                 disabled={disabled}
@@ -438,7 +461,7 @@ function BrandProfilePage() {
                 }}
               />
               <Input
-                aria-label="Hex value"
+                aria-label={t("Hex value")}
                 placeholder="#C9A227"
                 className="w-32"
                 value={color.hex}
@@ -450,8 +473,8 @@ function BrandProfilePage() {
                 }}
               />
               <Input
-                aria-label="Color usage"
-                placeholder="Usage"
+                aria-label={t("Color usage")}
+                placeholder={t("Color usage")}
                 className="w-48"
                 value={color.usage ?? ""}
                 disabled={disabled}
@@ -469,7 +492,7 @@ function BrandProfilePage() {
                     patch({ colors: form.colors.filter((_, i) => i !== index) })
                   }
                 >
-                  Remove
+                  {t("Remove")}
                 </Button>
               ) : null}
             </div>
@@ -487,7 +510,7 @@ function BrandProfilePage() {
                 })
               }
             >
-              Add color
+              {t("Add color")}
             </Button>
           ) : null}
         </CardContent>
@@ -495,8 +518,8 @@ function BrandProfilePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Typography</CardTitle>
-          <CardDescription>Families and their roles.</CardDescription>
+          <CardTitle>{t("Typography")}</CardTitle>
+          <CardDescription>{t("Families and their roles.")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           {form.typography.map((font, index) => (
@@ -505,8 +528,8 @@ function BrandProfilePage() {
               className="flex flex-wrap items-end gap-2"
             >
               <Input
-                aria-label="Font family"
-                placeholder="Family"
+                aria-label={t("Font family")}
+                placeholder={t("Font family")}
                 className="w-56"
                 value={font.family}
                 disabled={disabled}
@@ -517,8 +540,8 @@ function BrandProfilePage() {
                 }}
               />
               <Input
-                aria-label="Font role"
-                placeholder="Heading / body"
+                aria-label={t("Font role")}
+                placeholder={t("Font role")}
                 className="w-44"
                 value={font.role ?? ""}
                 disabled={disabled}
@@ -538,7 +561,7 @@ function BrandProfilePage() {
                     })
                   }
                 >
-                  Remove
+                  {t("Remove")}
                 </Button>
               ) : null}
             </div>
@@ -553,7 +576,7 @@ function BrandProfilePage() {
                 })
               }
             >
-              Add typeface
+              {t("Add typeface")}
             </Button>
           ) : null}
         </CardContent>
@@ -561,14 +584,14 @@ function BrandProfilePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Photography rules</CardTitle>
+          <CardTitle>{t("Photography rules")}</CardTitle>
           <CardDescription>
-            Guide image generation with existing visual rules.
+            {t("Guide image generation with existing visual rules.")}
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <ListField
-            label="Lighting"
+            label={t("Lighting")}
             value={form.photography.lighting}
             disabled={disabled}
             onChange={(lighting) =>
@@ -576,7 +599,7 @@ function BrandProfilePage() {
             }
           />
           <ListField
-            label="Backgrounds"
+            label={t("Backgrounds")}
             value={form.photography.backgrounds}
             disabled={disabled}
             onChange={(backgrounds) =>
@@ -584,7 +607,7 @@ function BrandProfilePage() {
             }
           />
           <ListField
-            label="Composition"
+            label={t("Composition")}
             value={form.photography.composition}
             disabled={disabled}
             onChange={(composition) =>
@@ -592,7 +615,7 @@ function BrandProfilePage() {
             }
           />
           <ListField
-            label="Prohibited styles"
+            label={t("Prohibited styles")}
             value={form.photography.prohibited_styles}
             disabled={disabled}
             onChange={(prohibited_styles) =>
@@ -600,7 +623,7 @@ function BrandProfilePage() {
             }
           />
           <div className="grid gap-2">
-            <Label htmlFor="contrast">Contrast</Label>
+            <Label htmlFor="contrast">{t("Contrast")}</Label>
             <Input
               id="contrast"
               value={form.photography.contrast}
@@ -616,7 +639,7 @@ function BrandProfilePage() {
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="shadow">Shadow style</Label>
+            <Label htmlFor="shadow">{t("Shadow style")}</Label>
             <Input
               id="shadow"
               value={form.photography.shadow_style}
@@ -636,14 +659,14 @@ function BrandProfilePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Tone of voice</CardTitle>
+          <CardTitle>{t("Tone of voice")}</CardTitle>
           <CardDescription>
-            Used for captions, CTAs, and hashtags.
+            {t("Used for captions, CTAs, and hashtags.")}
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <ListField
-            label="Languages"
+            label={t("Languages")}
             value={form.tone_of_voice.languages}
             disabled={disabled}
             onChange={(languages) =>
@@ -651,7 +674,7 @@ function BrandProfilePage() {
             }
           />
           <ListField
-            label="Tone"
+            label={t("Tone")}
             value={form.tone_of_voice.tone}
             disabled={disabled}
             onChange={(tone) =>
@@ -660,10 +683,10 @@ function BrandProfilePage() {
           />
           {(
             [
-              ["caption_style", "Caption style"],
-              ["emoji_policy", "Emoji policy"],
-              ["cta_style", "CTA style"],
-              ["hashtag_style", "Hashtag style"],
+              ["caption_style", t("Caption style")],
+              ["emoji_policy", t("Emoji policy")],
+              ["cta_style", t("CTA style")],
+              ["hashtag_style", t("Hashtag style")],
             ] as const
           ).map(([key, label]) => (
             <div key={key} className="grid gap-2">
@@ -688,15 +711,15 @@ function BrandProfilePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Logos</CardTitle>
+          <CardTitle>{t("Logos")}</CardTitle>
           <CardDescription>
-            Choose the logo variants that belong to the active identity.
+            {t("Choose the logo variants that belong to the active identity.")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           {logoAssets.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              No logo candidates imported.
+              {t("No logo candidates imported.")}
             </p>
           ) : (
             logoAssets.map((asset) => (
@@ -705,7 +728,9 @@ function BrandProfilePage() {
                 className="flex items-center gap-3 rounded-md border p-3 text-sm"
               >
                 <Checkbox
-                  aria-label={`Use ${asset.original_filename} as a logo`}
+                  aria-label={t("Use {name} as a logo", {
+                    name: asset.original_filename,
+                  })}
                   checked={selectedLogoIds.has(asset.id)}
                   disabled={disabled}
                   onCheckedChange={(checked) => {
@@ -729,7 +754,7 @@ function BrandProfilePage() {
                   {asset.original_filename}
                 </span>
                 <Badge variant="outline">
-                  {asset.asset_type.replace("_", " ")}
+                  {t(asset.asset_type.replace(/_/g, " "))}
                 </Badge>
               </div>
             ))
@@ -739,20 +764,20 @@ function BrandProfilePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Human model style</CardTitle>
+          <CardTitle>{t("Human model style")}</CardTitle>
           <CardDescription>
-            How people wearing the jewelry should look and pose.
+            {t("How people wearing the jewelry should look and pose.")}
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           {(
             [
-              ["appearance", "Appearance"],
-              ["makeup", "Makeup"],
-              ["hair", "Hair"],
-              ["wardrobe", "Wardrobe"],
-              ["hands_and_nails", "Hands and nails"],
-              ["posing", "Posing"],
+              ["appearance", t("Appearance")],
+              ["makeup", t("Makeup")],
+              ["hair", t("Hair")],
+              ["wardrobe", t("Wardrobe")],
+              ["hands_and_nails", t("Hands and nails")],
+              ["posing", t("Posing")],
             ] as const
           ).map(([key, label]) => (
             <ListField
@@ -775,17 +800,17 @@ function BrandProfilePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Graphic system</CardTitle>
+          <CardTitle>{t("Graphic system")}</CardTitle>
           <CardDescription>
-            Patterns and layout rules found in the brand book.
+            {t("Patterns and layout rules found in the brand book.")}
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           {(
             [
-              ["patterns", "Patterns"],
-              ["decorative_elements", "Decorative elements"],
-              ["layout_principles", "Layout principles"],
+              ["patterns", t("Patterns")],
+              ["decorative_elements", t("Decorative elements")],
+              ["layout_principles", t("Layout principles")],
             ] as const
           ).map(([key, label]) => (
             <ListField
@@ -805,17 +830,17 @@ function BrandProfilePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Social media</CardTitle>
+          <CardTitle>{t("Social media")}</CardTitle>
           <CardDescription>
-            Ratios and visual rules for social posts.
+            {t("Ratios and visual rules for social posts.")}
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           {(
             [
-              ["preferred_ratios", "Preferred ratios"],
-              ["visual_rules", "Visual rules"],
-              ["logo_rules", "Logo rules"],
+              ["preferred_ratios", t("Preferred ratios")],
+              ["visual_rules", t("Visual rules")],
+              ["logo_rules", t("Logo rules")],
             ] as const
           ).map(([key, label]) => (
             <ListField
@@ -835,16 +860,17 @@ function BrandProfilePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Additional sections from the brand book</CardTitle>
+          <CardTitle>{t("Additional sections from the brand book")}</CardTitle>
           <CardDescription>
-            Other topics found in the PDF (packaging, values, materials, care,
-            partnerships, and more).
+            {t(
+              "Other topics found in the PDF (packaging, values, materials, care, partnerships, and more).",
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {form.additional_sections.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              No additional sections were found.
+              {t("No additional sections were found.")}
             </p>
           ) : (
             form.additional_sections.map((section, index) => (
@@ -883,12 +909,14 @@ function BrandProfilePage() {
                         })
                       }
                     >
-                      Remove
+                      {t("Remove")}
                     </Button>
                   ) : null}
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor={`section-content-${index}`}>Content</Label>
+                  <Label htmlFor={`section-content-${index}`}>
+                    {t("Content")}
+                  </Label>
                   <Textarea
                     id={`section-content-${index}`}
                     rows={3}
@@ -906,7 +934,7 @@ function BrandProfilePage() {
                 </div>
                 {section.page_number ? (
                   <p className="text-xs text-muted-foreground">
-                    Found on page {section.page_number}
+                    {t("Found on page {page}", { page: section.page_number })}
                   </p>
                 ) : null}
               </div>
@@ -920,12 +948,12 @@ function BrandProfilePage() {
                 patch({
                   additional_sections: [
                     ...form.additional_sections,
-                    { title: "New section", content: [""] },
+                    { title: t("New section"), content: [""] },
                   ],
                 })
               }
             >
-              Add section
+              {t("Add section")}
             </Button>
           ) : null}
         </CardContent>
@@ -933,17 +961,17 @@ function BrandProfilePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Dos &amp; don'ts</CardTitle>
+          <CardTitle>{t("Dos & don'ts")}</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <ListField
-            label="Dos"
+            label={t("Dos")}
             value={form.dos}
             disabled={disabled}
             onChange={(dos) => patch({ dos })}
           />
           <ListField
-            label="Don'ts"
+            label={t("Don'ts")}
             value={form.donts}
             disabled={disabled}
             onChange={(donts) => patch({ donts })}
@@ -959,13 +987,13 @@ function BrandProfilePage() {
               onClick={() => save.mutate()}
               disabled={save.isPending}
             >
-              Save changes
+              {t("Save changes")}
             </Button>
             <Button
               onClick={() => activate.mutate()}
               disabled={activate.isPending || data.status === "active"}
             >
-              Activate profile
+              {t("Activate profile")}
             </Button>
           </div>
         </div>

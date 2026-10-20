@@ -11,11 +11,21 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useBrand } from "@/hooks/useBrand"
 import useCustomToast from "@/hooks/useCustomToast"
+import { pageTitle, useI18n } from "@/i18n"
 import { handleError } from "@/utils"
 
 export const Route = createFileRoute("/_layout/studio/generations/$id")({
   component: GenerationDetailPage,
-  head: () => ({ meta: [{ title: "Generation - Jewelry Brand Studio" }] }),
+  head: () => ({
+    meta: [
+      {
+        title: pageTitle(
+          "Generation - Jewelry Brand Studio",
+          "تولید - استودیوی برند جواهرات",
+        ),
+      },
+    ],
+  }),
 })
 
 function GenerationDetailPage() {
@@ -24,6 +34,7 @@ function GenerationDetailPage() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { showErrorToast, showSuccessToast } = useCustomToast()
+  const { t, formatDate } = useI18n()
 
   const { data, isLoading } = useQuery({
     queryKey: ["generation", brand?.id, id],
@@ -75,7 +86,7 @@ function GenerationDetailPage() {
       await queryClient.invalidateQueries({
         queryKey: ["generation", brand?.id, id],
       })
-      showSuccessToast("Generation restarted")
+      showSuccessToast(t("Generation restarted"))
     },
     onError: handleError.bind(showErrorToast),
   })
@@ -98,18 +109,19 @@ function GenerationDetailPage() {
     <div className="space-y-6">
       <Button variant="ghost" size="sm" asChild className="-ml-2">
         <Link to="/studio">
-          <ArrowLeft className="mr-2 h-4 w-4" /> Studio
+          <ArrowLeft className="mr-2 h-4 w-4" /> {t("Studio")}
         </Link>
       </Button>
 
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold capitalize">
-            {data.mode.replace("_", " ")} generation
-          </h1>
+          <h1 className="text-2xl font-semibold capitalize">{t(data.mode)}</h1>
           <p className="text-sm text-muted-foreground">
-            {product?.name ?? "Product"} · {data.aspect_ratio} ·{" "}
-            {new Date(data.created_at).toLocaleString()}
+            {product?.name ?? t("Product")} · {data.aspect_ratio} ·{" "}
+            {formatDate(data.created_at, {
+              dateStyle: "medium",
+              timeStyle: "short",
+            })}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -123,11 +135,11 @@ function GenerationDetailPage() {
             }
             className="capitalize"
           >
-            {data.status}
+            {t(data.status)}
           </Badge>
           {data.status === "failed" ? (
             <Button variant="outline" onClick={() => retry.mutate()}>
-              <RefreshCw className="mr-2 h-4 w-4" /> Retry
+              <RefreshCw className="mr-2 h-4 w-4" /> {t("Retry")}
             </Button>
           ) : null}
           {asset ? (
@@ -135,7 +147,7 @@ function GenerationDetailPage() {
               onClick={() => createDraft.mutate(asset.id)}
               disabled={createDraft.isPending}
             >
-              <FileText className="mr-2 h-4 w-4" /> Create content draft
+              <FileText className="mr-2 h-4 w-4" /> {t("Create content draft")}
             </Button>
           ) : null}
         </div>
@@ -150,7 +162,7 @@ function GenerationDetailPage() {
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Source</CardTitle>
+            <CardTitle>{t("Source")}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="aspect-square overflow-hidden rounded-md bg-muted">
@@ -163,7 +175,7 @@ function GenerationDetailPage() {
                 />
               ) : (
                 <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-                  Source image unavailable
+                  {t("Source image unavailable")}
                 </div>
               )}
             </div>
@@ -172,7 +184,7 @@ function GenerationDetailPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Generated result</CardTitle>
+            <CardTitle>{t("Generated result")}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="aspect-square overflow-hidden rounded-md bg-muted">
@@ -180,14 +192,18 @@ function GenerationDetailPage() {
                 <GeneratedImage brandId={brand.id} assetId={asset.id} />
               ) : (
                 <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-                  {data.status === "failed" ? "No result" : "Processing..."}
+                  {data.status === "failed"
+                    ? t("No result")
+                    : t("Processing...")}
                 </div>
               )}
             </div>
             {asset ? (
               <div className="mt-3 space-y-2 text-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Integrity</span>
+                  <span className="text-muted-foreground">
+                    {t("Integrity")}
+                  </span>
                   <Badge
                     variant={
                       asset.integrity_status === "failed"
@@ -196,7 +212,7 @@ function GenerationDetailPage() {
                     }
                     className="capitalize"
                   >
-                    {asset.integrity_status.replace("_", " ")}
+                    {t(asset.integrity_status)}
                   </Badge>
                 </div>
                 {typeof asset.integrity_findings_json.summary === "string" ? (
@@ -226,13 +242,21 @@ function GenerationDetailPage() {
 
       <details className="rounded-lg border p-4 text-sm">
         <summary className="cursor-pointer font-medium">
-          Request details
+          {t("Request details")}
         </summary>
         <dl className="mt-3 grid gap-2 text-muted-foreground sm:grid-cols-2">
-          <div>Provider: {data.provider}</div>
-          <div>Model: {data.model ?? "—"}</div>
-          <div>Prompt version: {data.prompt_version}</div>
-          <div>Status: {data.status}</div>
+          <div>
+            {t("Provider")}: {data.provider}
+          </div>
+          <div>
+            {t("Model")}: {data.model ?? "—"}
+          </div>
+          <div>
+            {t("Prompt version")}: {data.prompt_version}
+          </div>
+          <div>
+            {t("Status")}: {t(data.status)}
+          </div>
         </dl>
       </details>
     </div>

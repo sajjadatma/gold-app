@@ -30,11 +30,21 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useBrand } from "@/hooks/useBrand"
 import useCustomToast from "@/hooks/useCustomToast"
+import { pageTitle, useI18n } from "@/i18n"
 import { handleError } from "@/utils"
 
 export const Route = createFileRoute("/_layout/content/$id")({
   component: ContentDetailPage,
-  head: () => ({ meta: [{ title: "Content Draft - Jewelry Brand Studio" }] }),
+  head: () => ({
+    meta: [
+      {
+        title: pageTitle(
+          "Content Draft - Jewelry Brand Studio",
+          "پیش‌نویس محتوا - استودیوی برند جواهرات",
+        ),
+      },
+    ],
+  }),
 })
 
 function ContentDetailPage() {
@@ -42,6 +52,7 @@ function ContentDetailPage() {
   const { brand } = useBrand()
   const queryClient = useQueryClient()
   const { showErrorToast, showSuccessToast } = useCustomToast()
+  const { t, formatDate } = useI18n()
   const [caption, setCaption] = useState("")
   const [cta, setCta] = useState("")
   const [hashtags, setHashtags] = useState("")
@@ -103,7 +114,7 @@ function ContentDetailPage() {
       }),
     onSuccess: async () => {
       await refresh()
-      showSuccessToast("Caption generated")
+      showSuccessToast(t("Caption generated"))
     },
     onError: handleError.bind(showErrorToast),
   })
@@ -116,7 +127,7 @@ function ContentDetailPage() {
       }),
     onSuccess: async () => {
       await refresh()
-      showSuccessToast("Draft saved")
+      showSuccessToast(t("Draft saved"))
     },
     onError: handleError.bind(showErrorToast),
   })
@@ -128,7 +139,7 @@ function ContentDetailPage() {
       }),
     onSuccess: async () => {
       await refresh()
-      showSuccessToast("Content approved")
+      showSuccessToast(t("Content approved"))
     },
     onError: handleError.bind(showErrorToast),
   })
@@ -140,7 +151,7 @@ function ContentDetailPage() {
       }),
     onSuccess: async () => {
       await refresh()
-      showSuccessToast("Content rejected")
+      showSuccessToast(t("Content rejected"))
     },
     onError: handleError.bind(showErrorToast),
   })
@@ -155,7 +166,7 @@ function ContentDetailPage() {
       await queryClient.invalidateQueries({
         queryKey: ["publish-jobs", brand?.id, id],
       })
-      showSuccessToast("Publish job finished")
+      showSuccessToast(t("Publish job finished"))
     },
     onError: handleError.bind(showErrorToast),
   })
@@ -181,16 +192,18 @@ function ContentDetailPage() {
       }),
     onSuccess: async () => {
       await refresh()
-      showSuccessToast("Draft submitted for approval")
+      showSuccessToast(t("Draft submitted for approval"))
     },
     onError: handleError.bind(showErrorToast),
   })
 
   if (!brand) return <NoBrand />
   if (isLoading)
-    return <p className="text-sm text-muted-foreground">Loading draft...</p>
+    return <p className="text-sm text-muted-foreground">{t("Loading...")}</p>
   if (!data)
-    return <p className="text-sm text-muted-foreground">Draft not found.</p>
+    return (
+      <p className="text-sm text-muted-foreground">{t("Draft not found.")}</p>
+    )
 
   const sourceImage =
     product?.images.find((image) => image.is_primary) ?? product?.images[0]
@@ -203,7 +216,7 @@ function ContentDetailPage() {
     <div className="space-y-6 pb-8">
       <Button variant="ghost" size="sm" asChild className="-ml-2">
         <Link to="/content">
-          <ArrowLeft className="mr-2 h-4 w-4" /> All content
+          <ArrowLeft className="mr-2 h-4 w-4" /> {t("All content")}
         </Link>
       </Button>
 
@@ -211,31 +224,35 @@ function ContentDetailPage() {
         <div>
           <h1 className="text-2xl font-semibold">{data.product_name}</h1>
           <p className="text-sm text-muted-foreground">
-            Profile v{data.brand_profile_version}
-            {data.model_name ? ` · Model: ${data.model_name}` : ""}
+            {t("Profile v{version}", { version: data.brand_profile_version })}
+            {data.model_name
+              ? ` · ${t("Model: {name}", { name: data.model_name })}`
+              : ""}
             {" · "}
-            {data.product_category}
+            {t(data.product_category)}
           </p>
         </div>
-        <Badge className="capitalize">{data.status.replace("_", " ")}</Badge>
+        <Badge>{t(data.status)}</Badge>
       </div>
 
       {data.integrity_status === "failed" ? (
         <p className="rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
-          Integrity failed: this output cannot be approved. Regenerate the
-          image.
+          {t(
+            "Integrity failed: this output cannot be approved. Regenerate the image.",
+          )}
         </p>
       ) : data.integrity_status === "needs_review" ? (
         <p className="rounded-md border border-amber-500/40 bg-amber-500/5 p-3 text-sm">
-          Integrity needs review. Compare the source and generated jewelry
-          carefully before approving.
+          {t(
+            "Integrity needs review. Compare the source and generated jewelry carefully before approving.",
+          )}
         </p>
       ) : null}
 
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Source jewelry</CardTitle>
+            <CardTitle>{t("Source jewelry")}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="aspect-square overflow-hidden rounded-md bg-muted">
@@ -248,7 +265,7 @@ function ContentDetailPage() {
                 />
               ) : (
                 <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-                  Source unavailable
+                  {t("Source unavailable")}
                 </div>
               )}
             </div>
@@ -256,7 +273,7 @@ function ContentDetailPage() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Generated image</CardTitle>
+            <CardTitle>{t("Generated image")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="aspect-square overflow-hidden rounded-md bg-muted">
@@ -266,14 +283,14 @@ function ContentDetailPage() {
               />
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Integrity</span>
+              <span className="text-muted-foreground">{t("Integrity")}</span>
               <Badge
                 variant={
                   data.integrity_status === "failed" ? "destructive" : "outline"
                 }
                 className="capitalize"
               >
-                {data.integrity_status.replace("_", " ")}
+                {t(data.integrity_status)}
               </Badge>
             </div>
           </CardContent>
@@ -282,9 +299,9 @@ function ContentDetailPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Social copy</CardTitle>
+          <CardTitle>{t("Social copy")}</CardTitle>
           <CardDescription>
-            Generated from the active brand profile and product metadata.
+            {t("Generated from the active brand profile and product metadata.")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -295,7 +312,9 @@ function ContentDetailPage() {
                 if (data.user_edited) {
                   if (
                     window.confirm(
-                      "You edited this caption manually. Regenerating will replace your text. Continue?",
+                      t(
+                        "You edited this caption manually. Regenerating will replace your text. Continue?",
+                      ),
                     )
                   ) {
                     generate.mutate(true)
@@ -307,16 +326,18 @@ function ContentDetailPage() {
               disabled={generate.isPending || !isEditable}
             >
               <Sparkles className="mr-2 h-4 w-4" />
-              {generate.isPending ? "Generating..." : "Generate caption"}
+              {generate.isPending
+                ? t("Generating caption...")
+                : t("Generate caption")}
             </Button>
             {data.user_edited ? (
-              <Badge variant="outline">Manually edited</Badge>
+              <Badge variant="outline">{t("Manually edited")}</Badge>
             ) : null}
           </div>
 
           {data.alternative_captions_json.length ? (
             <div className="space-y-2">
-              <Label>Alternatives</Label>
+              <Label>{t("Alternatives")}</Label>
               {data.alternative_captions_json.map((alternative, index) => (
                 <button
                   key={index}
@@ -331,7 +352,7 @@ function ContentDetailPage() {
           ) : null}
 
           <div className="grid gap-2">
-            <Label htmlFor="caption">Caption</Label>
+            <Label htmlFor="caption">{t("Caption")}</Label>
             <Textarea
               id="caption"
               rows={5}
@@ -342,7 +363,7 @@ function ContentDetailPage() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-2">
-              <Label htmlFor="cta">Call to action</Label>
+              <Label htmlFor="cta">{t("Call to action")}</Label>
               <Input
                 id="cta"
                 value={cta}
@@ -351,7 +372,7 @@ function ContentDetailPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="hashtags">Hashtags</Label>
+              <Label htmlFor="hashtags">{t("Hashtags")}</Label>
               <Input
                 id="hashtags"
                 value={hashtags}
@@ -366,7 +387,7 @@ function ContentDetailPage() {
               onClick={() => save.mutate()}
               disabled={!isEditable || save.isPending}
             >
-              {save.isPending ? "Saving..." : "Save draft"}
+              {save.isPending ? t("Saving...") : t("Save draft")}
             </Button>
             {canSubmit ? (
               <Button
@@ -374,7 +395,7 @@ function ContentDetailPage() {
                 disabled={submit.isPending}
               >
                 <Send className="mr-2 h-4 w-4" />
-                Submit for approval
+                {t("Submit for approval")}
               </Button>
             ) : null}
             {canReview ? (
@@ -385,25 +406,30 @@ function ContentDetailPage() {
                     approve.isPending || data.integrity_status === "failed"
                   }
                 >
-                  <CheckCircle2 className="mr-2 h-4 w-4" /> Approve
+                  <CheckCircle2 className="mr-2 h-4 w-4" /> {t("Approve")}
                 </Button>
                 <Button
                   variant="outline"
                   onClick={() => {
-                    if (window.confirm("Reject this content draft?")) {
+                    if (window.confirm(t("Reject this content draft?"))) {
                       reject.mutate()
                     }
                   }}
                   disabled={reject.isPending}
                 >
-                  <XCircle className="mr-2 h-4 w-4" /> Reject
+                  <XCircle className="mr-2 h-4 w-4" /> {t("Reject")}
                 </Button>
               </>
             ) : null}
           </div>
           {data.status === "approved" && data.approved_at ? (
             <p className="text-sm text-muted-foreground">
-              Approved by Owner on {new Date(data.approved_at).toLocaleString()}
+              {t("Approved by Owner on {date}.", {
+                date: formatDate(data.approved_at, {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                }),
+              })}
               .
             </p>
           ) : null}
@@ -413,28 +439,28 @@ function ContentDetailPage() {
       {["approved", "published", "publish_failed"].includes(data.status) ? (
         <Card>
           <CardHeader>
-            <CardTitle>Instagram publishing</CardTitle>
+            <CardTitle>{t("Instagram publishing")}</CardTitle>
             <CardDescription>
-              Single-image feed post. Only the Owner can publish.
+              {t("Single-image feed post. Only the Owner can publish.")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             {data.status === "published" && publishJobs?.data[0] ? (
               <div className="space-y-1 text-sm">
-                <p>Published successfully.</p>
+                <p>{t("Published successfully.")}</p>
                 <a
                   href={publishJobs.data[0].remote_post_url ?? "#"}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center gap-1 text-primary underline"
                 >
-                  View post <ExternalLink className="h-3 w-3" />
+                  {t("View post")} <ExternalLink className="h-3 w-3" />
                 </a>
               </div>
             ) : null}
             {publishJobs?.data[0]?.status === "failed" ? (
               <p className="text-sm text-destructive">
-                {publishJobs.data[0].error_message ?? "Publishing failed"}
+                {publishJobs.data[0].error_message ?? t("Publishing failed")}
               </p>
             ) : null}
             <div className="flex flex-wrap gap-2">
@@ -444,7 +470,9 @@ function ContentDetailPage() {
                   disabled={publish.isPending}
                 >
                   <Share2 className="mr-2 h-4 w-4" />
-                  {publish.isPending ? "Publishing..." : "Publish to Instagram"}
+                  {publish.isPending
+                    ? t("Publishing...")
+                    : t("Publish to Instagram")}
                 </Button>
               ) : null}
               {isOwner && publishJobs?.data[0]?.status === "failed" ? (
@@ -453,12 +481,12 @@ function ContentDetailPage() {
                   onClick={() => retryPublish.mutate(publishJobs.data[0].id)}
                   disabled={retryPublish.isPending}
                 >
-                  <RefreshCw className="mr-2 h-4 w-4" /> Retry publish
+                  <RefreshCw className="mr-2 h-4 w-4" /> {t("Retry publish")}
                 </Button>
               ) : null}
               {!isOwner ? (
                 <p className="text-sm text-muted-foreground">
-                  The brand Owner performs the final publish.
+                  {t("The brand Owner performs the final publish.")}
                 </p>
               ) : null}
             </div>
