@@ -4,6 +4,8 @@ A multi-tenant SaaS for jewelry brands that already have an identity. Import the
 
 PDF brand books are read in full from their embedded text (up to configurable limits). Real AI analysis is chunked across the whole document, and any extra sections such as packaging, values, materials, or sustainability are preserved in the profile.
 
+For scanned or image-only PDFs, optional OCR uses GPT-6 Luna's native PDF input. Set `OCR_ENABLED=true` and `OCR_API_KEY`; the extracted text is cached on the asset so it is never billed twice.
+
 Built on the [Full Stack FastAPI Template](https://github.com/fastapi/full-stack-fastapi-template).
 
 - **Backend:** FastAPI, SQLModel, PostgreSQL, Alembic, Pydantic, PyJWT, pytest
@@ -58,6 +60,19 @@ cd frontend && bunx playwright test tests/mvp-workflow.spec.ts --workers=1
 ```
 
 CI and local tests never call paid AI, real Instagram, or real S3.
+
+## OCR (optional)
+
+```text
+OCR_ENABLED=true
+OCR_API_BASE=https://opencode.ai/inference/go/openai/v1   # Go
+OCR_API_KEY=...
+OCR_MODEL=gpt-6-luna
+```
+
+`gpt-6-luna` accepts `text`, `image`, and `pdf` input, so no rasterization is needed. Only PDFs with little or no embedded text are sent for OCR, and the result is stored per asset.
+
+OpenCode Go is intended for coding-agent traffic and is monitored for abuse. For document/OCR workloads, the OpenCode **Console pay-as-you-go** endpoint (`https://opencode.ai/inference/openai/v1`) uses the same model and is the safer choice. OpenAI's GPT-6 Luna requests are retained for up to 30 days for abuse monitoring.
 
 ## Providers
 

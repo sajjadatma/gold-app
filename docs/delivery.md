@@ -68,6 +68,24 @@ AI_IMAGE_MODEL=gpt-image-1
 
 The OpenAI-compatible adapter calls chat completions for brand analysis/captions/integrity and images for generation. All structured output is validated by Pydantic before persistence. Missing credentials fall back to fake providers.
 
+## OCR (optional)
+
+Scanned/image-only PDFs can be transcribed by GPT-6 Luna through the OpenAI Responses API. The model accepts PDF input directly.
+
+```text
+OCR_ENABLED=false
+OCR_API_BASE=https://opencode.ai/inference/go/openai/v1
+OCR_API_KEY=...
+OCR_MODEL=gpt-6-luna
+OCR_MIN_TEXT_CHARS=200
+OCR_MAX_PDF_BYTES=20971520
+```
+
+- Go endpoint: `https://opencode.ai/inference/go/openai/v1` (OpenCode Go subscription key).
+- Console endpoint: `https://opencode.ai/inference/openai/v1` (pay-as-you-go; recommended for OCR/document workloads).
+- Only PDFs whose extracted text is shorter than the threshold are sent. OCR text is cached in asset metadata.
+- Enabling OCR sends brand documents to an external provider and incurs token costs.
+
 ## Instagram
 
 ```text

@@ -33,7 +33,7 @@ CI must not depend on paid AI, real Instagram, or real S3. Fake providers are th
 
 ## Delivery verification (MVP1)
 
-- Backend: 158 tests passed; Ruff clean; mypy clean.
+- Backend: 162 tests passed; Ruff clean; mypy clean.
 - Frontend: Biome clean; production build passes.
 - Fresh database migrated through all ten revisions to `f1eb7aefef7a`.
 - OpenAPI client regenerated with no pending diff.
@@ -43,3 +43,8 @@ CI must not depend on paid AI, real Instagram, or real S3. Fake providers are th
 
 - A text-based PDF fixture is uploaded through the API and analyzed end-to-end.
 - Assertions cover identity, positioning, audience, tone, photography, colors, typography, model style, social rules, dos/don'ts, and extra PDF sections (packaging, sustainability).
+
+## OCR coverage
+
+- Responses API request shape is unit-tested (model, PDF data, session header).
+- A blank/scanned PDF is analyzed with a mocked OCR response; the profile is populated, OCR text is cached, and a second analysis does not call OCR again.

@@ -54,6 +54,15 @@ class Settings(BaseSettings):
     AI_VISION_MODEL: str = "gpt-4.1-mini"
     AI_IMAGE_MODEL: str = "gpt-image-1"
 
+    # Optional OCR for image-only/scanned PDFs (GPT-6 Luna accepts PDF input).
+    # Disabled by default: enabling it sends data to a paid external API.
+    OCR_ENABLED: bool = False
+    OCR_API_BASE: str = "https://opencode.ai/inference/go/openai/v1"
+    OCR_API_KEY: str | None = None
+    OCR_MODEL: str = "gpt-6-luna"
+    OCR_MIN_TEXT_CHARS: int = 200
+    OCR_MAX_PDF_BYTES: int = 20 * 1024 * 1024
+
     # Instagram
     INSTAGRAM_PROVIDER: Literal["fake", "graph"] = "fake"
     INSTAGRAM_GRAPH_BASE: str = "https://graph.facebook.com/v21.0"

@@ -173,3 +173,59 @@ def test_pdf_upload_analysis_writes_whole_profile(
     assert profile.graphic_system.layout_principles or profile.social_media.visual_rules
     assert profile.additional_sections
     assert any(section.title == "PACKAGING" for section in profile.additional_sections)
+
+
+def test_scanned_pdf_uses_ocr_fallback(
+    client: TestClient,
+    db,
+    normal_user_token_headers: dict[str, str],
+    monkeypatch,
+) -> None:
+    from app.core.config import settings as app_settings
+    from app.modules.brand_import.models import BrandAsset
+
+    monkeypatch.setattr(app_settings, "OCR_ENABLED", True)
+    monkeypatch.setattr(app_settings, "OCR_API_KEY", "test-key")
+    calls = {"count": 0}
+
+    def fake_ocr(_pdf: bytes, _filename: str, _session: str) -> str:
+        calls["count"] += 1
+        return BRAND_BOOK_TEXT
+
+    monkeypatch.setattr(
+        "app.modules.brand_import.intelligence.extract_pdf_text", fake_ocr
+    )
+
+    brand_id = _brand(client, normal_user_token_headers)
+    blank_pdf = _text_pdf("")
+    upload = client.post(
+        f"{settings.API_V1_STR}/brands/{brand_id}/imports",
+        headers=normal_user_token_headers,
+        files=[("files", ("scanned-book.pdf", blank_pdf, "application/pdf"))],
+    )
+    assert upload.status_code == 200, upload.text
+    import_row = upload.json()
+    assert import_row["assets"][0]["content_type"] == "application/pdf"
+
+    response = client.post(
+        f"{settings.API_V1_STR}/brands/{brand_id}/imports/{import_row['id']}/analyze",
+        headers=normal_user_token_headers,
+    )
+    assert response.status_code == 200, response.text
+    profile = BrandProfileData.model_validate(response.json()["profile_json"])
+    assert profile.identity.story.startswith("Aurum Atelier")
+    assert any(section.title == "PACKAGING" for section in profile.additional_sections)
+    assert calls["count"] == 1
+
+    asset = db.get(BrandAsset, import_row["assets"][0]["id"])
+    assert asset is not None
+    db.refresh(asset)
+    assert asset.metadata_json["text"].startswith("[Page 1]")
+    assert asset.metadata_json["ocr"]["model"] == app_settings.OCR_MODEL
+
+    # A second analysis reuses the stored OCR text instead of paying again.
+    client.post(
+        f"{settings.API_V1_STR}/brands/{brand_id}/imports/{import_row['id']}/analyze",
+        headers=normal_user_token_headers,
+    )
+    assert calls["count"] == 1

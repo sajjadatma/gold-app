@@ -32,6 +32,10 @@
 - Publishing requires an approved draft, connected account, and no successful prior job for the draft.
 - Approval and publish actions record actor and timestamp.
 
+## External OCR
+
+OCR is disabled by default. When enabled for scanned PDFs, the full document is sent to the configured vision provider (GPT-6 Luna) and the transcribed text is stored on the asset. Treat this as an external data-processing action: confirm the provider's retention policy and obtain brand consent before enabling it in production.
+
 ## Token storage
 
 Instagram access tokens are stored only in `socialconnection.access_token`, never

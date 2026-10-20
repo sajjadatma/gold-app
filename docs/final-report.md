@@ -18,7 +18,7 @@
 | --- | --- |
 | Brands & tenancy | Brand creation, memberships, Owner/Content Manager roles, tenant-scoped access, team management |
 | Brand import | Multi-file upload, PDF/images/SVG/fonts/AI/EPS/PSD/ZIP, MIME+signature validation, ZIP traversal/limits, SVG sanitization, private asset library |
-| Brand intelligence | Full PDF brand-book text extraction, chunked real-AI analysis, deterministic visual/color/font/logo/text parsing, extra brand-book sections, Pydantic-validated profile, provenance/uncertainty |
+| Brand intelligence | Full PDF brand-book text extraction, optional GPT-6 Luna OCR for scanned PDFs, chunked real-AI analysis, deterministic visual/color/font/logo/text parsing, extra brand-book sections, Pydantic-validated profile, provenance/uncertainty |
 | Brand validation | Owner review/edit, logo selection, activation, single active profile, archival of prior versions |
 | Brand models | Virtual models with generated previews and canonical reference; real models with reference uploads and consent gate; default model |
 | Products | CRUD/archive, jewelry metadata, source images, primary image, advisory quality checks |
@@ -92,7 +92,7 @@ Full contract: [`docs/api-contracts.md`](api-contracts.md).
 
 | Check | Result |
 | --- | --- |
-| `uv run pytest` | **158 passed** |
+| `uv run pytest` | **162 passed** |
 | `uv run ruff check app tests` | clean |
 | `uv run mypy app` | clean |
 | `bun run lint` (Biome) | clean |
@@ -110,6 +110,7 @@ No live external calls were made:
 - **AI:** no paid AI credentials were authorized; fake providers exercised every workflow.
 - **Instagram:** no real post was published; doing so is an external side effect requiring explicit approval and a professional account.
 - **S3:** no cloud bucket was created; the local adapter is tested and the S3 adapter is configured through environment variables.
+- **OCR:** the GPT-6 Luna OCR path is covered with mocked Responses API calls; no live OCR request was made because no provider key was available/authorized.
 
 ## Known MVP limitations
 
