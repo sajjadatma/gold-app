@@ -130,5 +130,6 @@ class NewPassword(SQLModel):
 from app.modules.brand_import.models import (  # noqa: E402, F401
     BrandAsset,
     BrandImport,
+    BrandProfile,
 )
 from app.modules.brands.models import Brand, Membership  # noqa: E402, F401

@@ -46,6 +46,18 @@ class Settings(BaseSettings):
     S3_SECRET_ACCESS_KEY: str | None = None
     S3_REGION: str = "us-east-1"
 
+    # AI providers. Fake by default; missing credentials never block work.
+    AI_PROVIDER: Literal["fake", "openai"] = "fake"
+    AI_API_BASE: str = "https://api.openai.com/v1"
+    AI_API_KEY: str | None = None
+    AI_TEXT_MODEL: str = "gpt-4.1-mini"
+    AI_VISION_MODEL: str = "gpt-4.1-mini"
+    AI_IMAGE_MODEL: str = "gpt-image-1"
+
+    # Instagram
+    INSTAGRAM_PROVIDER: Literal["fake", "graph"] = "fake"
+    INSTAGRAM_GRAPH_BASE: str = "https://graph.facebook.com/v21.0"
+
     # Upload limits (bytes / counts)
     MAX_PDF_BYTES: int = 50 * 1024 * 1024
     MAX_IMAGE_BYTES: int = 25 * 1024 * 1024

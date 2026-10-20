@@ -3,7 +3,7 @@ from datetime import UTC, datetime
 from enum import StrEnum
 from typing import Any
 
-from sqlalchemy import JSON, Column
+from sqlalchemy import JSON, Column, Index, text
 from sqlmodel import Field, SQLModel
 
 
@@ -75,3 +75,35 @@ class BrandAsset(SQLModel, table=True):
     is_active: bool = Field(default=True)
     created_at: datetime = Field(default_factory=utcnow)
     updated_at: datetime = Field(default_factory=utcnow)
+
+
+class ProfileStatus(StrEnum):
+    DRAFT = "draft"
+    NEEDS_REVIEW = "needs_review"
+    ACTIVE = "active"
+    ARCHIVED = "archived"
+
+
+class BrandProfile(SQLModel, table=True):
+    __table_args__ = (
+        Index(
+            "uq_brandprofile_one_active",
+            "brand_id",
+            unique=True,
+            postgresql_where=text("status = 'active'"),
+        ),
+    )
+
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    brand_id: uuid.UUID = Field(foreign_key="brand.id", index=True, ondelete="CASCADE")
+    version: int = 1
+    status: str = Field(default=ProfileStatus.DRAFT.value, max_length=32)
+    profile_json: dict[str, Any] = Field(
+        default_factory=dict, sa_column=Column(JSON, nullable=False)
+    )
+    created_from_import_id: uuid.UUID | None = Field(
+        default=None, foreign_key="brandimport.id", ondelete="SET NULL"
+    )
+    created_at: datetime = Field(default_factory=utcnow)
+    updated_at: datetime = Field(default_factory=utcnow)
+    activated_at: datetime | None = None

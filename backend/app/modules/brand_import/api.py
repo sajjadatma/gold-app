@@ -5,17 +5,25 @@ from fastapi import APIRouter, File, HTTPException, Query, Response, UploadFile
 from sqlmodel import select
 
 from app.api.deps import CurrentUser, SessionDep
-from app.modules.brand_import.models import BrandAsset, BrandImport
+from app.modules.brand_import.intelligence import (
+    ProfileAnalysisError,
+    analyze_import,
+    latest_profile,
+)
+from app.modules.brand_import.models import BrandAsset, BrandImport, BrandProfile
 from app.modules.brand_import.schemas import (
     AssetsPublic,
     BrandAssetPublic,
     BrandImportDetail,
     BrandImportPublic,
+    BrandProfilePublic,
     ImportsPublic,
+    ProfilesPublic,
 )
 from app.modules.brand_import.service import UploadedInput, process_import
 from app.modules.brand_import.validation import limit_for
 from app.modules.brands.deps import BrandMembership, BrandOwner
+from app.modules.brands.models import Brand
 from app.providers.storage import StorageError, get_storage
 
 router = APIRouter(prefix="/brands/{brand_id}", tags=["Brand Import"])
@@ -210,3 +218,69 @@ def preview_asset(
             "Cache-Control": "private, max-age=300",
         },
     )
+
+
+def _profile_public(profile: BrandProfile) -> BrandProfilePublic:
+    return BrandProfilePublic(
+        id=profile.id,
+        brand_id=profile.brand_id,
+        version=profile.version,
+        status=profile.status,
+        profile_json=profile.profile_json,
+        created_from_import_id=profile.created_from_import_id,
+        created_at=profile.created_at,
+        updated_at=profile.updated_at,
+        activated_at=profile.activated_at,
+    )
+
+
+def _brand_or_404(session: SessionDep, brand_id: uuid.UUID) -> Brand:
+    brand = session.get(Brand, brand_id)
+    if not brand:
+        raise HTTPException(status_code=404, detail="Brand not found")
+    return brand
+
+
+@router.post("/imports/{import_id}/analyze", response_model=BrandProfilePublic)
+def analyze_import_endpoint(
+    session: SessionDep, membership: BrandMembership, import_id: uuid.UUID
+) -> BrandProfilePublic:
+    import_row = get_import_or_404(session, membership.brand_id, import_id)
+    brand = _brand_or_404(session, membership.brand_id)
+    try:
+        profile = analyze_import(session, brand, import_row)
+    except ProfileAnalysisError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+    return _profile_public(profile)
+
+
+@router.get("/profile", response_model=BrandProfilePublic)
+def read_latest_profile(
+    session: SessionDep, membership: BrandMembership
+) -> BrandProfilePublic:
+    profile = latest_profile(session, membership.brand_id)
+    if not profile:
+        raise HTTPException(status_code=404, detail="No brand profile yet")
+    return _profile_public(profile)
+
+
+@router.get("/profiles", response_model=ProfilesPublic)
+def read_profiles(
+    session: SessionDep, membership: BrandMembership
+) -> ProfilesPublic:
+    profiles = session.exec(
+        select(BrandProfile).where(BrandProfile.brand_id == membership.brand_id)
+    ).all()
+    profiles = sorted(profiles, key=lambda profile: profile.version, reverse=True)
+    data = [_profile_public(profile) for profile in profiles]
+    return ProfilesPublic(data=data, count=len(data))
+
+
+@router.get("/profile/{profile_id}", response_model=BrandProfilePublic)
+def read_profile(
+    session: SessionDep, membership: BrandMembership, profile_id: uuid.UUID
+) -> BrandProfilePublic:
+    profile = session.get(BrandProfile, profile_id)
+    if not profile or profile.brand_id != membership.brand_id:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    return _profile_public(profile)

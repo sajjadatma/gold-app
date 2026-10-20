@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime
+from typing import Any
 
 from sqlmodel import SQLModel
 
@@ -41,3 +42,24 @@ class BrandImportDetail(BrandImportPublic):
 class ImportsPublic(SQLModel):
     data: list[BrandImportPublic]
     count: int
+
+
+class BrandProfilePublic(SQLModel):
+    id: uuid.UUID
+    brand_id: uuid.UUID
+    version: int
+    status: str
+    profile_json: dict[str, Any]
+    created_from_import_id: uuid.UUID | None
+    created_at: datetime
+    updated_at: datetime
+    activated_at: datetime | None
+
+
+class ProfilesPublic(SQLModel):
+    data: list[BrandProfilePublic]
+    count: int
+
+
+class ProfileUpdate(SQLModel):
+    profile_json: dict[str, Any]
