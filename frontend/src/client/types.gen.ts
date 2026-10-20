@@ -503,6 +503,226 @@ export type ConsentPublic = {
 };
 
 /**
+ * GeneratedAssetPublic
+ */
+export type GeneratedAssetPublic = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Content Type
+     */
+    content_type: string;
+    /**
+     * Width
+     */
+    width: number | null;
+    /**
+     * Height
+     */
+    height: number | null;
+    /**
+     * Integrity Status
+     */
+    integrity_status: string;
+    /**
+     * Integrity Findings Json
+     */
+    integrity_findings_json: {
+        [key: string]: unknown;
+    };
+    /**
+     * Created At
+     */
+    created_at: string;
+};
+
+/**
+ * GenerationCreate
+ */
+export type GenerationCreate = {
+    /**
+     * Product Id
+     */
+    product_id: string;
+    /**
+     * Mode
+     */
+    mode?: 'studio' | 'on_model' | 'campaign';
+    /**
+     * Aspect Ratio
+     */
+    aspect_ratio?: '1:1' | '4:5' | '9:16' | '16:9';
+    /**
+     * Brand Model Id
+     */
+    brand_model_id?: string | null;
+    /**
+     * Source Image Id
+     */
+    source_image_id?: string | null;
+    /**
+     * Style Notes
+     */
+    style_notes?: string;
+};
+
+/**
+ * GenerationDetail
+ */
+export type GenerationDetail = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Brand Id
+     */
+    brand_id: string;
+    /**
+     * Product Id
+     */
+    product_id: string;
+    /**
+     * Brand Profile Id
+     */
+    brand_profile_id: string;
+    /**
+     * Brand Model Id
+     */
+    brand_model_id: string | null;
+    /**
+     * Mode
+     */
+    mode: string;
+    /**
+     * Aspect Ratio
+     */
+    aspect_ratio: string;
+    /**
+     * Status
+     */
+    status: string;
+    /**
+     * Provider
+     */
+    provider: string;
+    /**
+     * Model
+     */
+    model: string | null;
+    /**
+     * Prompt Version
+     */
+    prompt_version: string;
+    /**
+     * Parameters Json
+     */
+    parameters_json: {
+        [key: string]: unknown;
+    };
+    /**
+     * Error Message
+     */
+    error_message: string | null;
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Updated At
+     */
+    updated_at: string;
+    /**
+     * Assets
+     */
+    assets: Array<GeneratedAssetPublic>;
+};
+
+/**
+ * GenerationPublic
+ */
+export type GenerationPublic = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Brand Id
+     */
+    brand_id: string;
+    /**
+     * Product Id
+     */
+    product_id: string;
+    /**
+     * Brand Profile Id
+     */
+    brand_profile_id: string;
+    /**
+     * Brand Model Id
+     */
+    brand_model_id: string | null;
+    /**
+     * Mode
+     */
+    mode: string;
+    /**
+     * Aspect Ratio
+     */
+    aspect_ratio: string;
+    /**
+     * Status
+     */
+    status: string;
+    /**
+     * Provider
+     */
+    provider: string;
+    /**
+     * Model
+     */
+    model: string | null;
+    /**
+     * Prompt Version
+     */
+    prompt_version: string;
+    /**
+     * Parameters Json
+     */
+    parameters_json: {
+        [key: string]: unknown;
+    };
+    /**
+     * Error Message
+     */
+    error_message: string | null;
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Updated At
+     */
+    updated_at: string;
+};
+
+/**
+ * GenerationsPublic
+ */
+export type GenerationsPublic = {
+    /**
+     * Data
+     */
+    data: Array<GenerationPublic>;
+    /**
+     * Count
+     */
+    count: number;
+};
+
+/**
  * HTTPValidationError
  */
 export type HTTPValidationError = {
@@ -2668,6 +2888,166 @@ export type brandModelsDownloadReferenceErrors = {
 export type brandModelsDownloadReferenceError = brandModelsDownloadReferenceErrors[keyof brandModelsDownloadReferenceErrors];
 
 export type brandModelsDownloadReferenceResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
+export type generationsReadGenerationsData = {
+    body?: never;
+    path: {
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/generations';
+};
+
+export type generationsReadGenerationsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type generationsReadGenerationsError = generationsReadGenerationsErrors[keyof generationsReadGenerationsErrors];
+
+export type generationsReadGenerationsResponses = {
+    /**
+     * Successful Response
+     */
+    200: GenerationsPublic;
+};
+
+export type generationsReadGenerationsResponse = generationsReadGenerationsResponses[keyof generationsReadGenerationsResponses];
+
+export type generationsCreateGenerationData = {
+    body: GenerationCreate;
+    path: {
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/generations';
+};
+
+export type generationsCreateGenerationErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type generationsCreateGenerationError = generationsCreateGenerationErrors[keyof generationsCreateGenerationErrors];
+
+export type generationsCreateGenerationResponses = {
+    /**
+     * Successful Response
+     */
+    200: GenerationDetail;
+};
+
+export type generationsCreateGenerationResponse = generationsCreateGenerationResponses[keyof generationsCreateGenerationResponses];
+
+export type generationsReadGenerationData = {
+    body?: never;
+    path: {
+        /**
+         * Request Id
+         */
+        request_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/generations/{request_id}';
+};
+
+export type generationsReadGenerationErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type generationsReadGenerationError = generationsReadGenerationErrors[keyof generationsReadGenerationErrors];
+
+export type generationsReadGenerationResponses = {
+    /**
+     * Successful Response
+     */
+    200: GenerationDetail;
+};
+
+export type generationsReadGenerationResponse = generationsReadGenerationResponses[keyof generationsReadGenerationResponses];
+
+export type generationsRetryGenerationData = {
+    body?: never;
+    path: {
+        /**
+         * Request Id
+         */
+        request_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/generations/{request_id}/retry';
+};
+
+export type generationsRetryGenerationErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type generationsRetryGenerationError = generationsRetryGenerationErrors[keyof generationsRetryGenerationErrors];
+
+export type generationsRetryGenerationResponses = {
+    /**
+     * Successful Response
+     */
+    200: GenerationDetail;
+};
+
+export type generationsRetryGenerationResponse = generationsRetryGenerationResponses[keyof generationsRetryGenerationResponses];
+
+export type generationsDownloadGeneratedAssetData = {
+    body?: never;
+    path: {
+        /**
+         * Asset Id
+         */
+        asset_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/generations/assets/{asset_id}/download';
+};
+
+export type generationsDownloadGeneratedAssetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type generationsDownloadGeneratedAssetError = generationsDownloadGeneratedAssetErrors[keyof generationsDownloadGeneratedAssetErrors];
+
+export type generationsDownloadGeneratedAssetResponses = {
     /**
      * Successful Response
      */

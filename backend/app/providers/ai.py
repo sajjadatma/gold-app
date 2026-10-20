@@ -315,3 +315,123 @@ def generate_model_previews(
         f"Direction: {json.dumps(config, ensure_ascii=True)[:1200]}"
     )
     return [generate_image(prompt, [], "4:5") for _ in range(count)]
+
+
+def generate_text(system: str, prompt: str) -> str:
+    if settings.AI_PROVIDER == "openai" and settings.AI_API_KEY:
+        response = httpx.post(
+            f"{settings.AI_API_BASE.rstrip('/')}/chat/completions",
+            headers={"Authorization": f"Bearer {settings.AI_API_KEY}"},
+            json={
+                "model": settings.AI_TEXT_MODEL,
+                "messages": [
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": prompt},
+                ],
+                "temperature": 0.4,
+            },
+            timeout=90,
+        )
+        response.raise_for_status()
+        return str(response.json()["choices"][0]["message"]["content"]).strip()
+    return "Fake provider response"
+
+
+def _image_difference(source: bytes, generated: bytes) -> float:
+    try:
+        first = Image.open(io.BytesIO(source)).convert("L").resize((64, 64))
+        second = Image.open(io.BytesIO(generated)).convert("L").resize((64, 64))
+        first_pixels = list(first.getdata())
+        second_pixels = list(second.getdata())
+        return sum(
+            abs(int(a) - int(b)) for a, b in zip(first_pixels, second_pixels, strict=True)
+        ) / len(first_pixels)
+    except Exception:  # noqa: BLE001
+        return 255.0
+
+
+def evaluate_integrity(
+    source: bytes, generated: bytes, product_name: str, notes: str = ""
+) -> dict[str, Any]:
+    if settings.AI_PROVIDER == "openai" and settings.AI_API_KEY:
+        content: list[dict[str, Any]] = [
+            {
+                "type": "text",
+                "text": (
+                    "Compare the source jewelry photo with the generated image. "
+                    f"Product: {product_name}. Known notes: {notes or 'none'}. "
+                    "Return JSON: {status: passed|needs_review|failed, summary: string, "
+                    "checks: [{name, result, note}], confidence: 0-1}. "
+                    "Check silhouette, major geometry, visible stone count, stone placement, "
+                    "ring/band/chain structure, pendant geometry, metal color, missing or added elements. "
+                    "Be conservative; do not claim certainty."
+                ),
+            }
+        ]
+        for label, data in (("source", source), ("generated", generated)):
+            content.append(
+                {
+                    "type": "text",
+                    "text": f"{label} image:",
+                }
+            )
+            content.append(
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": "data:image/png;base64,"
+                        + base64.b64encode(data).decode()
+                    },
+                }
+            )
+        response = httpx.post(
+            f"{settings.AI_API_BASE.rstrip('/')}/chat/completions",
+            headers={"Authorization": f"Bearer {settings.AI_API_KEY}"},
+            json={
+                "model": settings.AI_VISION_MODEL,
+                "messages": [
+                    {
+                        "role": "system",
+                        "content": "You verify jewelry product fidelity. Output valid JSON only.",
+                    },
+                    {"role": "user", "content": content},
+                ],
+                "response_format": {"type": "json_object"},
+                "temperature": 0.1,
+            },
+            timeout=120,
+        )
+        response.raise_for_status()
+        parsed = json.loads(response.json()["choices"][0]["message"]["content"])
+        if not isinstance(parsed, dict):
+            raise ValueError("Integrity response was not an object")
+        return parsed
+
+    difference = _image_difference(source, generated)
+    if difference < 45:
+        status = "passed"
+        summary = "Source and generated jewelry are visually consistent (fake provider)."
+    elif difference < 70:
+        status = "needs_review"
+        summary = "Some visual differences were detected; compare source and output (fake provider)."
+    else:
+        status = "failed"
+        summary = "The generated image differs materially from the source (fake provider)."
+    checks = [
+        {
+            "name": "overall_similarity",
+            "result": status,
+            "note": f"Mean grayscale difference: {difference:.1f}",
+        },
+        {
+            "name": "human_confirmation",
+            "result": "required",
+            "note": "Automatic evaluation is approximate; Owner approval is mandatory.",
+        },
+    ]
+    return {
+        "status": status,
+        "summary": summary,
+        "checks": checks,
+        "confidence": 0.55,
+    }

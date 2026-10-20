@@ -28,7 +28,9 @@ import { Route as LayoutModelsNewRouteImport } from './routes/_layout/models/new
 import { Route as LayoutProductsIndexRouteImport } from './routes/_layout/products/index'
 import { Route as LayoutProductsIdRouteImport } from './routes/_layout/products/$id'
 import { Route as LayoutProductsNewRouteImport } from './routes/_layout/products/new'
+import { Route as LayoutStudioIndexRouteImport } from './routes/_layout/studio/index'
 import { Route as LayoutBrandImportsIdRouteImport } from './routes/_layout/brand/imports.$id'
+import { Route as LayoutStudioGenerationsIdRouteImport } from './routes/_layout/studio/generations/$id'
 
 const LayoutRoute = LayoutRouteImport.update({
   id: '/_layout',
@@ -124,11 +126,22 @@ const LayoutProductsNewRoute = LayoutProductsNewRouteImport.update({
   path: '/products/new',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutStudioIndexRoute = LayoutStudioIndexRouteImport.update({
+  id: '/studio/',
+  path: '/studio/',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutBrandImportsIdRoute = LayoutBrandImportsIdRouteImport.update({
   id: '/brand/imports/$id',
   path: '/brand/imports/$id',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutStudioGenerationsIdRoute =
+  LayoutStudioGenerationsIdRouteImport.update({
+    id: '/studio/generations/$id',
+    path: '/studio/generations/$id',
+    getParentRoute: () => LayoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof LayoutIndexRoute
@@ -149,7 +162,9 @@ export interface FileRoutesByFullPath {
   '/products/new': typeof LayoutProductsNewRoute
   '/models/': typeof LayoutModelsIndexRoute
   '/products/': typeof LayoutProductsIndexRoute
+  '/studio/': typeof LayoutStudioIndexRoute
   '/brand/imports/$id': typeof LayoutBrandImportsIdRoute
+  '/studio/generations/$id': typeof LayoutStudioGenerationsIdRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -170,7 +185,9 @@ export interface FileRoutesByTo {
   '/products/new': typeof LayoutProductsNewRoute
   '/models': typeof LayoutModelsIndexRoute
   '/products': typeof LayoutProductsIndexRoute
+  '/studio': typeof LayoutStudioIndexRoute
   '/brand/imports/$id': typeof LayoutBrandImportsIdRoute
+  '/studio/generations/$id': typeof LayoutStudioGenerationsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -193,7 +210,9 @@ export interface FileRoutesById {
   '/_layout/products/new': typeof LayoutProductsNewRoute
   '/_layout/models/': typeof LayoutModelsIndexRoute
   '/_layout/products/': typeof LayoutProductsIndexRoute
+  '/_layout/studio/': typeof LayoutStudioIndexRoute
   '/_layout/brand/imports/$id': typeof LayoutBrandImportsIdRoute
+  '/_layout/studio/generations/$id': typeof LayoutStudioGenerationsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -216,7 +235,9 @@ export interface FileRouteTypes {
     | '/products/new'
     | '/models/'
     | '/products/'
+    | '/studio/'
     | '/brand/imports/$id'
+    | '/studio/generations/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -237,7 +258,9 @@ export interface FileRouteTypes {
     | '/products/new'
     | '/models'
     | '/products'
+    | '/studio'
     | '/brand/imports/$id'
+    | '/studio/generations/$id'
   id:
     | '__root__'
     | '/_layout'
@@ -259,7 +282,9 @@ export interface FileRouteTypes {
     | '/_layout/products/new'
     | '/_layout/models/'
     | '/_layout/products/'
+    | '/_layout/studio/'
     | '/_layout/brand/imports/$id'
+    | '/_layout/studio/generations/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -405,11 +430,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutProductsNewRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/studio/': {
+      id: '/_layout/studio/'
+      path: '/studio'
+      fullPath: '/studio/'
+      preLoaderRoute: typeof LayoutStudioIndexRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/brand/imports/$id': {
       id: '/_layout/brand/imports/$id'
       path: '/brand/imports/$id'
       fullPath: '/brand/imports/$id'
       preLoaderRoute: typeof LayoutBrandImportsIdRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/studio/generations/$id': {
+      id: '/_layout/studio/generations/$id'
+      path: '/studio/generations/$id'
+      fullPath: '/studio/generations/$id'
+      preLoaderRoute: typeof LayoutStudioGenerationsIdRouteImport
       parentRoute: typeof LayoutRoute
     }
   }
@@ -430,7 +469,9 @@ interface LayoutRouteChildren {
   LayoutProductsNewRoute: typeof LayoutProductsNewRoute
   LayoutModelsIndexRoute: typeof LayoutModelsIndexRoute
   LayoutProductsIndexRoute: typeof LayoutProductsIndexRoute
+  LayoutStudioIndexRoute: typeof LayoutStudioIndexRoute
   LayoutBrandImportsIdRoute: typeof LayoutBrandImportsIdRoute
+  LayoutStudioGenerationsIdRoute: typeof LayoutStudioGenerationsIdRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
@@ -448,7 +489,9 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutProductsNewRoute: LayoutProductsNewRoute,
   LayoutModelsIndexRoute: LayoutModelsIndexRoute,
   LayoutProductsIndexRoute: LayoutProductsIndexRoute,
+  LayoutStudioIndexRoute: LayoutStudioIndexRoute,
   LayoutBrandImportsIdRoute: LayoutBrandImportsIdRoute,
+  LayoutStudioGenerationsIdRoute: LayoutStudioGenerationsIdRoute,
 }
 
 const LayoutRouteWithChildren =

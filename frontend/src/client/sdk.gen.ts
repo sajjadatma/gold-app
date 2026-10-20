@@ -2,7 +2,7 @@
 
 import { type Client, formDataBodySerializer, type Options as Options2, type TDataShape, urlSearchParamsBodySerializer } from './client';
 import { client } from './client.gen';
-import type { brandImportActivateProfileData, brandImportActivateProfileErrors, brandImportActivateProfileResponses, brandImportAnalyzeImportEndpointData, brandImportAnalyzeImportEndpointErrors, brandImportAnalyzeImportEndpointResponses, brandImportArchiveAssetData, brandImportArchiveAssetErrors, brandImportArchiveAssetResponses, brandImportCreateImportData, brandImportCreateImportErrors, brandImportCreateImportResponses, brandImportDownloadAssetData, brandImportDownloadAssetErrors, brandImportDownloadAssetResponses, brandImportPreviewAssetData, brandImportPreviewAssetErrors, brandImportPreviewAssetResponses, brandImportReadAssetsData, brandImportReadAssetsErrors, brandImportReadAssetsResponses, brandImportReadImportData, brandImportReadImportErrors, brandImportReadImportResponses, brandImportReadImportsData, brandImportReadImportsErrors, brandImportReadImportsResponses, brandImportReadLatestProfileData, brandImportReadLatestProfileErrors, brandImportReadLatestProfileResponses, brandImportReadProfileData, brandImportReadProfileErrors, brandImportReadProfileResponses, brandImportReadProfilesData, brandImportReadProfilesErrors, brandImportReadProfilesResponses, brandImportUpdateProfileData, brandImportUpdateProfileErrors, brandImportUpdateProfileResponses, brandModelsCreateModelData, brandModelsCreateModelErrors, brandModelsCreateModelResponses, brandModelsDownloadReferenceData, brandModelsDownloadReferenceErrors, brandModelsDownloadReferenceResponses, brandModelsGeneratePreviewsData, brandModelsGeneratePreviewsErrors, brandModelsGeneratePreviewsResponses, brandModelsReadModelData, brandModelsReadModelErrors, brandModelsReadModelResponses, brandModelsReadModelsData, brandModelsReadModelsErrors, brandModelsReadModelsResponses, brandModelsRecordConsentData, brandModelsRecordConsentErrors, brandModelsRecordConsentResponses, brandModelsSetCanonicalReferenceData, brandModelsSetCanonicalReferenceErrors, brandModelsSetCanonicalReferenceResponses, brandModelsSetDefaultModelData, brandModelsSetDefaultModelErrors, brandModelsSetDefaultModelResponses, brandModelsUpdateModelData, brandModelsUpdateModelErrors, brandModelsUpdateModelResponses, brandModelsUploadReferenceData, brandModelsUploadReferenceErrors, brandModelsUploadReferenceResponses, brandsAddMemberData, brandsAddMemberErrors, brandsAddMemberResponses, brandsCreateBrandData, brandsCreateBrandErrors, brandsCreateBrandResponses, brandsDeleteMemberData, brandsDeleteMemberErrors, brandsDeleteMemberResponses, brandsReadBrandData, brandsReadBrandErrors, brandsReadBrandResponses, brandsReadBrandsData, brandsReadBrandsResponses, brandsReadMembersData, brandsReadMembersErrors, brandsReadMembersResponses, brandsUpdateMemberData, brandsUpdateMemberErrors, brandsUpdateMemberResponses, itemsCreateItemData, itemsCreateItemErrors, itemsCreateItemResponses, itemsDeleteItemData, itemsDeleteItemErrors, itemsDeleteItemResponses, itemsReadItemData, itemsReadItemErrors, itemsReadItemResponses, itemsReadItemsData, itemsReadItemsErrors, itemsReadItemsResponses, itemsUpdateItemData, itemsUpdateItemErrors, itemsUpdateItemResponses, loginLoginAccessTokenData, loginLoginAccessTokenErrors, loginLoginAccessTokenResponses, loginRecoverPasswordData, loginRecoverPasswordErrors, loginRecoverPasswordHtmlContentData, loginRecoverPasswordHtmlContentErrors, loginRecoverPasswordHtmlContentResponses, loginRecoverPasswordResponses, loginResetPasswordData, loginResetPasswordErrors, loginResetPasswordResponses, loginTestTokenData, loginTestTokenResponses, privateCreateUserData, privateCreateUserErrors, privateCreateUserResponses, productsArchiveProductData, productsArchiveProductErrors, productsArchiveProductResponses, productsCreateProductData, productsCreateProductErrors, productsCreateProductResponses, productsDownloadProductImageData, productsDownloadProductImageErrors, productsDownloadProductImageResponses, productsReadProductData, productsReadProductErrors, productsReadProductResponses, productsReadProductsData, productsReadProductsErrors, productsReadProductsResponses, productsSetPrimaryImageData, productsSetPrimaryImageErrors, productsSetPrimaryImageResponses, productsUpdateProductData, productsUpdateProductErrors, productsUpdateProductResponses, productsUploadProductImageData, productsUploadProductImageErrors, productsUploadProductImageResponses, usersCreateUserData, usersCreateUserErrors, usersCreateUserResponses, usersDeleteUserData, usersDeleteUserErrors, usersDeleteUserMeData, usersDeleteUserMeResponses, usersDeleteUserResponses, usersReadUserByIdData, usersReadUserByIdErrors, usersReadUserByIdResponses, usersReadUserMeData, usersReadUserMeResponses, usersReadUsersData, usersReadUsersErrors, usersReadUsersResponses, usersRegisterUserData, usersRegisterUserErrors, usersRegisterUserResponses, usersUpdatePasswordMeData, usersUpdatePasswordMeErrors, usersUpdatePasswordMeResponses, usersUpdateUserData, usersUpdateUserErrors, usersUpdateUserMeData, usersUpdateUserMeErrors, usersUpdateUserMeResponses, usersUpdateUserResponses, utilsHealthCheckData, utilsHealthCheckResponses, utilsTestEmailData, utilsTestEmailErrors, utilsTestEmailResponses } from './types.gen';
+import type { brandImportActivateProfileData, brandImportActivateProfileErrors, brandImportActivateProfileResponses, brandImportAnalyzeImportEndpointData, brandImportAnalyzeImportEndpointErrors, brandImportAnalyzeImportEndpointResponses, brandImportArchiveAssetData, brandImportArchiveAssetErrors, brandImportArchiveAssetResponses, brandImportCreateImportData, brandImportCreateImportErrors, brandImportCreateImportResponses, brandImportDownloadAssetData, brandImportDownloadAssetErrors, brandImportDownloadAssetResponses, brandImportPreviewAssetData, brandImportPreviewAssetErrors, brandImportPreviewAssetResponses, brandImportReadAssetsData, brandImportReadAssetsErrors, brandImportReadAssetsResponses, brandImportReadImportData, brandImportReadImportErrors, brandImportReadImportResponses, brandImportReadImportsData, brandImportReadImportsErrors, brandImportReadImportsResponses, brandImportReadLatestProfileData, brandImportReadLatestProfileErrors, brandImportReadLatestProfileResponses, brandImportReadProfileData, brandImportReadProfileErrors, brandImportReadProfileResponses, brandImportReadProfilesData, brandImportReadProfilesErrors, brandImportReadProfilesResponses, brandImportUpdateProfileData, brandImportUpdateProfileErrors, brandImportUpdateProfileResponses, brandModelsCreateModelData, brandModelsCreateModelErrors, brandModelsCreateModelResponses, brandModelsDownloadReferenceData, brandModelsDownloadReferenceErrors, brandModelsDownloadReferenceResponses, brandModelsGeneratePreviewsData, brandModelsGeneratePreviewsErrors, brandModelsGeneratePreviewsResponses, brandModelsReadModelData, brandModelsReadModelErrors, brandModelsReadModelResponses, brandModelsReadModelsData, brandModelsReadModelsErrors, brandModelsReadModelsResponses, brandModelsRecordConsentData, brandModelsRecordConsentErrors, brandModelsRecordConsentResponses, brandModelsSetCanonicalReferenceData, brandModelsSetCanonicalReferenceErrors, brandModelsSetCanonicalReferenceResponses, brandModelsSetDefaultModelData, brandModelsSetDefaultModelErrors, brandModelsSetDefaultModelResponses, brandModelsUpdateModelData, brandModelsUpdateModelErrors, brandModelsUpdateModelResponses, brandModelsUploadReferenceData, brandModelsUploadReferenceErrors, brandModelsUploadReferenceResponses, brandsAddMemberData, brandsAddMemberErrors, brandsAddMemberResponses, brandsCreateBrandData, brandsCreateBrandErrors, brandsCreateBrandResponses, brandsDeleteMemberData, brandsDeleteMemberErrors, brandsDeleteMemberResponses, brandsReadBrandData, brandsReadBrandErrors, brandsReadBrandResponses, brandsReadBrandsData, brandsReadBrandsResponses, brandsReadMembersData, brandsReadMembersErrors, brandsReadMembersResponses, brandsUpdateMemberData, brandsUpdateMemberErrors, brandsUpdateMemberResponses, generationsCreateGenerationData, generationsCreateGenerationErrors, generationsCreateGenerationResponses, generationsDownloadGeneratedAssetData, generationsDownloadGeneratedAssetErrors, generationsDownloadGeneratedAssetResponses, generationsReadGenerationData, generationsReadGenerationErrors, generationsReadGenerationResponses, generationsReadGenerationsData, generationsReadGenerationsErrors, generationsReadGenerationsResponses, generationsRetryGenerationData, generationsRetryGenerationErrors, generationsRetryGenerationResponses, itemsCreateItemData, itemsCreateItemErrors, itemsCreateItemResponses, itemsDeleteItemData, itemsDeleteItemErrors, itemsDeleteItemResponses, itemsReadItemData, itemsReadItemErrors, itemsReadItemResponses, itemsReadItemsData, itemsReadItemsErrors, itemsReadItemsResponses, itemsUpdateItemData, itemsUpdateItemErrors, itemsUpdateItemResponses, loginLoginAccessTokenData, loginLoginAccessTokenErrors, loginLoginAccessTokenResponses, loginRecoverPasswordData, loginRecoverPasswordErrors, loginRecoverPasswordHtmlContentData, loginRecoverPasswordHtmlContentErrors, loginRecoverPasswordHtmlContentResponses, loginRecoverPasswordResponses, loginResetPasswordData, loginResetPasswordErrors, loginResetPasswordResponses, loginTestTokenData, loginTestTokenResponses, privateCreateUserData, privateCreateUserErrors, privateCreateUserResponses, productsArchiveProductData, productsArchiveProductErrors, productsArchiveProductResponses, productsCreateProductData, productsCreateProductErrors, productsCreateProductResponses, productsDownloadProductImageData, productsDownloadProductImageErrors, productsDownloadProductImageResponses, productsReadProductData, productsReadProductErrors, productsReadProductResponses, productsReadProductsData, productsReadProductsErrors, productsReadProductsResponses, productsSetPrimaryImageData, productsSetPrimaryImageErrors, productsSetPrimaryImageResponses, productsUpdateProductData, productsUpdateProductErrors, productsUpdateProductResponses, productsUploadProductImageData, productsUploadProductImageErrors, productsUploadProductImageResponses, usersCreateUserData, usersCreateUserErrors, usersCreateUserResponses, usersDeleteUserData, usersDeleteUserErrors, usersDeleteUserMeData, usersDeleteUserMeResponses, usersDeleteUserResponses, usersReadUserByIdData, usersReadUserByIdErrors, usersReadUserByIdResponses, usersReadUserMeData, usersReadUserMeResponses, usersReadUsersData, usersReadUsersErrors, usersReadUsersResponses, usersRegisterUserData, usersRegisterUserErrors, usersRegisterUserResponses, usersUpdatePasswordMeData, usersUpdatePasswordMeErrors, usersUpdatePasswordMeResponses, usersUpdateUserData, usersUpdateUserErrors, usersUpdateUserMeData, usersUpdateUserMeErrors, usersUpdateUserMeResponses, usersUpdateUserResponses, utilsHealthCheckData, utilsHealthCheckResponses, utilsTestEmailData, utilsTestEmailErrors, utilsTestEmailResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -767,6 +767,72 @@ export class BrandModelsService {
             responseType: 'json',
             security: [{ scheme: 'bearer', type: 'http' }],
             url: '/api/v1/brands/{brand_id}/models/{model_id}/references/{reference_id}/download',
+            ...options
+        });
+    }
+}
+
+export class GenerationsService {
+    /**
+     * Read Generations
+     */
+    public static readGenerations<ThrowOnError extends boolean = true>(options: Options<generationsReadGenerationsData, ThrowOnError>) {
+        return (options.client ?? client).get<generationsReadGenerationsResponses, generationsReadGenerationsErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/brands/{brand_id}/generations',
+            ...options
+        });
+    }
+    
+    /**
+     * Create Generation
+     */
+    public static createGeneration<ThrowOnError extends boolean = true>(options: Options<generationsCreateGenerationData, ThrowOnError>) {
+        return (options.client ?? client).post<generationsCreateGenerationResponses, generationsCreateGenerationErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/brands/{brand_id}/generations',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Read Generation
+     */
+    public static readGeneration<ThrowOnError extends boolean = true>(options: Options<generationsReadGenerationData, ThrowOnError>) {
+        return (options.client ?? client).get<generationsReadGenerationResponses, generationsReadGenerationErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/brands/{brand_id}/generations/{request_id}',
+            ...options
+        });
+    }
+    
+    /**
+     * Retry Generation
+     */
+    public static retryGeneration<ThrowOnError extends boolean = true>(options: Options<generationsRetryGenerationData, ThrowOnError>) {
+        return (options.client ?? client).post<generationsRetryGenerationResponses, generationsRetryGenerationErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/brands/{brand_id}/generations/{request_id}/retry',
+            ...options
+        });
+    }
+    
+    /**
+     * Download Generated Asset
+     */
+    public static downloadGeneratedAsset<ThrowOnError extends boolean = true>(options: Options<generationsDownloadGeneratedAssetData, ThrowOnError>) {
+        return (options.client ?? client).get<generationsDownloadGeneratedAssetResponses, generationsDownloadGeneratedAssetErrors, ThrowOnError>({
+            responseType: 'json',
+            security: [{ scheme: 'bearer', type: 'http' }],
+            url: '/api/v1/brands/{brand_id}/generations/assets/{asset_id}/download',
             ...options
         });
     }
