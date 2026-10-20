@@ -41,6 +41,16 @@ export type Body_Brand_Models_upload_reference = {
 };
 
 /**
+ * Body_Products-upload_product_image
+ */
+export type Body_Products_upload_product_image = {
+    /**
+     * File
+     */
+    file: Blob | File;
+};
+
+/**
  * Body_login-login_access_token
  */
 export type Body_login_login_access_token = {
@@ -714,6 +724,197 @@ export type PrivateUserCreate = {
      * Is Verified
      */
     is_verified?: boolean;
+};
+
+/**
+ * ProductCategory
+ */
+export type ProductCategory = 'ring' | 'necklace' | 'bracelet' | 'earrings' | 'set' | 'pendant' | 'other';
+
+/**
+ * ProductCreate
+ */
+export type ProductCreate = {
+    /**
+     * Name
+     */
+    name: string;
+    category: ProductCategory;
+    /**
+     * Sku
+     */
+    sku?: string | null;
+    /**
+     * Metal Type
+     */
+    metal_type?: string | null;
+    /**
+     * Metal Color
+     */
+    metal_color?: string | null;
+    /**
+     * Stone Type
+     */
+    stone_type?: string | null;
+    /**
+     * Description
+     */
+    description?: string | null;
+    /**
+     * Integrity Notes
+     */
+    integrity_notes?: string | null;
+};
+
+/**
+ * ProductImagePublic
+ */
+export type ProductImagePublic = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Content Type
+     */
+    content_type: string;
+    /**
+     * Width
+     */
+    width: number | null;
+    /**
+     * Height
+     */
+    height: number | null;
+    /**
+     * Is Primary
+     */
+    is_primary: boolean;
+    /**
+     * Quality Status
+     */
+    quality_status: string;
+    /**
+     * Quality Findings Json
+     */
+    quality_findings_json: {
+        [key: string]: unknown;
+    };
+    /**
+     * Created At
+     */
+    created_at: string;
+};
+
+/**
+ * ProductPublic
+ */
+export type ProductPublic = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Brand Id
+     */
+    brand_id: string;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Sku
+     */
+    sku: string | null;
+    /**
+     * Category
+     */
+    category: string;
+    /**
+     * Metal Type
+     */
+    metal_type: string | null;
+    /**
+     * Metal Color
+     */
+    metal_color: string | null;
+    /**
+     * Stone Type
+     */
+    stone_type: string | null;
+    /**
+     * Description
+     */
+    description: string | null;
+    /**
+     * Integrity Notes
+     */
+    integrity_notes: string | null;
+    /**
+     * Status
+     */
+    status: string;
+    /**
+     * Images
+     */
+    images: Array<ProductImagePublic>;
+    /**
+     * Created At
+     */
+    created_at: string;
+    /**
+     * Updated At
+     */
+    updated_at: string;
+};
+
+/**
+ * ProductUpdate
+ */
+export type ProductUpdate = {
+    /**
+     * Name
+     */
+    name?: string | null;
+    category?: ProductCategory | null;
+    /**
+     * Sku
+     */
+    sku?: string | null;
+    /**
+     * Metal Type
+     */
+    metal_type?: string | null;
+    /**
+     * Metal Color
+     */
+    metal_color?: string | null;
+    /**
+     * Stone Type
+     */
+    stone_type?: string | null;
+    /**
+     * Description
+     */
+    description?: string | null;
+    /**
+     * Integrity Notes
+     */
+    integrity_notes?: string | null;
+};
+
+/**
+ * ProductsPublic
+ */
+export type ProductsPublic = {
+    /**
+     * Data
+     */
+    data: Array<ProductPublic>;
+    /**
+     * Count
+     */
+    count: number;
 };
 
 /**
@@ -2467,6 +2668,285 @@ export type brandModelsDownloadReferenceErrors = {
 export type brandModelsDownloadReferenceError = brandModelsDownloadReferenceErrors[keyof brandModelsDownloadReferenceErrors];
 
 export type brandModelsDownloadReferenceResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
+export type productsReadProductsData = {
+    body?: never;
+    path: {
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: {
+        /**
+         * Category
+         */
+        category?: ProductCategory | null;
+        /**
+         * Include Archived
+         */
+        include_archived?: boolean;
+    };
+    url: '/api/v1/brands/{brand_id}/products';
+};
+
+export type productsReadProductsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type productsReadProductsError = productsReadProductsErrors[keyof productsReadProductsErrors];
+
+export type productsReadProductsResponses = {
+    /**
+     * Successful Response
+     */
+    200: ProductsPublic;
+};
+
+export type productsReadProductsResponse = productsReadProductsResponses[keyof productsReadProductsResponses];
+
+export type productsCreateProductData = {
+    body: ProductCreate;
+    path: {
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/products';
+};
+
+export type productsCreateProductErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type productsCreateProductError = productsCreateProductErrors[keyof productsCreateProductErrors];
+
+export type productsCreateProductResponses = {
+    /**
+     * Successful Response
+     */
+    200: ProductPublic;
+};
+
+export type productsCreateProductResponse = productsCreateProductResponses[keyof productsCreateProductResponses];
+
+export type productsReadProductData = {
+    body?: never;
+    path: {
+        /**
+         * Product Id
+         */
+        product_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/products/{product_id}';
+};
+
+export type productsReadProductErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type productsReadProductError = productsReadProductErrors[keyof productsReadProductErrors];
+
+export type productsReadProductResponses = {
+    /**
+     * Successful Response
+     */
+    200: ProductPublic;
+};
+
+export type productsReadProductResponse = productsReadProductResponses[keyof productsReadProductResponses];
+
+export type productsUpdateProductData = {
+    body: ProductUpdate;
+    path: {
+        /**
+         * Product Id
+         */
+        product_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/products/{product_id}';
+};
+
+export type productsUpdateProductErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type productsUpdateProductError = productsUpdateProductErrors[keyof productsUpdateProductErrors];
+
+export type productsUpdateProductResponses = {
+    /**
+     * Successful Response
+     */
+    200: ProductPublic;
+};
+
+export type productsUpdateProductResponse = productsUpdateProductResponses[keyof productsUpdateProductResponses];
+
+export type productsArchiveProductData = {
+    body?: never;
+    path: {
+        /**
+         * Product Id
+         */
+        product_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/products/{product_id}/archive';
+};
+
+export type productsArchiveProductErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type productsArchiveProductError = productsArchiveProductErrors[keyof productsArchiveProductErrors];
+
+export type productsArchiveProductResponses = {
+    /**
+     * Successful Response
+     */
+    200: ProductPublic;
+};
+
+export type productsArchiveProductResponse = productsArchiveProductResponses[keyof productsArchiveProductResponses];
+
+export type productsUploadProductImageData = {
+    body: Body_Products_upload_product_image;
+    path: {
+        /**
+         * Product Id
+         */
+        product_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/products/{product_id}/images';
+};
+
+export type productsUploadProductImageErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type productsUploadProductImageError = productsUploadProductImageErrors[keyof productsUploadProductImageErrors];
+
+export type productsUploadProductImageResponses = {
+    /**
+     * Successful Response
+     */
+    200: ProductPublic;
+};
+
+export type productsUploadProductImageResponse = productsUploadProductImageResponses[keyof productsUploadProductImageResponses];
+
+export type productsSetPrimaryImageData = {
+    body?: never;
+    path: {
+        /**
+         * Product Id
+         */
+        product_id: string;
+        /**
+         * Image Id
+         */
+        image_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/products/{product_id}/images/{image_id}/primary';
+};
+
+export type productsSetPrimaryImageErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type productsSetPrimaryImageError = productsSetPrimaryImageErrors[keyof productsSetPrimaryImageErrors];
+
+export type productsSetPrimaryImageResponses = {
+    /**
+     * Successful Response
+     */
+    200: ProductPublic;
+};
+
+export type productsSetPrimaryImageResponse = productsSetPrimaryImageResponses[keyof productsSetPrimaryImageResponses];
+
+export type productsDownloadProductImageData = {
+    body?: never;
+    path: {
+        /**
+         * Product Id
+         */
+        product_id: string;
+        /**
+         * Image Id
+         */
+        image_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/products/{product_id}/images/{image_id}/download';
+};
+
+export type productsDownloadProductImageErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type productsDownloadProductImageError = productsDownloadProductImageErrors[keyof productsDownloadProductImageErrors];
+
+export type productsDownloadProductImageResponses = {
     /**
      * Successful Response
      */

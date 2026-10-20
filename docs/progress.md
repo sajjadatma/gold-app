@@ -11,8 +11,8 @@ MVP1 execution status. Updated at the end of every completed stage.
 | T04 | Brand import | complete | `df11d1f` |
 | T05 | Brand intelligence | complete | `45fc6e6` |
 | T06 | Brand validation & activation | complete | `b4db9de` |
-| T07 | Real & virtual brand models | complete | pending push |
-| T08 | Product catalog | pending | — |
+| T07 | Real & virtual brand models | complete | `c76ad5f` |
+| T08 | Product catalog | complete | pending push |
 | T09 | AI generation foundation | pending | — |
 | T10 | AI photography studio | pending | — |
 | T11 | Product integrity evaluation | pending | — |
