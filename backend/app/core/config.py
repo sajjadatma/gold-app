@@ -1,4 +1,5 @@
 import warnings
+from pathlib import Path
 from typing import Literal, Self
 
 from pydantic import (
@@ -29,6 +30,31 @@ class Settings(BaseSettings):
     PROJECT_NAME: str
     SENTRY_DSN: HttpUrl | None = None
     DATABASE_URL: PostgresDsn
+
+    # Background jobs (arq). Eager mode keeps tests and local demos deterministic.
+    REDIS_URL: str = "redis://localhost:6379"
+    TASKS_EAGER: bool = True
+
+    # Storage
+    STORAGE_BACKEND: Literal["local", "s3"] = "local"
+    STORAGE_LOCAL_DIR: str = str(
+        Path(__file__).resolve().parents[2] / "storage"
+    )
+    S3_ENDPOINT_URL: str | None = None
+    S3_BUCKET: str | None = None
+    S3_ACCESS_KEY_ID: str | None = None
+    S3_SECRET_ACCESS_KEY: str | None = None
+    S3_REGION: str = "us-east-1"
+
+    # Upload limits (bytes / counts)
+    MAX_PDF_BYTES: int = 50 * 1024 * 1024
+    MAX_IMAGE_BYTES: int = 25 * 1024 * 1024
+    MAX_FONT_BYTES: int = 20 * 1024 * 1024
+    MAX_DESIGN_SOURCE_BYTES: int = 150 * 1024 * 1024
+    MAX_ZIP_BYTES: int = 250 * 1024 * 1024
+    MAX_ARCHIVE_FILES: int = 500
+    MAX_ARCHIVE_EXPANDED_BYTES: int = 500 * 1024 * 1024
+    MAX_IMAGE_PIXELS: int = 80_000_000
 
     @field_validator("DATABASE_URL", mode="before")
     @classmethod

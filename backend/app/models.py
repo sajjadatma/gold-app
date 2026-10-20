@@ -127,4 +127,8 @@ class NewPassword(SQLModel):
 
 
 # Module models are imported so Alembic and SQLModel see their metadata.
+from app.modules.brand_import.models import (  # noqa: E402, F401
+    BrandAsset,
+    BrandImport,
+)
 from app.modules.brands.models import Brand, Membership  # noqa: E402, F401

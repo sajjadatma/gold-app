@@ -9,3 +9,4 @@ backend/app/frontend/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+backend/storage/
