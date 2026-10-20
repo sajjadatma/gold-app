@@ -3434,6 +3434,74 @@ export type contentGenerateCaptionEndpointResponses = {
 
 export type contentGenerateCaptionEndpointResponse = contentGenerateCaptionEndpointResponses[keyof contentGenerateCaptionEndpointResponses];
 
+export type contentApproveDraftData = {
+    body?: never;
+    path: {
+        /**
+         * Draft Id
+         */
+        draft_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/drafts/{draft_id}/approve';
+};
+
+export type contentApproveDraftErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type contentApproveDraftError = contentApproveDraftErrors[keyof contentApproveDraftErrors];
+
+export type contentApproveDraftResponses = {
+    /**
+     * Successful Response
+     */
+    200: ContentDraftDetail;
+};
+
+export type contentApproveDraftResponse = contentApproveDraftResponses[keyof contentApproveDraftResponses];
+
+export type contentRejectDraftData = {
+    body?: never;
+    path: {
+        /**
+         * Draft Id
+         */
+        draft_id: string;
+        /**
+         * Brand Id
+         */
+        brand_id: string;
+    };
+    query?: never;
+    url: '/api/v1/brands/{brand_id}/drafts/{draft_id}/reject';
+};
+
+export type contentRejectDraftErrors = {
+    /**
+     * Validation Error
+     */
+    422: HTTPValidationError;
+};
+
+export type contentRejectDraftError = contentRejectDraftErrors[keyof contentRejectDraftErrors];
+
+export type contentRejectDraftResponses = {
+    /**
+     * Successful Response
+     */
+    200: ContentDraftDetail;
+};
+
+export type contentRejectDraftResponse = contentRejectDraftResponses[keyof contentRejectDraftResponses];
+
 export type contentSubmitDraftData = {
     body?: never;
     path: {

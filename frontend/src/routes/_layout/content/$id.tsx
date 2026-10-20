@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { createFileRoute, Link } from "@tanstack/react-router"
-import { ArrowLeft, Send, Sparkles } from "lucide-react"
+import { ArrowLeft, CheckCircle2, Send, Sparkles, XCircle } from "lucide-react"
 import { useEffect, useState } from "react"
 
 import { ContentService, ProductsService } from "@/client"
@@ -101,6 +101,30 @@ function ContentDetailPage() {
     onError: handleError.bind(showErrorToast),
   })
 
+  const approve = useMutation({
+    mutationFn: async () =>
+      ContentService.approveDraft({
+        path: { brand_id: brand?.id ?? "", draft_id: id },
+      }),
+    onSuccess: async () => {
+      await refresh()
+      showSuccessToast("Content approved")
+    },
+    onError: handleError.bind(showErrorToast),
+  })
+
+  const reject = useMutation({
+    mutationFn: async () =>
+      ContentService.rejectDraft({
+        path: { brand_id: brand?.id ?? "", draft_id: id },
+      }),
+    onSuccess: async () => {
+      await refresh()
+      showSuccessToast("Content rejected")
+    },
+    onError: handleError.bind(showErrorToast),
+  })
+
   const submit = useMutation({
     mutationFn: async () =>
       ContentService.submitDraft({
@@ -123,6 +147,8 @@ function ContentDetailPage() {
     product?.images.find((image) => image.is_primary) ?? product?.images[0]
   const isEditable = !["published", "publish_failed"].includes(data.status)
   const canSubmit = ["draft", "rejected"].includes(data.status)
+  const isOwner = brand.role === "owner"
+  const canReview = isOwner && data.status === "needs_approval"
 
   return (
     <div className="space-y-6 pb-8">
@@ -302,7 +328,36 @@ function ContentDetailPage() {
                 Submit for approval
               </Button>
             ) : null}
+            {canReview ? (
+              <>
+                <Button
+                  onClick={() => approve.mutate()}
+                  disabled={
+                    approve.isPending || data.integrity_status === "failed"
+                  }
+                >
+                  <CheckCircle2 className="mr-2 h-4 w-4" /> Approve
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    if (window.confirm("Reject this content draft?")) {
+                      reject.mutate()
+                    }
+                  }}
+                  disabled={reject.isPending}
+                >
+                  <XCircle className="mr-2 h-4 w-4" /> Reject
+                </Button>
+              </>
+            ) : null}
           </div>
+          {data.status === "approved" && data.approved_at ? (
+            <p className="text-sm text-muted-foreground">
+              Approved by Owner on {new Date(data.approved_at).toLocaleString()}
+              .
+            </p>
+          ) : null}
         </CardContent>
       </Card>
     </div>

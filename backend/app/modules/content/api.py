@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException
 from sqlmodel import select
 
 from app.api.deps import CurrentUser, SessionDep
-from app.modules.brands.deps import BrandMembership
+from app.modules.brands.deps import BrandMembership, BrandOwner
 from app.modules.content.models import ContentDraft, DraftStatus
 from app.modules.content.schemas import (
     CaptionGenerateRequest,
@@ -21,6 +21,7 @@ from app.modules.content.service import (
     draft_detail_fields,
     generate_caption_for_draft,
 )
+from app.modules.generations.models import GeneratedAsset, IntegrityStatus
 
 router = APIRouter(prefix="/brands/{brand_id}/drafts", tags=["Content"])
 
@@ -164,6 +165,56 @@ def generate_caption_endpoint(
     except CaptionGenerationError as exc:
         status_code = 409 if (draft.user_edited and not request_in.force) else 400
         raise HTTPException(status_code=status_code, detail=str(exc)) from exc
+    return _detail(session, draft)
+
+
+@router.post("/{draft_id}/approve", response_model=ContentDraftDetail)
+def approve_draft(
+    session: SessionDep, owner: BrandOwner, draft_id: uuid.UUID
+) -> ContentDraftDetail:
+    draft = get_draft_or_404(session, owner.brand_id, draft_id)
+    if draft.status != DraftStatus.NEEDS_APPROVAL.value:
+        raise HTTPException(
+            status_code=400, detail="Only drafts awaiting approval can be approved"
+        )
+    asset = session.get(GeneratedAsset, draft.generated_asset_id)
+    if not asset:
+        raise HTTPException(status_code=400, detail="Generated asset is missing")
+    if asset.integrity_status in {
+        IntegrityStatus.FAILED.value,
+        IntegrityStatus.PENDING.value,
+    }:
+        raise HTTPException(
+            status_code=400,
+            detail="This generated asset did not pass the integrity gate",
+        )
+    draft.status = DraftStatus.APPROVED.value
+    draft.approved_by = owner.user_id
+    draft.approved_at = datetime.now(UTC)
+    draft.updated_at = datetime.now(UTC)
+    session.add(draft)
+    session.commit()
+    session.refresh(draft)
+    return _detail(session, draft)
+
+
+@router.post("/{draft_id}/reject", response_model=ContentDraftDetail)
+def reject_draft(
+    session: SessionDep, owner: BrandOwner, draft_id: uuid.UUID
+) -> ContentDraftDetail:
+    draft = get_draft_or_404(session, owner.brand_id, draft_id)
+    if draft.status not in {
+        DraftStatus.NEEDS_APPROVAL.value,
+        DraftStatus.DRAFT.value,
+    }:
+        raise HTTPException(status_code=400, detail="This draft cannot be rejected")
+    draft.status = DraftStatus.REJECTED.value
+    draft.approved_by = None
+    draft.approved_at = None
+    draft.updated_at = datetime.now(UTC)
+    session.add(draft)
+    session.commit()
+    session.refresh(draft)
     return _detail(session, draft)
 
 
