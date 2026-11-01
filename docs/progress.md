@@ -41,3 +41,12 @@ MVP1 execution status. Updated at the end of every completed stage.
 - Added English/Farsi localization with RTL, Persian dates, persisted language selection, and a sidebar/auth language switcher.
 
 - Full-app acceptance pass completed with downloaded real assets, rich brand-book PDFs, scanned OCR, admin/items CRUD, and both languages; fixed discovered parser, settings-form, and English enum-label issues.
+
+## Isolated full-app QA — 2026-11-01
+
+- Complete: 166 backend tests, 65 browser tests against Redis and one real arq worker, and 27 additional live API/worker checks passed.
+- Fresh PostgreSQL databases and private storage isolated test cleanup from the existing development data. External AI/OCR and Instagram calls were disabled or faked.
+- Fixed PDF typographic-apostrophe headings losing `donts`, asynchronous publishing UI failing to follow worker completion, profile field labels, and missing Farsi labels.
+- Made the Farsi browser test self-contained, added profile-edit persistence coverage, and excluded generated test artifacts from Biome.
+- Ruff, mypy, Biome, TypeScript/production build and diff review passed. OpenAPI unchanged. Ten main Farsi pages checked at a 390×844 mobile viewport without document overflow.
+- Detailed evidence, original failures, fixes, screenshots and scope limits: [QA report](qa/2026-11-01.md).

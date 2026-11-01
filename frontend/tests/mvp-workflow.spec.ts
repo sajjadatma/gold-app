@@ -34,6 +34,17 @@ test("complete MVP workflow with fake providers", async ({ page }) => {
   // Brand intelligence and activation
   await page.getByRole("button", { name: "Analyze brand" }).click()
   await page.waitForURL(/\/brand\/profile/)
+  await page
+    .getByLabel("Audience", { exact: true })
+    .fill("Collectors, Designers")
+  await page.getByRole("button", { name: "Save changes" }).first().click()
+  await expect(
+    page.getByText("Brand profile saved", { exact: true }),
+  ).toBeVisible()
+  await page.reload()
+  await expect(page.getByLabel("Audience", { exact: true })).toHaveValue(
+    "Collectors, Designers",
+  )
   await page.getByRole("button", { name: "Activate" }).first().click()
   await expect(page.getByText(/v1 · active/i)).toBeVisible()
 

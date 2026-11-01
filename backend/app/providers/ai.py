@@ -174,6 +174,7 @@ def _empty_profile(brand_name: str) -> dict[str, Any]:
 def _heading_key(line: str) -> str | None:
     cleaned = re.sub(r"^[0-9]+[.)\-\s]+", "", line.strip())
     cleaned = re.sub(r"\s+", " ", cleaned).strip().strip(":").lower()
+    cleaned = cleaned.replace("\u2018", "'").replace("\u2019", "'")
     return HEADING_ALIASES.get(cleaned)
 
 

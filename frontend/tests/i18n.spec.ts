@@ -6,6 +6,11 @@ test("switches to Farsi, applies RTL, and persists the choice", async ({
   await page.goto("/")
   await expect(page.getByRole("heading", { name: /Hi,/ })).toBeVisible()
 
+  await page.getByRole("button", { name: "New brand" }).first().click()
+  await page.locator("#brand-name").fill(`I18n Atelier ${Date.now()}`)
+  await page.getByRole("button", { name: "Create brand" }).click()
+  await expect(page.getByText("Brand created", { exact: true })).toBeVisible()
+
   await page.getByRole("button", { name: "Language" }).click()
   await page.getByRole("menuitem", { name: "فارسی" }).click()
 

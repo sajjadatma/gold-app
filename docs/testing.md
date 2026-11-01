@@ -56,3 +56,13 @@ A comprehensive browser pass used real downloaded assets: public-domain/CC jewel
 Covered: signup/team roles, full brand import and downloads, brand intelligence and every profile field, virtual + real models with consent, full product fields and multi-image upload, all three studio modes, integrity, captions, approval, Instagram publish, admin CRUD, items CRUD, settings, language switching/RTL, OCR of a scanned brand book, and failed-upload state.
 
 Bugs found and fixed: PDF section headings without blank lines were not preserved; the settings form could disable Save when reverting to the original name; English mode showed raw enum values such as `on_model` instead of display labels.
+
+## Isolated full-app QA (2026-11-01)
+
+- 166 backend tests and 65 Playwright tests passed, with all browser tests targeting a dedicated QA API/database and real Redis-backed worker.
+- 27 additional live checks covered all generation modes, tenant isolation, role restrictions, approval invalidation, caption preservation, safe uploads and idempotent fake publishing.
+- The PDF regression now verifies typographic apostrophes in `DON’TS`, including the text extracted from an uploaded PDF.
+- The MVP browser flow also verifies named profile fields and persistence after editing and reloading. The Farsi test creates its own brand instead of relying on previous test data.
+- A controlled worker pause/resume verified that queued publishing disables duplicate clicks and updates the UI automatically when the worker finishes.
+- Ten main Farsi pages were checked for document overflow at 390×844; the profile's inputs and textareas all had accessible labels.
+- Full results, screenshots and limitations: [QA report](qa/2026-11-01.md).

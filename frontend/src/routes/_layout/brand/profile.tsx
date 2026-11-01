@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { CheckCircle2, Save } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useId, useState } from "react"
 
 import {
   type BrandAssetPublic,
@@ -128,12 +128,15 @@ function ListField({
   disabled: boolean
 }) {
   const { t } = useI18n()
+  const id = useId()
   const [text, setText] = useState(value.join(", "))
   useEffect(() => setText(value.join(", ")), [value])
   return (
     <div className="grid gap-2">
-      <Label>{label}</Label>
+      <Label htmlFor={id}>{label}</Label>
       <Textarea
+        id={id}
+        aria-describedby={`${id}-help`}
         value={text}
         disabled={disabled}
         rows={2}
@@ -147,7 +150,7 @@ function ListField({
           )
         }
       />
-      <p className="text-xs text-muted-foreground">
+      <p id={`${id}-help`} className="text-xs text-muted-foreground">
         {t("Separate values with commas.")}
       </p>
     </div>
@@ -881,7 +884,7 @@ function BrandProfilePage() {
                 <div className="flex items-end gap-2">
                   <div className="grid flex-1 gap-2">
                     <Label htmlFor={`section-title-${index}`}>
-                      Section title
+                      {t("Section title")}
                     </Label>
                     <Input
                       id={`section-title-${index}`}

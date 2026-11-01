@@ -1,5 +1,6 @@
 import io
 
+import pytest
 from fastapi.testclient import TestClient
 from pypdf import PdfWriter
 from pypdf.generic import DictionaryObject, NameObject, StreamObject
@@ -143,6 +144,23 @@ def test_fake_analysis_parses_brand_book_sections() -> None:
     assert "SUSTAINABILITY" in titles
 
 
+@pytest.mark.parametrize("apostrophe", ["'", "\u2018", "\u2019"])
+def test_donts_heading_accepts_typographic_apostrophes(apostrophe: str) -> None:
+    profile = analyze_brand(
+        "Aurum Atelier",
+        [
+            AnalysisSource(
+                filename="brand-book.pdf",
+                asset_type="brand_book",
+                text=f"12 DON{apostrophe}TS\nDo not over-style\nNo neon colors\n",
+                asset_id=None,
+            )
+        ],
+    )
+    validated = BrandProfileData.model_validate(profile)
+    assert validated.donts == ["Do not over-style", "No neon colors"]
+
+
 def test_pdf_upload_analysis_writes_whole_profile(
     client: TestClient, normal_user_token_headers: dict[str, str]
 ) -> None:
@@ -173,6 +191,7 @@ def test_pdf_upload_analysis_writes_whole_profile(
     assert profile.graphic_system.layout_principles or profile.social_media.visual_rules
     assert profile.additional_sections
     assert any(section.title == "PACKAGING" for section in profile.additional_sections)
+    assert profile.donts == ["Do not over-style", "No neon colors"]
 
 
 def test_scanned_pdf_uses_ocr_fallback(

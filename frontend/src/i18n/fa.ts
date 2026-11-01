@@ -40,6 +40,8 @@ export const fa: Record<string, string> = {
   "Collapse Sidebar": "جمع‌کردن نوار کناری",
   "Open Sidebar": "بازکردن نوار کناری",
   "Toggle Sidebar": "تغییر نوار کناری",
+  Sidebar: "نوار کناری",
+  "Displays the mobile sidebar.": "فهرست ناوبری در نمایش موبایل.",
   "No colors could be extracted from the imported assets.":
     "هیچ رنگی از دارایی‌های واردشده استخراج نشد.",
   "No font files or typeface names were found.":
@@ -529,6 +531,7 @@ export const fa: Record<string, string> = {
   "Retry publish": "تلاش دوباره برای انتشار",
   "Publishing failed": "انتشار ناموفق بود",
   "Publish job finished": "کار انتشار تمام شد",
+  "Publish job queued": "انتشار در صف قرار گرفت",
 
   // Settings
   "Manage your account settings and preferences":

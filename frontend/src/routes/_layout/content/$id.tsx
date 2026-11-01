@@ -91,7 +91,28 @@ function ContentDetailPage() {
         })
       ).data,
     enabled: Boolean(brand && data),
+    refetchInterval: (query) =>
+      query.state.data?.data.some((job) =>
+        ["queued", "processing"].includes(job.status),
+      )
+        ? 1000
+        : false,
   })
+
+  const latestPublishStatus = publishJobs?.data[0]?.status
+  useEffect(() => {
+    if (
+      latestPublishStatus === "published" ||
+      latestPublishStatus === "failed"
+    ) {
+      void queryClient.invalidateQueries({
+        queryKey: ["draft", brand?.id, id],
+      })
+      void queryClient.invalidateQueries({
+        queryKey: ["drafts", brand?.id],
+      })
+    }
+  }, [latestPublishStatus, brand?.id, id, queryClient])
 
   useEffect(() => {
     if (data) {
@@ -161,12 +182,16 @@ function ContentDetailPage() {
       PublishingService.publishDraft({
         path: { brand_id: brand?.id ?? "", draft_id: id },
       }),
-    onSuccess: async () => {
+    onSuccess: async (result) => {
       await refresh()
       await queryClient.invalidateQueries({
         queryKey: ["publish-jobs", brand?.id, id],
       })
-      showSuccessToast(t("Publish job finished"))
+      showSuccessToast(
+        result.data.status === "published"
+          ? t("Publish job finished")
+          : t("Publish job queued"),
+      )
     },
     onError: handleError.bind(showErrorToast),
   })
@@ -211,6 +236,10 @@ function ContentDetailPage() {
   const canSubmit = ["draft", "rejected"].includes(data.status)
   const isOwner = brand.role === "owner"
   const canReview = isOwner && data.status === "needs_approval"
+  const isPublishing =
+    publish.isPending ||
+    latestPublishStatus === "queued" ||
+    latestPublishStatus === "processing"
 
   return (
     <div className="space-y-6 pb-8">
@@ -467,10 +496,10 @@ function ContentDetailPage() {
               {isOwner && data.status === "approved" ? (
                 <Button
                   onClick={() => publish.mutate()}
-                  disabled={publish.isPending}
+                  disabled={isPublishing}
                 >
                   <Share2 className="mr-2 h-4 w-4" />
-                  {publish.isPending
+                  {isPublishing
                     ? t("Publishing...")
                     : t("Publish to Instagram")}
                 </Button>
